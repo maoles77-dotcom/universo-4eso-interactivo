@@ -1,0 +1,389 @@
+{
+  "title": "Astronomía Mapa",
+  "root": {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-0",
+                "level": 4,
+                "text": "Big Bang"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-1",
+                "level": 4,
+                "text": "Inflación"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-2",
+                "level": 4,
+                "text": "Nucleosíntesis"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-3",
+                "level": 4,
+                "text": "Recombinación"
+              }
+            ],
+            "expanded": true,
+            "id": "node-4",
+            "level": 3,
+            "text": "Origen y Evolución"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-5",
+                "level": 4,
+                "text": "Expansión de galaxias"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-6",
+                "level": 4,
+                "text": "Radiación de fondo de microondas"
+              }
+            ],
+            "expanded": true,
+            "id": "node-7",
+            "level": 3,
+            "text": "Pruebas Científicas"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-8",
+                "level": 4,
+                "text": "Ciclo de vida estelar"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-9",
+                "level": 4,
+                "text": "Vía Láctea"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-10",
+                "level": 4,
+                "text": "Cúmulos globulares y abiertos"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-11",
+                "level": 4,
+                "text": "Tipos de galaxias"
+              }
+            ],
+            "expanded": true,
+            "id": "node-12",
+            "level": 3,
+            "text": "Cuerpos Celestes"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-13",
+                "level": 4,
+                "text": "Año-luz"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-14",
+                "level": 4,
+                "text": "Unidad astronómica"
+              }
+            ],
+            "expanded": true,
+            "id": "node-15",
+            "level": 3,
+            "text": "Medición de distancias"
+          }
+        ],
+        "expanded": true,
+        "id": "node-16",
+        "level": 2,
+        "text": "El universo"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-17",
+            "level": 3,
+            "text": "Origen nebular y acreción"
+          },
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-18",
+            "level": 3,
+            "text": "El Sol: estructura y viento solar"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-19",
+                "level": 4,
+                "text": "Interiores o rocosos"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-20",
+                "level": 4,
+                "text": "Exteriores o gaseosos"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-21",
+                "level": 4,
+                "text": "Planetas enanos"
+              }
+            ],
+            "expanded": true,
+            "id": "node-22",
+            "level": 3,
+            "text": "Planetas"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-23",
+                "level": 4,
+                "text": "Satélites naturales"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-24",
+                "level": 4,
+                "text": "Cinturón de asteroides"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-25",
+                "level": 4,
+                "text": "Cinturón de Kuiper"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-26",
+                "level": 4,
+                "text": "Nube de Oort"
+              }
+            ],
+            "expanded": true,
+            "id": "node-27",
+            "level": 3,
+            "text": "Cuerpos menores"
+          }
+        ],
+        "expanded": true,
+        "id": "node-28",
+        "level": 2,
+        "text": "El sistema solar"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-29",
+                "level": 4,
+                "text": "Atmósfera y efecto invernadero"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-30",
+                "level": 4,
+                "text": "Campo magnético protector"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-31",
+                "level": 4,
+                "text": "Agua líquida"
+              }
+            ],
+            "expanded": true,
+            "id": "node-32",
+            "level": 3,
+            "text": "Habitabilidad terrestre"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-33",
+                "level": 4,
+                "text": "Rotación: día y noche"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-34",
+                "level": 4,
+                "text": "Traslación: estaciones y equinoccios"
+              }
+            ],
+            "expanded": true,
+            "id": "node-35",
+            "level": 3,
+            "text": "Movimientos terrestres"
+          },
+          {
+            "children": [
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-36",
+                "level": 4,
+                "text": "Fases lunares"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-37",
+                "level": 4,
+                "text": "Eclipses solares y lunares"
+              },
+              {
+                "children": [],
+                "expanded": false,
+                "id": "node-38",
+                "level": 4,
+                "text": "Mareas vivas y muertas"
+              }
+            ],
+            "expanded": true,
+            "id": "node-39",
+            "level": 3,
+            "text": "Interacción con la Luna"
+          }
+        ],
+        "expanded": true,
+        "id": "node-40",
+        "level": 2,
+        "text": "La Tierra y la Luna"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-41",
+            "level": 3,
+            "text": "Generación espontánea y biogénesis"
+          },
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-42",
+            "level": 3,
+            "text": "Teoría quimiosintética: coacervados"
+          },
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-43",
+            "level": 3,
+            "text": "Experimento de Miller-Urey"
+          },
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-44",
+            "level": 3,
+            "text": "Panspermia: origen extraterrestre"
+          },
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-45",
+            "level": 3,
+            "text": "Hipótesis: fuentes hidrotermales y mundo ARN"
+          }
+        ],
+        "expanded": true,
+        "id": "node-46",
+        "level": 2,
+        "text": "Origen de la vida"
+      },
+      {
+        "children": [
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-47",
+            "level": 3,
+            "text": "Búsqueda en exoplanetas"
+          },
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-48",
+            "level": 3,
+            "text": "Biomarcadores: oxígeno y metano"
+          },
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-49",
+            "level": 3,
+            "text": "Misiones espaciales y rovers"
+          },
+          {
+            "children": [],
+            "expanded": false,
+            "id": "node-50",
+            "level": 3,
+            "text": "Organismos extremófilos"
+          }
+        ],
+        "expanded": true,
+        "id": "node-51",
+        "level": 2,
+        "text": "La astrobiología"
+      }
+    ],
+    "expanded": true,
+    "id": "node-52",
+    "level": 1,
+    "text": "El universo y la Tierra"
+  }
+}
