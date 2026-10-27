@@ -441,11 +441,13 @@
 <!-- Modal genérico -->
 <div class="overlay hidden" id="overlay"><div class="card modal" id="modal"></div></div>
 
-<script src="datos-tema2.js"></script>
+<script src="datos-tema2.js?v=20261027b"></script>
 <script>
 (function () {
   "use strict";
   const D = window.TEMA2;
+  // Por si el navegador usa un datos-tema2.js antiguo guardado en caché
+  D.planetas = D.planetas || [];
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -1054,7 +1056,9 @@
   }
 
   function renderPlanets() {
-    const p = D.planetas[PL.idx], st = PL.s[PL.idx], n = p.capas.length;
+    const p = D.planetas[PL.idx];
+    if (!p) return;
+    const st = PL.s[PL.idx], n = p.capas.length;
     $("#plStory").innerHTML = bi(UI.es.plStory, UI.en.plStory);
     $("#plTabs").innerHTML = D.planetas.map((x, i) => `<button class="chip ${i === PL.idx ? "on" : ""}" data-i="${i}">${PL.s[i].solved ? "✅" : "🪐"} ${esc(x.nombre)} <span class="lvl">${"⭐".repeat(x.nivel)}</span></button>`).join("");
     $$("#plTabs .chip").forEach(c => c.onclick = () => { PL.idx = +c.dataset.i; renderPlanets(); });
