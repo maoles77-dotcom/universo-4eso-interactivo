@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Astronomía | Mapa mental interactivo</title>
+  <style>
+    :root {
+      --bg: #071126;
+      --bg2: #111f43;
+      --panel: rgba(18, 34, 70, .9);
+      --panel-light: rgba(31, 53, 99, .72);
+      --ink: #f6f8ff;
+      --muted: #afbdd7;
+      --line: rgba(185, 206, 245, .2);
+      --cyan: #5ee6e2;
+      --gold: #ffd166;
+      --coral: #ff947e;
+      --green: #80e2ad;
+      --violet: #bc9cff;
+      --shadow: 0 24px 70px rgba(1, 7, 22, .36);
+    }
+    * { box-sizing: border-box; }
+    body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--ink); background: radial-gradient(circle at 76% 8%, rgba(94,230,226,.14) 0 2px, transparent 3px), radial-gradient(circle at 15% 72%, rgba(255,209,102,.16) 0 2px, transparent 3px), linear-gradient(135deg, var(--bg), var(--bg2)); background-size: 230px 190px, 280px 240px, auto; font-family: "Trebuchet MS", "Segoe UI", sans-serif; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1380px, calc(100% - 36px)); margin: 0 auto; padding: 26px 0 42px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 22px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .planet { position: relative; width: 43px; height: 43px; border-radius: 50%; background: #ffb568; box-shadow: inset -9px -8px 0 #dc6f69, 0 0 0 7px rgba(255,209,102,.07); }
+    .planet::after { content: ""; position: absolute; left: -8px; top: 13px; width: 57px; height: 14px; border: 3px solid var(--cyan); border-radius: 50%; transform: rotate(-18deg); }
+    .brand strong { display: block; font-family: Georgia, serif; font-size: 1.16rem; }
+    .brand small { color: var(--muted); font-size: .78rem; }
+    .actions { display: flex; gap: 9px; align-items: center; }
+    .button { min-height: 42px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: rgba(255,255,255,.06); }
+    .button:hover, .button.active { border-color: var(--cyan); background: rgba(94,230,226,.12); }
+    .button.primary { border: 0; color: var(--bg); background: var(--gold); font-weight: 800; }
+    .button.primary:hover { filter: brightness(1.07); }
+    .hero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(270px, .7fr); gap: 20px; margin-bottom: 20px; }
+    .hero-copy, .hero-stats { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: var(--panel); box-shadow: var(--shadow); }
+    .hero-copy { padding: clamp(25px, 5vw, 47px); }
+    .hero-copy::after { content: ""; position: absolute; width: 200px; height: 200px; right: -65px; top: -70px; border: 1px solid rgba(94,230,226,.27); border-radius: 50%; box-shadow: 0 0 0 23px rgba(94,230,226,.04), 0 0 0 46px rgba(94,230,226,.025); }
+    .eyebrow { margin: 0 0 13px; color: var(--cyan); font-size: .78rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    h1, h2, h3 { font-family: Georgia, serif; line-height: 1.08; margin: 0; }
+    h1 { max-width: 760px; font-size: clamp(2.35rem, 5vw, 4.6rem); letter-spacing: -.035em; }
+    .hero-copy p:not(.eyebrow) { max-width: 720px; margin: 19px 0 0; color: var(--muted); font-size: 1rem; line-height: 1.6; }
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; padding: 13px; background-color: rgba(255,255,255,.06); }
+    .stat { display: flex; flex-direction: column; justify-content: center; min-height: 105px; padding: 13px; background: var(--panel); }
+    .stat:first-child { border-radius: 14px 0 0 0; } .stat:nth-child(2) { border-radius: 0 14px 0 0; } .stat:nth-child(3) { border-radius: 0 0 0 14px; } .stat:last-child { border-radius: 0 0 14px 0; }
+    .stat-label { color: var(--muted); font-size: .7rem; letter-spacing: .09em; text-transform: uppercase; }
+    .stat strong { margin-top: 5px; color: var(--gold); font-size: 1.55rem; }
+    .workspace { display: grid; grid-template-columns: minmax(260px, .75fr) minmax(0, 1.5fr) minmax(255px, .75fr); gap: 16px; align-items: start; }
+    .panel { min-width: 0; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); box-shadow: var(--shadow); }
+    .panel-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 18px 19px 13px; }
+    .panel-heading h2 { font-size: 1.2rem; }
+    .panel-heading small { color: var(--muted); }
+    .search { width: calc(100% - 30px); margin: 0 15px 14px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 11px; outline: 0; color: var(--ink); background: rgba(4,11,29,.4); }
+    .search:focus { border-color: var(--cyan); }
+    .tree { max-height: 650px; overflow: auto; padding: 0 13px 17px; }
+    .tree::-webkit-scrollbar { width: 7px; } .tree::-webkit-scrollbar-thumb { border-radius: 99px; background: rgba(174,194,233,.25); }
+    .tree-root, .tree-children { list-style: none; margin: 0; padding: 0; }
+    .tree-children { margin-left: 17px; padding-left: 12px; border-left: 1px solid rgba(174,194,233,.2); }
+    .tree-item { position: relative; margin: 3px 0; }
+    .tree-row { width: 100%; display: flex; align-items: center; gap: 7px; padding: 8px 7px; border: 1px solid transparent; border-radius: 10px; text-align: left; color: var(--ink); background: transparent; }
+    .tree-row:hover, .tree-row.selected { border-color: rgba(94,230,226,.35); background: rgba(94,230,226,.1); }
+    .tree-row.selected .node-dot { background: var(--gold); box-shadow: 0 0 0 4px rgba(255,209,102,.12); }
+    .node-dot { flex: 0 0 9px; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); }
+    .node-label { overflow: hidden; text-overflow: ellipsis; line-height: 1.25; font-size: .86rem; }
+    .branch-toggle { display: grid; flex: 0 0 20px; width: 20px; height: 20px; place-items: center; border: 0; color: var(--muted); background: transparent; font-weight: 800; }
+    .tree-item.collapsed > .tree-children { display: none; }
+    .tree-item.hidden { display: none; }
+    .focus-panel { min-height: 650px; padding: clamp(20px, 4vw, 34px); background: linear-gradient(150deg, rgba(27,50,97,.95), rgba(17,31,65,.94)); }
+    .breadcrumb { color: var(--muted); font-size: .8rem; line-height: 1.5; }
+    .focus-panel h2 { margin-top: 14px; font-size: clamp(2rem, 4vw, 3.25rem); }
+    .focus-intro { max-width: 720px; color: #d8e4f9; font-size: 1rem; line-height: 1.65; margin: 17px 0 23px; }
+    .orbit-line { display: flex; gap: 10px; align-items: center; margin: 20px 0 22px; color: var(--cyan); font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; }
+    .orbit-line::before, .orbit-line::after { content: ""; height: 1px; flex: 1; background: var(--line); }
+    .children-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+    .child-card { min-height: 86px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; text-align: left; color: var(--ink); background: rgba(255,255,255,.055); transition: transform .18s ease, border-color .18s ease; }
+    .child-card:hover { transform: translateY(-2px); border-color: var(--cyan); }
+    .child-card strong { display: block; font-family: Georgia, serif; font-size: 1.03rem; }
+    .child-card small { display: block; margin-top: 7px; color: var(--muted); line-height: 1.35; }
+    .concept-box { margin-top: 24px; padding: 17px; border-left: 3px solid var(--gold); border-radius: 0 14px 14px 0; background: rgba(255,209,102,.08); }
+    .concept-box strong { color: var(--gold); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; }
+    .concept-box p { color: #e3ebfa; line-height: 1.55; margin: 8px 0 0; }
+    .answer-toggle { margin-top: 14px; padding: 9px 12px; border: 1px solid rgba(255,209,102,.42); border-radius: 10px; color: var(--gold); background: rgba(255,209,102,.08); font-weight: 700; }
+    .answer-toggle:hover { background: rgba(255,209,102,.16); }
+    .class-answer { display: none; margin-top: 13px; padding: 13px 14px; border-left: 2px solid var(--green); border-radius: 0 10px 10px 0; color: #e6f8ee; background: rgba(128,226,173,.1); line-height: 1.5; }
+    .class-answer.visible { display: block; animation: reveal .25s ease both; }
+    .side-panel { padding-bottom: 18px; }
+    .side-section { padding: 0 18px; }
+    .side-section + .side-section { margin-top: 19px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .side-section h3 { font-size: 1.14rem; }
+    .side-section p { color: var(--muted); font-size: .86rem; line-height: 1.5; }
+    .teacher-toggle { width: calc(100% - 36px); margin: 0 18px 18px; padding: 9px 12px; border: 1px solid rgba(188,156,255,.35); border-radius: 10px; color: var(--violet); background: rgba(188,156,255,.08); font-size: .8rem; font-weight: 700; }
+    .teacher-toggle:hover { border-color: var(--violet); background: rgba(188,156,255,.14); }
+    .teacher-guide { display: none; padding: 0 18px 18px; }
+    .teacher-guide.visible { display: block; animation: reveal .25s ease both; }
+    .teacher-guide ol { margin: 12px 0 0; padding-left: 20px; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+    .teacher-guide li + li { margin-top: 8px; }
+    .teacher-note { margin-top: 14px; padding: 11px 12px; border-left: 2px solid var(--cyan); border-radius: 0 9px 9px 0; color: #dce9fb; background: rgba(94,230,226,.08); font-size: .8rem; line-height: 1.45; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .tag { padding: 7px 9px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); font-size: .75rem; }
+    .challenge { padding: 15px; border: 1px solid rgba(188,156,255,.33); border-radius: 14px; background: rgba(188,156,255,.08); }
+    .challenge strong { color: var(--violet); font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; }
+    .challenge p { margin: 9px 0 13px; color: var(--ink); }
+    .challenge-option { width: 100%; margin-top: 7px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px; text-align: left; color: var(--ink); background: rgba(255,255,255,.05); font-size: .82rem; }
+    .challenge-option:hover { border-color: var(--violet); }
+    .challenge-option.correct { border-color: var(--green); background: rgba(128,226,173,.15); }
+    .challenge-option.wrong { border-color: var(--coral); background: rgba(255,148,126,.14); }
+    .map-file { display: none; }
+    .footer { margin-top: 17px; color: rgba(174,189,215,.66); text-align: center; font-size: .76rem; }
+    @keyframes reveal { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+    .focus-panel.reveal { animation: reveal .3s ease both; }
+    @media (max-width: 1080px) { .workspace { grid-template-columns: minmax(250px, .8fr) minmax(0, 1.4fr); } .side-panel { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } .side-section + .side-section { margin-top: 0; padding-top: 0; border-top: 0; } }
+    @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } .workspace { grid-template-columns: 1fr; } .tree { max-height: 410px; } .focus-panel { min-height: auto; } .side-panel { display: block; } .side-section + .side-section { margin-top: 19px; padding-top: 18px; border-top: 1px solid var(--line); } }
+    @media (max-width: 520px) { .shell { width: min(100% - 22px, 1380px); padding-top: 16px; } .topbar { align-items: flex-start; } .actions .button:first-child { display: none; } .hero-copy { padding: 25px 20px; } h1 { font-size: 2.75rem; } .children-grid { grid-template-columns: 1fr; } .hero-stats { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="planet" aria-hidden="true"></span><div><strong>Astronomía: mapa de ideas</strong><small>Repaso guiado para 4 ESO</small></div></div>
+      <div class="actions"><a class="button" href="universo-flashcards.html">Flashcards</a><a class="button" href="universo-repaso.html">Cuestionario</a><button class="button" id="loadMapBtn" type="button">Cargar otro mapa</button><button class="button" id="collapseBtn" type="button">Plegar ramas</button><button class="button primary" id="challengeBtn" type="button">Modo reto</button><input class="map-file" id="mapFile" type="file" accept=".json,application/json"></div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy"><p class="eyebrow">Mapa mental interactivo</p><h1>Un viaje por las ideas del universo.</h1><p>Explora las ramas, selecciona un concepto y construye conexiones con el alumnado. El mapa parte del tema de astronomía y llega desde el Big Bang hasta la astrobiología.</p></div>
+      <div class="hero-stats"><div class="stat"><span class="stat-label">Ramas principales</span><strong id="branchCount">5</strong></div><div class="stat"><span class="stat-label">Conceptos</span><strong id="conceptCount">0</strong></div><div class="stat"><span class="stat-label">Explorados</span><strong id="visitedCount">0</strong></div><div class="stat"><span class="stat-label">Reto</span><strong id="challengeScore">0 / 0</strong></div></div>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel tree-panel"><div class="panel-heading"><h2>Mapa</h2><small id="mapTitle">Cargando...</small></div><label class="sr-only" for="search">Buscar conceptos</label><input class="search" id="search" type="search" placeholder="Buscar concepto..." autocomplete="off"><nav class="tree" id="tree" aria-label="Mapa mental"></nav></aside>
+      <section class="panel focus-panel" id="focusPanel"><div class="breadcrumb" id="breadcrumb"></div><h2 id="focusTitle"></h2><p class="focus-intro" id="focusIntro"></p><div class="orbit-line">Conecta con</div><div class="children-grid" id="childrenGrid"></div><div class="concept-box"><strong>Pregunta para el aula</strong><p id="classPrompt"></p><button class="answer-toggle" id="answerToggle" type="button" aria-expanded="false">Mostrar respuesta</button><div class="class-answer" id="classAnswer"></div></div></section>
+      <aside class="panel side-panel"><button class="teacher-toggle" id="teacherToggle" type="button" aria-expanded="false">Profesor · mostrar instrucciones</button><div class="teacher-guide" id="teacherGuide"><h3>Guía para proyectarlo</h3><ol><li>Comienza en el nodo principal y pide al alumnado que anticipe qué ideas aparecerán en cada rama.</li><li>Despliega una rama y selecciona los conceptos uno a uno para construir la explicación de forma gradual.</li><li>Usa la pregunta del aula antes de pulsar “Mostrar respuesta”. Deja que argumenten y comparen sus ideas.</li><li>Revela la respuesta cuando termine el debate y conecta el concepto con los nodos vecinos.</li><li>Activa “Modo reto” como cierre rápido o como comprobación entre dos grupos.</li></ol><div class="teacher-note">El panel está oculto por defecto para que la proyección mantenga el foco en el mapa y en la conversación.</div></div><div class="side-section"><div class="challenge"><strong>Modo reto</strong><p id="challengeQuestion">Pulsa el botón para comprobar si sabes dónde encaja un concepto.</p><div id="challengeOptions"></div><small id="challengeFeedback"></small></div></div></aside>
+    </section>
+    <p class="footer">Actividad de repaso · Ciencias · 4 ESO</p>
+  </main>
+
+  <script>
+    const fallbackMap = { title: 'Astronomía Mapa', root: { text: 'El universo y la Tierra', children: [
+      { text: 'El universo', children: [{ text: 'Origen y Evolución', children: [{ text: 'Big Bang' }, { text: 'Inflación' }, { text: 'Nucleosíntesis' }, { text: 'Recombinación' }] }, { text: 'Pruebas Científicas', children: [{ text: 'Expansión de galaxias' }, { text: 'Radiación de fondo de microondas' }] }, { text: 'Cuerpos Celestes', children: [{ text: 'Ciclo de vida estelar' }, { text: 'Vía Láctea' }, { text: 'Cúmulos globulares y abiertos' }, { text: 'Tipos de galaxias' }] }, { text: 'Medición de distancias', children: [{ text: 'Año-luz' }, { text: 'Unidad astronómica' }] }] },
+      { text: 'El sistema solar', children: [{ text: 'Origen nebular y acreción' }, { text: 'El Sol: estructura y viento solar' }, { text: 'Planetas', children: [{ text: 'Interiores o rocosos' }, { text: 'Exteriores o gaseosos' }, { text: 'Planetas enanos' }] }, { text: 'Cuerpos menores', children: [{ text: 'Satélites naturales' }, { text: 'Cinturón de asteroides' }, { text: 'Cinturón de Kuiper' }, { text: 'Nube de Oort' }] }] },
+      { text: 'La Tierra y la Luna', children: [{ text: 'Habitabilidad terrestre', children: [{ text: 'Atmósfera y efecto invernadero' }, { text: 'Campo magnético protector' }, { text: 'Agua líquida' }] }, { text: 'Movimientos terrestres', children: [{ text: 'Rotación: día y noche' }, { text: 'Traslación: estaciones y equinoccios' }] }, { text: 'Interacción con la Luna', children: [{ text: 'Fases lunares' }, { text: 'Eclipses solares y lunares' }, { text: 'Mareas vivas y muertas' }] }] },
+      { text: 'Origen de la vida', children: [{ text: 'Generación espontánea y biogénesis' }, { text: 'Teoría quimiosintética: coacervados' }, { text: 'Experimento de Miller-Urey' }, { text: 'Panspermia: origen extraterrestre' }, { text: 'Hipótesis: fuentes hidrotermales y mundo ARN' }] },
+      { text: 'La astrobiología', children: [{ text: 'Búsqueda en exoplanetas' }, { text: 'Biomarcadores: oxígeno y metano' }, { text: 'Misiones espaciales y rovers' }, { text: 'Organismos extremófilos' }] }
+    ] } };
+    const state = { map: null, selected: null, visited: new Set(), challenge: null, challengeAnswered: false, challengeScore: 0, collapsed: false };
+    const $ = id => document.getElementById(id);
+    const insight = {
+      'El universo': 'Estudia el origen, la evolución, las pruebas observacionales, los cuerpos celestes y las escalas de distancia.',
+      'El sistema solar': 'Es nuestro vecindario cósmico: una estrella central, planetas, cuerpos menores y la historia de su formación.',
+      'La Tierra y la Luna': 'Relaciona las condiciones que permiten la vida con los movimientos de la Tierra y las interacciones lunares.',
+      'Origen de la vida': 'Reúne las hipótesis y experimentos que intentan explicar cómo apareció la vida a partir de materia no viva.',
+      'La astrobiología': 'Busca vida fuera de la Tierra usando exoplanetas, biomarcadores, misiones espaciales y organismos extremos.',
+      'Big Bang': 'Modelo que describe un universo muy denso y caliente que comenzó a expandirse y continúa evolucionando.',
+      'Recombinación': 'Etapa en la que los electrones se unieron a los núcleos, el universo se volvió transparente y la luz pudo viajar libremente.',
+      'Radiación de fondo de microondas': 'Señal electromagnética antigua que llega desde todas las direcciones y conserva información del universo temprano.',
+      'Año-luz': 'Distancia que recorre la luz en un año; sirve para expresar distancias entre estrellas y galaxias.',
+      'Unidad astronómica': 'Distancia media entre la Tierra y el Sol; resulta práctica para medir distancias dentro del sistema solar.',
+      'Campo magnético protector': 'Desvía parte del viento solar y ayuda a proteger la atmósfera y la vida de partículas energéticas.',
+      'Biomarcadores: oxígeno y metano': 'La presencia simultánea de ciertos gases puede ser una pista para investigar actividad biológica en otros mundos.'
+    };
+    const prompts = ['¿Qué ejemplo del tema te ayuda a explicar este concepto?', '¿Qué concepto de esta rama debería estudiarse antes y por qué?', '¿Cómo se relaciona esta idea con la vida en la Tierra?', '¿Qué observación o experimento podría apoyar esta idea?'];
+    const answers = {
+      'El universo': 'Es todo lo que existe: espacio, tiempo, materia y energía. Incluye galaxias, estrellas, planetas y las leyes que describen su evolución.',
+      'Origen y Evolución': 'El universo comenzó en un estado muy caliente y denso y ha evolucionado mediante expansión, enfriamiento y formación de estructuras.',
+      'Big Bang': 'Es el modelo que explica que el universo se expandió desde un estado inicial extremadamente caliente y denso. No describe una explosión dentro del espacio, sino la expansión del propio espacio.',
+      'Inflación': 'Fue una expansión enormemente rápida del universo durante una fracción muy pequeña de segundo, anterior a la expansión que observamos hoy.',
+      'Nucleosíntesis': 'Es la formación de núcleos atómicos. En el universo temprano se formaron sobre todo hidrógeno y helio; las estrellas fabrican elementos más pesados mediante fusión.',
+      'Recombinación': 'Ocurrió cuando los electrones se unieron a los núcleos para formar átomos neutros. El universo se volvió transparente y la luz pudo viajar libremente.',
+      'Pruebas Científicas': 'La expansión de las galaxias y la radiación de fondo de microondas son dos pruebas fundamentales que apoyan el modelo del Big Bang.',
+      'Expansión de galaxias': 'Las galaxias lejanas se alejan y, en general, cuanto más lejos están, mayor es su velocidad de alejamiento. Es una evidencia de la expansión del universo.',
+      'Radiación de fondo de microondas': 'Es la radiación antigua que quedó del universo temprano. Llega prácticamente desde todas las direcciones y permite estudiar cómo era el cosmos cuando se volvió transparente.',
+      'Cuerpos Celestes': 'Son objetos naturales del espacio, como estrellas, planetas, satélites, asteroides, cometas y galaxias.',
+      'Ciclo de vida estelar': 'Las estrellas nacen en nebulosas, pasan gran parte de su vida fusionando hidrógeno y terminan de forma distinta según su masa: como enanas blancas, estrellas de neutrones o agujeros negros.',
+      'Vía Láctea': 'Es la galaxia espiral donde se encuentra el Sistema Solar. El Sol está situado en uno de sus brazos, lejos del centro galáctico.',
+      'Tipos de galaxias': 'Se clasifican principalmente en espirales, elípticas e irregulares según su forma y organización.',
+      'Medición de distancias': 'Se usan distintas unidades según la escala: la unidad astronómica para el Sistema Solar y el año-luz para distancias entre estrellas y galaxias.',
+      'Año-luz': 'Es una unidad de distancia, no de tiempo: equivale a la distancia que recorre la luz en un año.',
+      'Unidad astronómica': 'Es la distancia media entre la Tierra y el Sol, aproximadamente 150 millones de kilómetros.',
+      'El sistema solar': 'Está formado por el Sol y todos los cuerpos que orbitan a su alrededor: planetas, planetas enanos, satélites, asteroides y cometas.',
+      'Origen nebular y acreción': 'El Sistema Solar se formó a partir de una nube de gas y polvo que colapsó. La materia se fue agrupando por gravedad mediante un proceso llamado acreción.',
+      'El Sol: estructura y viento solar': 'El Sol es una estrella cuya energía procede de la fusión nuclear. Su viento solar es un flujo de partículas que puede interactuar con los campos magnéticos planetarios.',
+      'Planetas': 'Son cuerpos que orbitan una estrella, tienen forma casi esférica por su propia gravedad y han limpiado su órbita de objetos comparables.',
+      'Interiores o rocosos': 'Mercurio, Venus, la Tierra y Marte son pequeños, densos y tienen superficies sólidas rocosas.',
+      'Exteriores o gaseosos': 'Júpiter, Saturno, Urano y Neptuno son grandes y están formados principalmente por gases y hielos, con sistemas de anillos y satélites.',
+      'Planetas enanos': 'Orbitan una estrella y tienen forma casi esférica, pero no han limpiado su órbita de otros cuerpos.',
+      'Cuerpos menores': 'Son objetos como satélites, asteroides y cometas, más pequeños que los planetas y con composiciones y órbitas variadas.',
+      'La Tierra y la Luna': 'La Tierra es un planeta rocoso con agua líquida y vida; la Luna es su satélite natural y afecta a fenómenos como las fases y las mareas.',
+      'Habitabilidad terrestre': 'La vida terrestre depende de factores como agua líquida, una atmósfera adecuada, temperatura compatible y protección frente a radiación energética.',
+      'Atmósfera y efecto invernadero': 'La atmósfera retiene parte del calor mediante el efecto invernadero natural. Sin él la Tierra sería demasiado fría, pero un exceso provoca calentamiento.',
+      'Campo magnético protector': 'Generado principalmente por el movimiento del material metálico del interior terrestre, desvía parte del viento solar y protege la atmósfera.',
+      'Agua líquida': 'Es esencial para la vida conocida porque permite reacciones químicas y transporte de sustancias. En la Tierra existe gracias a su temperatura y presión adecuadas.',
+      'Movimientos terrestres': 'La rotación produce el día y la noche; la traslación alrededor del Sol, junto con la inclinación del eje terrestre, produce las estaciones.',
+      'Interacción con la Luna': 'La gravedad de la Luna y su posición respecto al Sol y la Tierra explican las fases, los eclipses y las mareas.',
+      'Origen de la vida': 'Existen varias hipótesis científicas sobre cómo la materia no viva pudo dar lugar a moléculas y sistemas cada vez más complejos capaces de evolucionar.',
+      'Generación espontánea y biogénesis': 'La biogénesis afirma que todo ser vivo procede de otro ser vivo. Los experimentos de Pasteur ayudaron a rechazar la generación espontánea.',
+      'Teoría quimiosintética: coacervados': 'Propone que moléculas sencillas pudieron formar moléculas orgánicas y agrupaciones precelulares, como coacervados, antes de aparecer las primeras células.',
+      'Experimento de Miller-Urey': 'Simuló condiciones de la Tierra primitiva y obtuvo moléculas orgánicas, como aminoácidos, a partir de sustancias inorgánicas.',
+      'Panspermia: origen extraterrestre': 'Es la hipótesis de que algunos componentes o formas de vida pudieron llegar a la Tierra desde el espacio, aunque no explica necesariamente su origen último.',
+      'La astrobiología': 'Es la ciencia que estudia el origen, evolución y posible distribución de la vida en el universo.',
+      'Búsqueda en exoplanetas': 'Se investigan planetas que orbitan otras estrellas y se buscan condiciones compatibles con la vida, como temperatura adecuada y atmósfera.',
+      'Biomarcadores: oxígeno y metano': 'La presencia simultánea de oxígeno y metano en una atmósfera podría indicar procesos biológicos, porque ambos gases tienden a reaccionar entre sí.',
+      'Misiones espaciales y rovers': 'Las sondas y los rovers recogen imágenes, datos y muestras para estudiar otros cuerpos sin exponer directamente a las personas.',
+      'Organismos extremófilos': 'Son seres vivos capaces de vivir en condiciones extremas de temperatura, presión, acidez o salinidad. Ayudan a imaginar dónde podría existir vida fuera de la Tierra.'
+    };
+
+    function childrenOf(node) { return Array.isArray(node.children) ? node.children : []; }
+    function countNodes(node) { return 1 + childrenOf(node).reduce((sum, child) => sum + countNodes(child), 0); }
+    function rootBranches() { return childrenOf(state.map.root); }
+    function breadcrumbFor(target, node = state.map.root, trail = [node.text]) { if (node === target) return trail; for (const child of childrenOf(node)) { const result = breadcrumbFor(target, child, [...trail, child.text]); if (result) return result; } return null; }
+    function renderTree() { const tree = $('tree'); tree.innerHTML = ''; const rootList = document.createElement('ul'); rootList.className = 'tree-root'; rootList.appendChild(treeNode(state.map.root, true)); tree.appendChild(rootList); }
+    function treeNode(node, isRoot = false) {
+      const item = document.createElement('li'); item.className = 'tree-item'; item.dataset.text = node.text.toLowerCase();
+      const row = document.createElement('div'); row.className = 'tree-row' + (state.selected === node ? ' selected' : '');
+      const kids = childrenOf(node); const toggle = document.createElement('button'); toggle.className = 'branch-toggle'; toggle.type = 'button'; toggle.textContent = kids.length ? '−' : ''; toggle.setAttribute('aria-label', kids.length ? 'Plegar o desplegar rama' : 'Concepto');
+      const select = document.createElement('button'); select.className = 'tree-row'; select.type = 'button'; select.innerHTML = '<span class="node-dot"></span><span class="node-label"></span>'; select.querySelector('.node-label').textContent = node.text; select.addEventListener('click', () => selectNode(node));
+      row.replaceWith(select); item.appendChild(select);
+      if (kids.length) { toggle.addEventListener('click', event => { event.stopPropagation(); item.classList.toggle('collapsed'); toggle.textContent = item.classList.contains('collapsed') ? '+' : '−'; }); select.prepend(toggle); }
+      if (kids.length) { const list = document.createElement('ul'); list.className = 'tree-children'; kids.forEach(child => list.appendChild(treeNode(child))); item.appendChild(list); }
+      return item;
+    }
+    function selectNode(node) { state.selected = node; state.visited.add(node.text); renderTree(); renderFocus(); updateStats(); }
+    function renderFocus() { const node = state.selected; $('focusPanel').classList.remove('reveal'); void $('focusPanel').offsetWidth; $('focusPanel').classList.add('reveal'); $('breadcrumb').textContent = breadcrumbFor(node).join('  /  '); $('focusTitle').textContent = node.text; $('focusIntro').textContent = insight[node.text] || (childrenOf(node).length ? 'Esta rama agrupa conceptos relacionados. Explora sus nodos y explica cómo se conectan.' : 'Concepto clave del mapa. Intenta definirlo y relacionarlo con la rama que lo contiene.'); const grid = $('childrenGrid'); grid.innerHTML = ''; const kids = childrenOf(node); if (!kids.length) { const card = document.createElement('div'); card.className = 'child-card'; card.innerHTML = '<strong>Último nodo de esta rama</strong><small>Busca un ejemplo, una definición y una conexión con el concepto anterior.</small>'; grid.appendChild(card); } else kids.forEach(child => { const button = document.createElement('button'); button.className = 'child-card'; button.type = 'button'; button.innerHTML = '<strong></strong><small>Explorar esta conexión</small>'; button.querySelector('strong').textContent = child.text; button.addEventListener('click', () => selectNode(child)); grid.appendChild(button); }); $('classPrompt').textContent = prompts[state.visited.size % prompts.length]; $('classAnswer').textContent = answers[node.text] || 'La respuesta debe relacionar este concepto con la rama «' + (breadcrumbFor(node)[1] || state.map.root.text) + '». Pide al alumnado que lo defina, ponga un ejemplo y explique por qué pertenece a ese grupo.'; $('classAnswer').classList.remove('visible'); $('answerToggle').textContent = 'Mostrar respuesta'; $('answerToggle').setAttribute('aria-expanded', 'false'); }
+    function updateStats() { $('conceptCount').textContent = countNodes(state.map.root); $('branchCount').textContent = rootBranches().length; $('visitedCount').textContent = state.visited.size; $('challengeScore').textContent = state.challengeScore + ' / ' + (state.challenge ? 1 : 0); }
+    function filterTree() { const term = $('search').value.trim().toLowerCase(); document.querySelectorAll('.tree-item').forEach(item => { const own = item.dataset.text.includes(term); const descendant = [...item.querySelectorAll('.tree-item')].some(child => child.dataset.text.includes(term)); item.classList.toggle('hidden', Boolean(term) && !own && !descendant); if (term && descendant) item.classList.remove('collapsed'); }); }
+    function collapseAll() { state.collapsed = !state.collapsed; document.querySelectorAll('.tree-item').forEach(item => { if (item.querySelector(':scope > .tree-children')) { item.classList.toggle('collapsed', state.collapsed); const button = item.querySelector(':scope > .tree-row .branch-toggle'); if (button) button.textContent = state.collapsed ? '+' : '−'; } }); $('collapseBtn').textContent = state.collapsed ? 'Desplegar ramas' : 'Plegar ramas'; }
+    function startChallenge() { const leaves = []; function collect(node, parent = null) { if (!childrenOf(node).length && parent) leaves.push({ node, parent }); childrenOf(node).forEach(child => collect(child, node)); } collect(state.map.root); const picked = leaves[Math.floor(Math.random() * leaves.length)]; const branches = rootBranches().map(branch => branch.text); const correctBranch = breadcrumbFor(picked.node)[1] || branches[0]; const options = [correctBranch, ...branches.filter(branch => branch !== correctBranch).sort(() => Math.random() - .5).slice(0, 2)].sort(() => Math.random() - .5); state.challenge = { node: picked.node, correctBranch, options }; state.challengeAnswered = false; $('challengeQuestion').textContent = '¿En qué gran recorrido encaja «' + picked.node.text + '»?'; $('challengeFeedback').textContent = ''; const wrap = $('challengeOptions'); wrap.innerHTML = ''; options.forEach(option => { const button = document.createElement('button'); button.className = 'challenge-option'; button.type = 'button'; button.textContent = option; button.addEventListener('click', () => answerChallenge(button, option)); wrap.appendChild(button); }); }
+    function answerChallenge(button, option) { if (state.challengeAnswered) return; state.challengeAnswered = true; const correct = option === state.challenge.correctBranch; button.classList.add(correct ? 'correct' : 'wrong'); document.querySelectorAll('.challenge-option').forEach(optionButton => { optionButton.disabled = true; if (optionButton.textContent === state.challenge.correctBranch) optionButton.classList.add('correct'); }); if (correct) { state.challengeScore++; $('challengeFeedback').textContent = 'Correcto. Has encontrado su recorrido.'; } else $('challengeFeedback').textContent = 'Casi. La rama correcta es «' + state.challenge.correctBranch + '».'; updateStats(); }
+    async function loadMap(data) { state.map = data; state.selected = data.root; state.visited = new Set([data.root.text]); $('mapTitle').textContent = data.title || 'Mapa mental'; $('app'); renderTree(); renderFocus(); updateStats(); }
+    $('search').addEventListener('input', filterTree); $('collapseBtn').addEventListener('click', collapseAll); $('challengeBtn').addEventListener('click', startChallenge); $('loadMapBtn').addEventListener('click', () => $('mapFile').click()); $('mapFile').addEventListener('change', event => { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { try { loadMap(JSON.parse(reader.result)); } catch { alert('No se ha podido leer este mapa JSON.'); } }; reader.readAsText(file, 'UTF-8'); });
+    $('teacherToggle').addEventListener('click', () => { const guide = $('teacherGuide'); const visible = guide.classList.toggle('visible'); $('teacherToggle').textContent = visible ? 'Profesor · ocultar instrucciones' : 'Profesor · mostrar instrucciones'; $('teacherToggle').setAttribute('aria-expanded', String(visible)); });
+    $('answerToggle').addEventListener('click', () => { const answer = $('classAnswer'); const visible = answer.classList.toggle('visible'); $('answerToggle').textContent = visible ? 'Ocultar respuesta' : 'Mostrar respuesta'; $('answerToggle').setAttribute('aria-expanded', String(visible)); });
+    fetch('MAPAMENTALUNIVERSO.json').then(response => response.ok ? response.json() : Promise.reject()).then(loadMap).catch(() => loadMap(fallbackMap));
+  </script>
+</body>
+</html>

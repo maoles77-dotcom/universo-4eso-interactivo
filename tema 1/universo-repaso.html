@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Universo | Repaso 4 ESO</title>
+  <style>
+    :root {
+      --ink: #f6f8ff;
+      --muted: #aebbd2;
+      --deep: #080f24;
+      --night: #101b3b;
+      --panel: rgba(21, 35, 72, .88);
+      --line: rgba(174, 194, 235, .2);
+      --cyan: #5ee6e2;
+      --gold: #ffd166;
+      --coral: #ff8e7d;
+      --green: #77e0ad;
+      --shadow: 0 24px 70px rgba(1, 6, 20, .35);
+    }
+
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--deep); }
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 84% 9%, rgba(94, 230, 226, .15) 0 2px, transparent 3px),
+        radial-gradient(circle at 17% 76%, rgba(255, 209, 102, .13) 0 2px, transparent 3px),
+        radial-gradient(circle at 75% 66%, rgba(255, 142, 125, .1) 0 1px, transparent 2px),
+        linear-gradient(145deg, #080f24 0%, #101b3b 56%, #182551 100%);
+      background-size: 260px 220px, 310px 280px, 190px 170px, auto;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1180px, calc(100% - 36px)); margin: 0 auto; padding: 28px 0 46px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 22px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .planet-mark { position: relative; width: 42px; height: 42px; border-radius: 50%; background: #ffb86b; box-shadow: inset -9px -7px 0 #e87966, 0 0 0 7px rgba(255, 209, 102, .08); }
+    .planet-mark::after { content: ""; position: absolute; width: 56px; height: 15px; left: -8px; top: 13px; border: 3px solid var(--cyan); border-radius: 50%; transform: rotate(-19deg); }
+    .brand strong { display: block; font-family: Georgia, serif; font-size: 1.15rem; letter-spacing: .02em; }
+    .brand small { color: var(--muted); font-size: .78rem; }
+    .top-actions { display: flex; align-items: center; gap: 9px; }
+    .icon-btn, .ghost-btn { border: 1px solid var(--line); color: var(--ink); background: rgba(255,255,255,.06); border-radius: 12px; min-height: 42px; padding: 8px 13px; }
+    .icon-btn:hover, .ghost-btn:hover { border-color: var(--cyan); background: rgba(94,230,226,.1); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    .intro { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(250px, .7fr); gap: 24px; align-items: stretch; margin-bottom: 24px; }
+    .hero, .loader { border: 1px solid var(--line); background: var(--panel); box-shadow: var(--shadow); border-radius: 24px; }
+    .hero { padding: clamp(25px, 5vw, 54px); position: relative; overflow: hidden; }
+    .hero::before { content: ""; position: absolute; width: 230px; height: 230px; border-radius: 50%; right: -86px; top: -76px; background: rgba(94,230,226,.13); box-shadow: 0 0 0 32px rgba(94,230,226,.035), 0 0 0 65px rgba(94,230,226,.02); }
+    .eyebrow { margin: 0 0 15px; color: var(--cyan); text-transform: uppercase; letter-spacing: .14em; font-weight: 700; font-size: .78rem; }
+    h1, h2, h3 { font-family: Georgia, serif; line-height: 1.06; margin: 0; }
+    h1 { max-width: 690px; font-size: clamp(2.65rem, 7vw, 5.5rem); font-weight: 700; letter-spacing: -.035em; }
+    .hero p { max-width: 600px; color: var(--muted); line-height: 1.6; font-size: 1.04rem; margin: 22px 0 0; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 26px; }
+    .pill { padding: 8px 12px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); background: rgba(255,255,255,.045); font-size: .82rem; }
+    .loader { padding: 24px; display: flex; flex-direction: column; justify-content: center; }
+    .loader h2 { font-size: 1.35rem; margin-bottom: 10px; }
+    .loader p { color: var(--muted); line-height: 1.5; font-size: .91rem; margin: 0 0 18px; }
+    .file-label { display: flex; justify-content: center; align-items: center; min-height: 48px; padding: 10px 16px; border-radius: 13px; color: var(--deep); background: var(--gold); font-weight: 700; transition: transform .2s ease, filter .2s ease; }
+    .file-label:hover { transform: translateY(-2px); filter: brightness(1.06); }
+    #csvFile { display: none; }
+    .load-status { min-height: 22px; color: var(--muted); font-size: .8rem; margin-top: 12px; }
+
+    .app { display: none; }
+    .app.ready { display: block; }
+    .stats { display: grid; grid-template-columns: 1.5fr repeat(3, minmax(100px, .5fr)); gap: 12px; margin-bottom: 17px; }
+    .stat { min-height: 77px; padding: 15px 17px; border: 1px solid var(--line); border-radius: 16px; background: rgba(11, 22, 50, .7); }
+    .stat-label { display: block; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px; }
+    .stat-value { font-size: 1.25rem; font-weight: 700; }
+    .progress-card { display: flex; align-items: center; gap: 14px; }
+    .progress-track { height: 9px; overflow: hidden; flex: 1; border-radius: 99px; background: rgba(255,255,255,.1); }
+    .progress-fill { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--cyan), var(--gold)); transition: width .45s ease; }
+    .quiz-card { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr); gap: 22px; padding: clamp(20px, 4vw, 35px); border: 1px solid var(--line); border-radius: 24px; background: rgba(15, 29, 63, .93); box-shadow: var(--shadow); }
+    .question-kicker { color: var(--gold); font-weight: 700; font-size: .84rem; letter-spacing: .08em; text-transform: uppercase; }
+    .question { font-size: clamp(1.45rem, 2.7vw, 2.05rem); margin: 12px 0 17px; line-height: 1.18; }
+    .hint { display: flex; gap: 10px; align-items: flex-start; padding: 13px 15px; color: #dbe8ff; border-left: 3px solid var(--cyan); background: rgba(94,230,226,.08); border-radius: 0 12px 12px 0; line-height: 1.45; font-size: .9rem; }
+    .hint b { color: var(--cyan); white-space: nowrap; }
+    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 22px; }
+    .option { min-height: 77px; text-align: left; display: flex; align-items: flex-start; gap: 12px; padding: 14px 15px; color: var(--ink); border: 1px solid var(--line); border-radius: 15px; background: rgba(255,255,255,.055); transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+    .option:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--cyan); background: rgba(94,230,226,.1); }
+    .option:disabled { cursor: default; }
+    .option-letter { display: grid; flex: 0 0 28px; height: 28px; place-items: center; border-radius: 50%; color: var(--deep); background: var(--cyan); font-weight: 800; }
+    .option-text { padding-top: 3px; line-height: 1.34; font-size: .95rem; }
+    .option.correct { border-color: var(--green); background: rgba(119,224,173,.16); }
+    .option.correct .option-letter { background: var(--green); }
+    .option.wrong { border-color: var(--coral); background: rgba(255,142,125,.15); }
+    .option.wrong .option-letter { background: var(--coral); }
+    .empty-question { margin-top: 22px; padding: 25px; border: 1px dashed var(--line); border-radius: 16px; color: var(--muted); }
+    .side-panel { min-height: 100%; display: flex; flex-direction: column; gap: 14px; padding: 19px; border: 1px solid rgba(255,255,255,.09); border-radius: 18px; background: rgba(4, 12, 31, .35); }
+    .side-panel h3 { font-size: 1.15rem; }
+    .side-panel p { color: var(--muted); line-height: 1.5; font-size: .9rem; margin: 0; }
+    .answer-box { display: none; padding: 16px; border-radius: 14px; background: rgba(119,224,173,.11); border: 1px solid rgba(119,224,173,.38); }
+    .answer-box.visible { display: block; animation: rise .3s ease both; }
+    .answer-label { color: var(--green); font-size: .74rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+    .answer-text { margin: 7px 0 0; font-size: .95rem; line-height: 1.45; }
+    .rationale { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(119,224,173,.23); color: var(--muted); font-size: .83rem; line-height: 1.45; }
+    .side-spacer { flex: 1; }
+    .next-btn, .restart-btn { border: 0; border-radius: 13px; min-height: 48px; padding: 11px 17px; color: var(--deep); background: var(--cyan); font-weight: 800; }
+    .next-btn:hover, .restart-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .next-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+    .finish { display: none; text-align: center; padding: 62px 24px; border: 1px solid var(--line); border-radius: 24px; background: var(--panel); box-shadow: var(--shadow); }
+    .finish.visible { display: block; animation: rise .4s ease both; }
+    .finish-orbit { width: 75px; height: 75px; margin: 0 auto 20px; display: grid; place-items: center; border: 2px solid var(--cyan); border-radius: 50%; color: var(--gold); font-size: 2rem; box-shadow: 0 0 0 10px rgba(94,230,226,.06), 0 0 0 20px rgba(94,230,226,.03); }
+    .finish h2 { font-size: clamp(2rem, 5vw, 3.7rem); }
+    .finish p { color: var(--muted); line-height: 1.55; max-width: 600px; margin: 16px auto 25px; }
+    .footer { margin-top: 18px; text-align: center; color: rgba(174,187,210,.68); font-size: .76rem; }
+    .toast { position: fixed; left: 50%; bottom: 22px; z-index: 5; transform: translate(-50%, 20px); padding: 12px 17px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: #172650; box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: .25s ease; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 820px) {
+      .intro, .quiz-card { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr 1fr; }
+      .progress-card { grid-column: 1 / -1; }
+      .side-panel { min-height: 0; }
+    }
+    @media (max-width: 560px) {
+      .shell { width: min(100% - 24px, 1180px); padding-top: 17px; }
+      .topbar { align-items: flex-start; }
+      .top-actions .ghost-btn { display: none; }
+      .hero { padding: 25px 21px; border-radius: 19px; }
+      h1 { font-size: 2.85rem; }
+      .options { grid-template-columns: 1fr; }
+      .stats { gap: 8px; }
+      .stat { min-height: 72px; padding: 12px 10px; }
+      .stat-label { font-size: .62rem; }
+      .stat-value { font-size: 1.08rem; }
+      .quiz-card { padding: 18px 15px; border-radius: 19px; }
+      .question { font-size: 1.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="planet-mark" aria-hidden="true"></span><div><strong>Exploradores del universo</strong><small>Repaso de 4 ESO</small></div></div>
+      <div class="top-actions"><a class="ghost-btn" href="universo-mapa-interactivo.html">Mapa mental</a><a class="ghost-btn" href="universo-flashcards.html">Flashcards</a><button class="ghost-btn" id="changeBtn" type="button">Cambiar CSV</button><button class="ghost-btn" id="shuffleBtn" type="button">Mezclar preguntas</button><button class="icon-btn" id="soundBtn" type="button" aria-label="Activar o desactivar sonidos">Sonido: no</button></div>
+    </header>
+
+    <section class="intro" id="intro">
+      <div class="hero">
+        <p class="eyebrow">Mision de repaso · 26 coordenadas</p>
+        <h1>Viaja por el universo, una pregunta cada vez.</h1>
+        <p>Comprueba lo que sabes sobre galaxias, estrellas, cosmologia y nuestro lugar en el espacio. Lee la pista, elige una respuesta y descubre la explicacion.</p>
+        <div class="hero-meta"><span class="pill">Galaxias</span><span class="pill">Estrellas</span><span class="pill">Cosmologia</span><span class="pill">Sistema Solar</span></div>
+      </div>
+      <aside class="loader">
+        <h2>Preparar la mision</h2>
+        <p>La pagina intenta cargar automaticamente el CSV de esta carpeta. Tambien puedes seleccionar cualquier cuestionario CSV.</p>
+        <label class="file-label" for="csvFile">Cargar cuestionario CSV</label>
+        <input id="csvFile" type="file" accept=".csv,text/csv">
+        <div class="load-status" id="loadStatus" role="status">Buscando el cuestionario...</div>
+      </aside>
+    </section>
+
+    <section class="app" id="app" aria-live="polite">
+      <div class="stats">
+        <div class="stat progress-card"><div class="progress-track" aria-label="Progreso"><div class="progress-fill" id="progressFill"></div></div><strong id="progressText">1 / 26</strong></div>
+        <div class="stat"><span class="stat-label">Aciertos</span><span class="stat-value" id="scoreValue">0</span></div>
+        <div class="stat"><span class="stat-label">Racha</span><span class="stat-value" id="streakValue">0</span></div>
+        <div class="stat"><span class="stat-label">Nivel</span><span class="stat-value" id="levelValue">Explorador</span></div>
+      </div>
+      <article class="quiz-card" id="quizCard">
+        <div class="question-area">
+          <div class="question-kicker" id="questionKicker">Pregunta 1</div>
+          <h2 class="question" id="questionText"></h2>
+          <div class="hint"><b>Pista</b><span id="hintText"></span></div>
+          <div class="options" id="options"></div>
+        </div>
+        <aside class="side-panel">
+          <h3 id="feedbackTitle">Tu lectura del cosmos</h3>
+          <p id="feedbackPrompt">Elige una opcion para comprobar tu hipotesis.</p>
+          <div class="answer-box" id="answerBox"><div class="answer-label" id="answerLabel">Respuesta correcta</div><div class="answer-text" id="answerText"></div><div class="rationale" id="rationaleText"></div></div>
+          <div class="side-spacer"></div>
+          <button class="next-btn" id="nextBtn" type="button" disabled>Siguiente pregunta</button>
+        </aside>
+      </article>
+      <section class="finish" id="finish"><div class="finish-orbit" aria-hidden="true">★</div><h2>Mision completada</h2><p id="finishText"></p><button class="restart-btn" id="restartBtn" type="button">Volver a explorar</button></section>
+    </section>
+    <p class="footer">Actividad de repaso · Ciencias · 4 ESO</p>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const state = { questions: [], index: 0, score: 0, streak: 0, answered: false, sound: false };
+    const $ = (id) => document.getElementById(id);
+
+    function cleanKey(value) {
+      return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/^\uFEFF/, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    function parseCSV(text) {
+      text = text.replace(/^\uFEFF/, '');
+      const firstLine = text.split(/\r?\n/).find(line => line.trim()) || '';
+      const counts = [',', ';', '\t'].map(delimiter => ({ delimiter, count: firstLine.split(delimiter).length - 1 }));
+      const delimiter = counts.sort((a, b) => b.count - a.count)[0].delimiter;
+      const rows = [];
+      let row = [], cell = '', quoted = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i], next = text[i + 1];
+        if (char === '"' && quoted && next === '"') { cell += '"'; i++; continue; }
+        if (char === '"') { quoted = !quoted; continue; }
+        if (char === delimiter && !quoted) { row.push(cell); cell = ''; continue; }
+        if ((char === '\n' || char === '\r') && !quoted) {
+          if (char === '\r' && next === '\n') i++;
+          row.push(cell); if (row.some(value => value.trim())) rows.push(row); row = []; cell = ''; continue;
+        }
+        cell += char;
+      }
+      if (cell.length || row.length) { row.push(cell); rows.push(row); }
+      const headers = rows.shift().map(value => value.trim());
+      return rows.map(values => Object.fromEntries(headers.map((header, i) => [header, (values[i] || '').trim()])));
+    }
+
+    function normalise(rows) {
+      const headers = Object.keys(rows[0] || {});
+      const headerFor = (aliases) => headers.find(header => aliases.some(alias => cleanKey(header) === cleanKey(alias))) || '';
+      const fuzzyHeader = (patterns, excluded = []) => headers.find(header => patterns.some(pattern => cleanKey(header).includes(pattern)) && !excluded.some(pattern => cleanKey(header).includes(pattern))) || '';
+      const value = (row, names) => names.map(name => row[headerFor([name])]).find(item => item !== undefined && item !== null && String(item).trim())?.trim() || '';
+      const questionHeader = headerFor(['Question', 'Pregunta', 'Enunciado', 'Question text', 'Texto']) || fuzzyHeader(['question', 'pregunta', 'enunciado']);
+      const answerHeader = headerFor(['Correct Answer', 'Respuesta correcta', 'Respuesta', 'Correcta', 'Correct option', 'Answer']) || fuzzyHeader(['correct', 'respuesta', 'answer'], ['option', 'opcion']);
+      const hintHeader = headerFor(['Hint', 'Pista', 'Ayuda', 'Clue']) || fuzzyHeader(['hint', 'pista', 'ayuda', 'clue']);
+      const rationaleHeader = headerFor(['Rationale', 'Explicacion', 'Explanation', 'Justificacion', 'Feedback']) || fuzzyHeader(['rationale', 'explic', 'justific', 'feedback']);
+      const optionHeaders = ['A', 'B', 'C', 'D'].map((letter, index) => {
+        const letterAliases = [letter, 'Option ' + letter, 'Opcion ' + letter, 'Respuesta ' + letter, 'Option ' + (index + 1), 'Opcion ' + (index + 1), 'Respuesta ' + (index + 1)];
+        return headerFor(letterAliases) || fuzzyHeader(['option' + letter.toLowerCase(), 'opcion' + letter.toLowerCase(), 'option' + (index + 1), 'opcion' + (index + 1), 'respuesta' + (index + 1)], ['correct']);
+      });
+      if (!questionHeader) throw new Error('No encuentro una columna de preguntas. Usa un encabezado como Question, Pregunta o Enunciado.');
+      return rows.map((row, index) => {
+        const question = row[questionHeader]?.trim() || '';
+        let options = optionHeaders.map((header, optionIndex) => ({ letter: String.fromCharCode(65 + optionIndex), text: header ? (row[header] || '').trim() : '' })).filter(option => option.text);
+        if (options.length === 1 && /[|;]/.test(options[0].text)) options = options[0].text.split(/[|;]/).map((text, optionIndex) => ({ letter: String.fromCharCode(65 + optionIndex), text: text.trim() })).filter(option => option.text);
+        const correct = answerHeader ? (row[answerHeader] || '').trim() : '';
+        const numericCorrect = (correct.match(/^[1-4]$/) || [])[0];
+        const letter = numericCorrect ? String.fromCharCode(64 + Number(numericCorrect)) : ((correct.match(/^([A-D])\./i) || [])[1]?.toUpperCase() || options.find(option => option.text.toLowerCase() === correct.toLowerCase())?.letter || '');
+        return { number: index + 1, question, hint: hintHeader ? (row[hintHeader] || '').trim() : '', options, correctLetter: letter, correctText: correct.replace(/^[A-D]\.|^[1-4]\.?/i, '').trim(), rationale: rationaleHeader ? (row[rationaleHeader] || '').trim() : '' };
+      }).filter(item => item.question);
+    }
+
+    async function loadCSV(text) {
+      const questions = normalise(parseCSV(text));
+      if (!questions.length) throw new Error('No se han encontrado preguntas validas.');
+      state.questions = questions; state.index = 0; state.score = 0; state.streak = 0;
+      $('app').classList.add('ready'); $('intro').style.display = 'none'; $('loadStatus').textContent = questions.length + ' preguntas listas.';
+      renderQuestion();
+    }
+
+    async function autoLoad() {
+      try { const response = await fetch('universo-cuestionario.csv'); if (!response.ok) throw new Error(); await loadCSV(await response.text()); }
+      catch (error) { $('loadStatus').textContent = 'Selecciona el CSV para comenzar.'; }
+    }
+
+    function renderQuestion() {
+      const item = state.questions[state.index]; state.answered = false;
+      $('finish').classList.remove('visible'); $('quizCard').style.display = 'grid'; $('questionKicker').textContent = 'Pregunta ' + (state.index + 1);
+      $('questionText').textContent = item.question; $('hintText').textContent = item.hint; $('progressText').textContent = (state.index + 1) + ' / ' + state.questions.length;
+      $('progressFill').style.width = ((state.index / state.questions.length) * 100) + '%'; $('scoreValue').textContent = state.score; $('streakValue').textContent = state.streak; $('levelValue').textContent = state.score > state.questions.length * .75 ? 'Astronomo' : state.score > state.questions.length * .4 ? 'Observador' : 'Explorador';
+      $('feedbackTitle').textContent = 'Tu lectura del cosmos'; $('feedbackPrompt').textContent = 'Elige una opcion para comprobar tu hipotesis.'; $('answerBox').classList.remove('visible'); $('nextBtn').disabled = true;
+      const options = $('options'); options.innerHTML = '';
+      if (!item.options.length) { options.innerHTML = '<div class="empty-question">Esta pregunta pide una respuesta razonada. Piensa, escríbela en tu cuaderno y pulsa para ver una posible respuesta.</div>'; $('nextBtn').disabled = false; }
+      item.options.forEach(option => { const button = document.createElement('button'); button.className = 'option'; button.type = 'button'; button.dataset.letter = option.letter; button.innerHTML = '<span class="option-letter">' + option.letter + '</span><span class="option-text"></span>'; button.querySelector('.option-text').textContent = option.text; button.addEventListener('click', () => answer(option.letter)); options.appendChild(button); });
+    }
+
+    function answer(letter) {
+      if (state.answered) return; state.answered = true; const item = state.questions[state.index]; const correct = letter === item.correctLetter;
+      if (correct) { state.score++; state.streak++; $('feedbackTitle').textContent = 'Orbita estable'; $('feedbackPrompt').textContent = 'Has conectado bien las ideas.'; } else { state.streak = 0; $('feedbackTitle').textContent = 'Ajuste de trayectoria'; $('feedbackPrompt').textContent = 'Revisa la explicacion y vuelve a intentarlo en la siguiente.'; }
+      document.querySelectorAll('.option').forEach(button => { button.disabled = true; if (button.dataset.letter === item.correctLetter) button.classList.add('correct'); if (button.dataset.letter === letter && !correct) button.classList.add('wrong'); });
+      $('answerLabel').textContent = correct ? 'Respuesta correcta' : 'Respuesta para revisar'; $('answerText').textContent = item.correctText || item.options.find(option => option.letter === item.correctLetter)?.text || 'Consulta la explicacion.'; $('rationaleText').textContent = item.rationale; $('answerBox').classList.add('visible'); $('nextBtn').disabled = false; $('scoreValue').textContent = state.score; $('streakValue').textContent = state.streak; $('progressFill').style.width = (((state.index + 1) / state.questions.length) * 100) + '%'; playTone(correct);
+    }
+
+    function next() { if (state.index >= state.questions.length - 1) return finish(); state.index++; renderQuestion(); }
+    function finish() { $('quizCard').style.display = 'none'; $('finish').classList.add('visible'); const percent = Math.round((state.score / state.questions.length) * 100); $('finishText').textContent = 'Has conseguido ' + state.score + ' aciertos de ' + state.questions.length + ' (' + percent + '%). El universo sigue siendo enorme, pero tu mapa mental ya tiene nuevas coordenadas.'; }
+    function shuffle() { for (let i = state.questions.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [state.questions[i], state.questions[j]] = [state.questions[j], state.questions[i]]; } state.index = 0; state.score = 0; state.streak = 0; renderQuestion(); toast('Preguntas mezcladas'); }
+    function toast(message) { const element = $('toast'); element.textContent = message; element.classList.add('show'); setTimeout(() => element.classList.remove('show'), 2200); }
+    function playTone(correct) { if (!state.sound || !window.AudioContext) return; const audio = new AudioContext(), oscillator = audio.createOscillator(), gain = audio.createGain(); oscillator.frequency.value = correct ? 660 : 190; oscillator.type = 'sine'; gain.gain.value = .035; oscillator.connect(gain); gain.connect(audio.destination); oscillator.start(); oscillator.stop(audio.currentTime + .12); }
+
+    $('csvFile').addEventListener('change', event => { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => loadCSV(reader.result).catch(error => { $('loadStatus').textContent = error.message; }); reader.readAsText(file, 'UTF-8'); });
+    $('changeBtn').addEventListener('click', () => $('csvFile').click());
+    $('nextBtn').addEventListener('click', next); $('restartBtn').addEventListener('click', () => { state.index = 0; state.score = 0; state.streak = 0; renderQuestion(); }); $('shuffleBtn').addEventListener('click', shuffle); $('soundBtn').addEventListener('click', () => { state.sound = !state.sound; $('soundBtn').textContent = 'Sonido: ' + (state.sound ? 'si' : 'no'); });
+    document.addEventListener('keydown', event => { if (/^[a-d]$/i.test(event.key)) document.querySelector('.option[data-letter="' + event.key.toUpperCase() + '"]')?.click(); if (event.key === 'Enter' && !$('nextBtn').disabled) next(); });
+    autoLoad();
+  </script>
+</body>
+</html>

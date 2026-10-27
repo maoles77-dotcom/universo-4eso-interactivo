@@ -1,0 +1,14 @@
+# Entornos y scripts locales
+.venv/
+*.ps1
+.mcp.json
+
+# Material del libro, documentos internos y laboratorio (no se publican)
+*.pdf
+*.docx
+*.pptx
+*.jpeg
+tema 2/LABORATORIO/
+
+# Exportación vacía de NotebookLM
+tema 2/Geología_Interior_Tarjetas.md

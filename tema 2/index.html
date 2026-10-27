@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tierra Viva · Tema 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #120b09; --bg2: #21130d; --panel: #26170f; --panel2: #33200f;
+    --line: rgba(255, 190, 140, .2); --ink: #fff6ec; --muted: #e0c9b4;
+    --magma: #ff5a1f; --lava: #ffb703; --ember: #ff8a3d; --sea: #2ec4b6;
+    --ok: #34d399; --bad: #ff4d6d; --rock: #8d6e63;
+    --radius: 22px; --shadow: 0 18px 50px rgba(0,0,0,.45);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { font-size: clamp(17px, 0.9vw + 9px, 26px); background: var(--bg); }
+  body {
+    margin: 0; min-height: 100vh; color: var(--ink); overflow-x: hidden;
+    font-family: "Nunito", "Segoe UI", sans-serif; line-height: 1.35;
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(255,90,31,.22), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(46,196,182,.12), transparent 60%),
+      linear-gradient(180deg, var(--bg2), var(--bg));
+    background-attachment: fixed;
+  }
+  h1, h2, h3, .display { font-family: "Baloo 2", "Trebuchet MS", sans-serif; line-height: 1.05; margin: 0; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  button { cursor: pointer; touch-action: manipulation; user-select: none; }
+  .hidden { display: none !important; }
+
+  /* Ascuas flotando */
+  .embers { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .embers i { position: absolute; bottom: -20px; width: 6px; height: 6px; border-radius: 50%;
+    background: radial-gradient(circle, #ffd27a, #ff5a1f 60%, transparent 70%);
+    animation: rise linear infinite; opacity: .0; }
+  @keyframes rise { 0% { transform: translate(0,0); opacity: 0 } 10% { opacity: .9 } 100% { transform: translate(var(--dx), -110vh); opacity: 0 } }
+
+  .shell { position: relative; z-index: 1; width: min(1500px, calc(100% - 32px)); margin: 0 auto; padding: 14px 0 40px; }
+
+  /* Barra superior */
+  .topbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+  .brand { display: flex; align-items: center; gap: 12px; background: none; border: 0; padding: 0; text-align: left; }
+  .brand svg { width: 3rem; height: 3rem; flex: none; }
+  .brand strong { display: block; font-family: "Baloo 2", sans-serif; font-size: 1.5rem; line-height: 1; }
+  .brand small { color: var(--muted); font-size: .8rem; }
+  .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+  .nav button, .btn {
+    min-height: 3rem; padding: .5rem .9rem; border-radius: 16px; border: 2px solid var(--line);
+    background: rgba(255,255,255,.06); font-weight: 800; font-size: 1rem; display: inline-flex; align-items: center; gap: .45rem; justify-content: center;
+    transition: transform .12s ease, background .2s, border-color .2s;
+  }
+  .nav button:active, .btn:active { transform: scale(.96); }
+  .nav button.on { background: linear-gradient(135deg, var(--magma), var(--ember)); border-color: transparent; color: #1a0b05; }
+  .btn.hot { background: linear-gradient(135deg, var(--magma), var(--lava)); color: #1a0b05; border-color: transparent; }
+  .btn.sea { background: rgba(46,196,182,.18); border-color: rgba(46,196,182,.55); }
+  .btn.big { min-height: 3.6rem; font-size: 1.15rem; padding: .6rem 1.4rem; }
+  .modetabs { width: 100%; margin-left: 0; }
+  .modetabs button { flex: 1 1 0; min-height: 3.5rem; font-size: 1.15rem; }
+  .langs { display: flex; border: 2px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .nav .langs button { min-height: 2.75rem; border: 0; border-radius: 0; padding: .4rem .85rem; border: 0; background: transparent; font-weight: 800; }
+  .nav .langs button.on { background: var(--sea); color: #04201d; }
+
+  .card { background: linear-gradient(180deg, rgba(51,32,15,.92), rgba(38,23,15,.92)); border: 2px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .en { display: block; color: #9fe8e0; font-style: italic; font-size: .82em; margin-top: .25em; font-weight: 700; }
+  .en::before { content: "🇬🇧 "; font-style: normal; }
+
+  /* ---------- PORTADA ---------- */
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; align-items: center; padding: clamp(18px, 3vw, 40px); overflow: hidden; position: relative; }
+  .hero h1 { font-size: clamp(2.6rem, 5vw, 4.6rem); letter-spacing: -.01em; }
+  .hero h1 span { background: linear-gradient(90deg, var(--lava), var(--magma)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { color: var(--muted); font-size: 1.15rem; max-width: 36ch; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .tag { padding: .3rem .8rem; border-radius: 99px; background: rgba(255,255,255,.07); border: 1px solid var(--line); font-size: .9rem; font-weight: 700; }
+  .scene { width: 100%; height: auto; border-radius: 18px; }
+  .modes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 18px; }
+  .mode { text-align: left; padding: 22px; border-radius: var(--radius); border: 2px solid var(--line); background: var(--panel); position: relative; overflow: hidden; min-height: 11rem; transition: transform .15s, border-color .2s; }
+  .mode:hover { border-color: var(--ember); transform: translateY(-3px); }
+  .mode .ico { font-size: 2.6rem; }
+  .mode h3 { font-size: 1.55rem; margin: .3rem 0 .2rem; }
+  .mode p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .mode::after { content: ""; position: absolute; right: -40px; bottom: -40px; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, rgba(255,90,31,.35), transparent 70%); }
+  .mode:nth-child(2)::after { background: radial-gradient(circle, rgba(255,183,3,.3), transparent 70%); }
+  .mode:nth-child(3)::after { background: radial-gradient(circle, rgba(46,196,182,.3), transparent 70%); }
+  .mode:nth-child(4)::after { background: radial-gradient(circle, rgba(141,110,99,.45), transparent 70%); }
+
+  /* Animaciones de la escena */
+  .plate-l { animation: driftL 6s ease-in-out infinite alternate; }
+  .plate-r { animation: driftR 6s ease-in-out infinite alternate; }
+  @keyframes driftL { to { transform: translateX(-14px); } }
+  @keyframes driftR { to { transform: translateX(14px); } }
+  .magma-rise { animation: pulse 2.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .55; } }
+  .smoke circle { animation: puff 4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  .smoke circle:nth-child(2) { animation-delay: 1.3s; } .smoke circle:nth-child(3) { animation-delay: 2.6s; }
+  @keyframes puff { 0% { transform: translateY(20px) scale(.4); opacity: 0 } 30% { opacity: .9 } 100% { transform: translateY(-22px) scale(1.25); opacity: 0 } }
+  .conv { animation: spin 14s linear infinite; transform-origin: center; transform-box: fill-box; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Barra de alumno / biopuntos ---------- */
+  .bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; margin-bottom: 14px; }
+  .who { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px; }
+  .who .avatar { width: 3.2rem; height: 3.2rem; border-radius: 50%; display: grid; place-items: center; font-size: 1.6rem; background: radial-gradient(circle at 35% 30%, var(--lava), var(--magma)); box-shadow: 0 0 22px rgba(255,90,31,.6); flex: none; }
+  .who .name { font-family: "Baloo 2", sans-serif; font-size: 1.9rem; line-height: 1; }
+  .who .sub { color: var(--muted); font-size: .9rem; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { min-height: 2.6rem; padding: .3rem .9rem; border-radius: 99px; border: 2px solid var(--line); background: rgba(255,255,255,.05); font-weight: 800; font-size: .92rem; }
+  .chip.on { background: rgba(255,183,3,.2); border-color: var(--lava); }
+
+  /* ---------- CUESTIONARIO ---------- */
+  .quiz { padding: clamp(18px, 2.5vw, 34px); }
+  .qhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .qtag { font-weight: 800; color: var(--lava); letter-spacing: .04em; font-size: 1rem; }
+  .qcount { color: var(--muted); font-weight: 800; }
+  .progress { height: 10px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; margin-bottom: 18px; }
+  .progress i { display: block; height: 100%; background: linear-gradient(90deg, var(--sea), var(--lava), var(--magma)); transition: width .4s; }
+  .question { font-size: clamp(1.6rem, 2.4vw, 2.5rem); font-weight: 800; margin: 0 0 6px; }
+  .multi-note { display: inline-block; margin: 6px 0 4px; padding: .25rem .8rem; border-radius: 99px; background: rgba(46,196,182,.18); border: 2px solid var(--sea); font-weight: 800; font-size: .95rem; }
+  .hint { margin-top: 10px; padding: 12px 16px; border-radius: 14px; background: rgba(255,183,3,.12); border: 2px dashed rgba(255,183,3,.5); font-size: 1.1rem; }
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  .opt { display: flex; align-items: center; gap: 14px; text-align: left; min-height: 5.2rem; padding: 14px 18px; border-radius: 18px; border: 3px solid var(--line); background: rgba(255,255,255,.05); font-size: clamp(1.1rem, 1.5vw, 1.5rem); font-weight: 700; transition: transform .12s, background .2s, border-color .2s; }
+  .opt:active { transform: scale(.98); }
+  .opt .let { flex: none; width: 2.6rem; height: 2.6rem; border-radius: 12px; display: grid; place-items: center; font-family: "Baloo 2", sans-serif; font-size: 1.5rem; background: rgba(255,255,255,.1); }
+  .opt:nth-child(1) .let { background: #ff5a1f; color: #1a0b05; } .opt:nth-child(2) .let { background: #ffb703; color: #1a0b05; }
+  .opt:nth-child(3) .let { background: #2ec4b6; color: #04201d; } .opt:nth-child(4) .let { background: #c084fc; color: #1d0a33; }
+  .opt.sel { border-color: var(--sea); background: rgba(46,196,182,.2); }
+  .opt.right { border-color: var(--ok); background: rgba(52,211,153,.25); animation: pop .4s; }
+  .opt.wrong { border-color: var(--bad); background: rgba(255,77,109,.18); opacity: .7; animation: shake .4s; }
+  .opt[disabled] { cursor: default; }
+  @keyframes pop { 50% { transform: scale(1.03); } }
+  @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .actions .spacer { flex: 1; }
+  .feedback { margin-top: 18px; padding: 16px 20px; border-radius: 18px; font-size: 1.2rem; display: flex; gap: 14px; align-items: flex-start; }
+  .feedback .big { font-size: 2.4rem; line-height: 1; }
+  .feedback.ok { background: rgba(52,211,153,.16); border: 2px solid var(--ok); }
+  .feedback.ko { background: rgba(255,77,109,.14); border: 2px solid var(--bad); }
+  .feedback.info { background: rgba(46,196,182,.14); border: 2px solid var(--sea); }
+  .feedback b { font-family: "Baloo 2", sans-serif; font-size: 1.5rem; display: block; }
+
+  /* ---------- TARJETAS ---------- */
+  .flip-wrap { perspective: 1600px; margin: 6px auto 0; max-width: 1100px; }
+  .flip { position: relative; width: 100%; min-height: min(24rem, 55vh); transform-style: preserve-3d; transition: transform .6s cubic-bezier(.3,1.4,.5,1); cursor: pointer; }
+  .flip.turned { transform: rotateY(180deg); }
+  .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 28px; padding: clamp(22px, 4vw, 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border: 3px solid var(--line); box-shadow: var(--shadow); }
+  .face.front { background: radial-gradient(circle at 20% 0%, rgba(255,183,3,.25), transparent 50%), linear-gradient(160deg, #3a1f10, #1f120c); }
+  .face.back { transform: rotateY(180deg); background: radial-gradient(circle at 80% 100%, rgba(46,196,182,.28), transparent 50%), linear-gradient(160deg, #0f2a2a, #10201d); }
+  .face .label { position: absolute; top: 18px; left: 22px; font-weight: 800; color: var(--muted); font-size: .95rem; letter-spacing: .08em; text-transform: uppercase; }
+  .face .txt { font-size: clamp(1.7rem, 3vw, 3rem); font-weight: 800; }
+  .face.back .txt { font-size: clamp(1.4rem, 2.4vw, 2.3rem); }
+  .face .tap { position: absolute; bottom: 16px; color: var(--muted); font-size: .9rem; }
+  .speak { position: absolute; top: 12px; right: 14px; width: 3.2rem; height: 3.2rem; border-radius: 50%; border: 2px solid var(--line); background: rgba(255,255,255,.08); font-size: 1.4rem; }
+  .cardnav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+  .cardnav .count { font-family: "Baloo 2", sans-serif; font-size: 1.6rem; min-width: 6ch; text-align: center; }
+
+  /* ---------- IMÁGENES MUDAS ---------- */
+  .mudas { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(300px, 1fr); gap: 16px; align-items: start; }
+  .diagram { padding: 12px; }
+  .diagram svg { width: 100%; height: auto; max-height: max(340px, calc(100vh - 380px)); display: block; border-radius: 16px; }
+  .mk { cursor: pointer; }
+  .mk circle.dot { fill: #fff6ec; stroke: #1a0b05; stroke-width: 4; transition: fill .2s; }
+  .mk text { font-family: "Baloo 2", sans-serif; font-size: 30px; font-weight: 800; fill: #1a0b05; pointer-events: none; }
+  .mk:hover circle.dot { fill: var(--lava); }
+  .mk.solved circle.dot { fill: var(--ok); }
+  .mk .pulse { fill: none; stroke: #fff6ec; stroke-width: 3; opacity: .7; animation: ring 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  .mk.solved .pulse { display: none; }
+  @keyframes ring { 0% { transform: scale(1); opacity: .7 } 100% { transform: scale(1.7); opacity: 0 } }
+  .leader { stroke: #fff6ec; stroke-width: 3; stroke-dasharray: 6 5; opacity: .9; }
+  .legend { padding: 16px; }
+  .legend h3 { font-size: 1.6rem; margin-bottom: 10px; }
+  .legend ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .legend li button { width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; min-height: 3.2rem; padding: 8px 12px; border-radius: 14px; border: 2px solid var(--line); background: rgba(255,255,255,.04); font-size: 1.1rem; font-weight: 800; }
+  .legend .n { flex: none; width: 2.3rem; height: 2.3rem; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #1a0b05; font-family: "Baloo 2", sans-serif; font-size: 1.3rem; }
+  .legend li.solved .n { background: var(--ok); }
+  .legend li:not(.solved) .lt { color: var(--muted); letter-spacing: .3em; }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tabs .chip { font-size: .85rem; min-height: 2.4rem; }
+
+  /* ---------- VOCABULARIO ---------- */
+  .vocab-tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  .search { flex: 1; min-width: 240px; min-height: 3.2rem; padding: .4rem 1rem; border-radius: 16px; border: 2px solid var(--line); background: rgba(0,0,0,.25); font-size: 1.1rem; }
+  .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 12px; }
+  .vcard { position: relative; padding: 16px 16px 14px; border-radius: 18px; border: 2px solid var(--line); background: var(--panel); text-align: left; min-height: 8.2rem; }
+  .vcard .emo { font-size: 1.8rem; }
+  .vcard .es { font-family: "Baloo 2", sans-serif; font-size: 1.6rem; line-height: 1.05; margin-top: 4px; }
+  .vcard .eng { color: #9fe8e0; font-weight: 800; font-size: 1.15rem; margin-top: 4px; }
+  .vcard.masked .eng, .vcard.masked-es .es { filter: blur(9px); }
+  .vcard .speak { width: 2.6rem; height: 2.6rem; font-size: 1.1rem; }
+
+  /* ---------- MODALES ---------- */
+  .overlay { position: fixed; inset: 0; z-index: 50; background: rgba(10,5,3,.78); backdrop-filter: blur(4px); display: grid; place-items: center; padding: 16px; }
+  .modal { width: min(900px, 100%); max-height: 92vh; overflow: auto; padding: clamp(18px, 3vw, 34px); }
+  .modal h2 { font-size: 2rem; margin-bottom: 10px; }
+  .modal textarea { width: 100%; min-height: 9rem; padding: 12px; border-radius: 14px; border: 2px solid var(--line); background: rgba(0,0,0,.3); font-size: 1.1rem; }
+  .roster { display: grid; gap: 8px; margin-top: 14px; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 14px; background: rgba(255,255,255,.05); }
+  .row .nm { flex: 1; font-weight: 800; font-size: 1.15rem; }
+  .row .pts { font-family: "Baloo 2", sans-serif; font-size: 1.6rem; min-width: 3ch; text-align: right; color: var(--lava); }
+  .row .turns { color: var(--muted); font-size: .85rem; min-width: 6ch; }
+  .row button { width: 2.8rem; height: 2.8rem; border-radius: 12px; border: 2px solid var(--line); background: rgba(255,255,255,.07); font-size: 1.3rem; font-weight: 800; }
+  .muted { color: var(--muted); }
+
+  .picker { text-align: center; padding: 40px 20px; }
+  .picker .vol { font-size: 5rem; animation: wobble .25s infinite alternate; display: inline-block; }
+  @keyframes wobble { from { transform: rotate(-6deg) } to { transform: rotate(6deg) } }
+  .picker .pname { font-family: "Baloo 2", sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 1.1; margin-top: 10px; min-height: 1.2em; }
+  .picker.done .pname { color: var(--lava); text-shadow: 0 0 30px rgba(255,90,31,.8); animation: pop .5s; }
+  .picker.done .vol { animation: none; }
+
+  .podium { display: grid; gap: 10px; }
+  .podium .row:nth-child(1) { background: rgba(255,183,3,.22); } .podium .row:nth-child(2) { background: rgba(220,220,220,.14); } .podium .row:nth-child(3) { background: rgba(205,127,50,.2); }
+
+  .float-pts { position: fixed; z-index: 80; left: 50%; top: 40%; transform: translate(-50%, -50%); font-family: "Baloo 2", sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: var(--lava); text-shadow: 0 0 30px rgba(255,90,31,.9), 0 4px 0 #7a2a08; pointer-events: none; animation: floatUp 1.6s ease-out forwards; white-space: nowrap; }
+  @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, -20%) scale(.6) } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) } 100% { opacity: 0; transform: translate(-50%, -140%) scale(1) } }
+
+  .footer { margin-top: 26px; color: var(--muted); font-size: .85rem; text-align: center; }
+
+  @media (max-width: 1000px) {
+    .hero { grid-template-columns: 1fr; }
+    .modes { grid-template-columns: 1fr 1fr; }
+    .mudas { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .shell { width: calc(100% - 32px); }
+    .modes, .options { grid-template-columns: 1fr; }
+    .nav { margin-left: 0; }
+    .flip { min-height: 20rem; }
+  }
+</style>
+</head>
+<body>
+<div class="embers" id="embers"></div>
+
+<div class="shell">
+  <header class="topbar">
+    <button class="brand" data-go="home" aria-label="Inicio">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="#2a160c" stroke="#ff8a3d" stroke-width="3"/>
+        <path d="M10 50 L26 22 h12 L54 50 Z" fill="#6b3b22"/>
+        <path d="M26 22 q6 6 12 0" fill="#ffb703"/>
+        <path d="M31 22 q-2 12 -6 28 M33 22 q3 10 9 28" stroke="#ff5a1f" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="28" cy="13" r="4" fill="#d9c2ae" opacity=".8"/><circle cx="35" cy="9" r="5" fill="#d9c2ae" opacity=".6"/>
+      </svg>
+      <span><strong>Tierra Viva</strong><small data-t="subtitle"></small></span>
+    </button>
+    <div class="nav tools">
+      <div class="langs" id="langs" role="group" aria-label="Idioma / Language">
+        <button data-lang="es">ES</button>
+        <button data-lang="both">ES+EN</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <button id="btnRank">🏆 <span data-t="ranking"></span></button>
+      <button id="btnClass">👥 <span data-t="class"></span></button>
+      <button id="btnFull" title="Pantalla completa">⛶</button>
+    </div>
+    <nav class="nav modetabs" id="nav">
+      <button data-go="quiz">🎯 <span data-t="navQuiz"></span></button>
+      <button data-go="cards">🃏 <span data-t="navCards"></span></button>
+      <button data-go="mudas">🖼️ <span data-t="navMudas"></span></button>
+      <button data-go="vocab">📖 <span data-t="navVocab"></span></button>
+    </nav>
+  </header>
+
+  <!-- ===== PORTADA ===== -->
+  <section id="v-home">
+    <div class="card hero">
+      <div>
+        <h1><span data-t="heroA"></span><br><span data-t="heroB"></span></h1>
+        <p data-t="heroP"></p>
+        <div class="tags">
+          <span class="tag">🌍 <span data-t="tag1"></span></span><span class="tag">🧩 <span data-t="tag2"></span></span>
+          <span class="tag">🌋 <span data-t="tag3"></span></span><span class="tag">📳 <span data-t="tag4"></span></span>
+          <span class="tag">💎 <span data-t="tag5"></span></span><span class="tag">〰️ <span data-t="tag6"></span></span>
+        </div>
+      </div>
+      <svg class="scene" viewBox="0 0 600 340" role="img" aria-label="Placas tectónicas separándose y volcán">
+        <defs>
+          <linearGradient id="hsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b1a10"/><stop offset="1" stop-color="#7a3416"/></linearGradient>
+          <linearGradient id="hmantle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7a2e"/><stop offset="1" stop-color="#9a2a0c"/></linearGradient>
+          <linearGradient id="hmag" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff5a1f"/><stop offset="1" stop-color="#ffe066"/></linearGradient>
+        </defs>
+        <rect width="600" height="340" fill="url(#hsky)"/>
+        <rect y="150" width="600" height="190" fill="url(#hmantle)"/>
+        <g class="conv" opacity=".35"><circle cx="150" cy="270" r="55" fill="none" stroke="#ffd27a" stroke-width="4" stroke-dasharray="20 14"/></g>
+        <g class="conv" opacity=".35" style="animation-direction: reverse"><circle cx="450" cy="270" r="55" fill="none" stroke="#ffd27a" stroke-width="4" stroke-dasharray="20 14"/></g>
+        <path class="magma-rise" d="M290 340 C285 280 295 220 300 150 C305 220 315 280 310 340 Z" fill="url(#hmag)"/>
+        <g class="plate-l">
+          <path d="M-20 120 L292 120 L288 168 L-20 168 Z" fill="#5a3320"/>
+          <path d="M-20 120 L292 120 L291 132 L-20 132 Z" fill="#2e6f8a"/>
+          <path d="M60 120 L120 46 L132 46 L196 120 Z" fill="#6b3b22"/>
+          <path d="M120 46 q6 8 12 0 L128 70 Z" fill="#ffb703"/>
+          <path d="M128 50 q20 30 40 70" stroke="#ff5a1f" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <g class="smoke" fill="#d9c2ae"><circle cx="126" cy="36" r="14"/><circle cx="134" cy="36" r="18"/><circle cx="120" cy="36" r="12"/></g>
+          <text x="40" y="160" fill="#fff6ec" font-size="18" font-weight="800" font-family="Nunito">← placa</text>
+        </g>
+        <g class="plate-r">
+          <path d="M308 120 L620 120 L620 168 L312 168 Z" fill="#5a3320"/>
+          <path d="M308 120 L620 120 L620 132 L309 132 Z" fill="#2e6f8a"/>
+          <path d="M430 120 L470 84 L500 100 L530 70 L580 120 Z" fill="#7d5a44"/>
+          <path d="M520 78 L530 70 L540 80 Z" fill="#fff"/>
+          <text x="480" y="160" fill="#fff6ec" font-size="18" font-weight="800" font-family="Nunito">placa →</text>
+        </g>
+        <text x="300" y="330" text-anchor="middle" fill="#fff6ec" font-size="15" font-weight="800" font-family="Nunito" opacity=".85">astenosfera · corrientes de convección</text>
+      </svg>
+    </div>
+
+    <div class="modes">
+      <button class="mode" data-go="quiz"><div class="ico">🎯</div><h3 data-t="m1t"></h3><p data-t="m1p"></p></button>
+      <button class="mode" data-go="cards"><div class="ico">🃏</div><h3 data-t="m2t"></h3><p data-t="m2p"></p></button>
+      <button class="mode" data-go="mudas"><div class="ico">🖼️</div><h3 data-t="m3t"></h3><p data-t="m3p"></p></button>
+      <button class="mode" data-go="vocab"><div class="ico">📖</div><h3 data-t="m4t"></h3><p data-t="m4p"></p></button>
+    </div>
+  </section>
+
+  <!-- Barra de turno (compartida por cuestionario e imágenes mudas) -->
+  <div class="card bar hidden" id="turnBar">
+    <div class="who">
+      <div class="avatar">🌋</div>
+      <div><div class="name" id="whoName"></div><div class="sub" id="whoSub"></div></div>
+    </div>
+    <button class="btn hot big" id="btnPick">🎲 <span data-t="pick"></span></button>
+  </div>
+
+  <!-- ===== CUESTIONARIO ===== -->
+  <section id="v-quiz" class="hidden">
+    <div class="chips" id="quizBlocks" style="margin-bottom:12px"></div>
+    <div class="card quiz">
+      <div class="qhead"><span class="qtag" id="qTag"></span><span class="qcount" id="qCount"></span></div>
+      <div class="progress"><i id="qProg"></i></div>
+      <h2 class="question" id="qText"></h2>
+      <div id="qMulti"></div>
+      <div id="qHint"></div>
+      <div class="options" id="qOpts"></div>
+      <div id="qFeedback"></div>
+      <div class="actions">
+        <button class="btn" id="qHintBtn">💡 <span data-t="hint"></span></button>
+        <button class="btn sea hidden" id="qCheck">✔️ <span data-t="check"></span></button>
+        <button class="btn hidden" id="qRebound">🔁 <span data-t="rebound"></span></button>
+        <button class="btn hidden" id="qReveal">👁️ <span data-t="reveal"></span></button>
+        <span class="spacer"></span>
+        <button class="btn" id="qPrev">◀</button>
+        <button class="btn hot big" id="qNext"><span data-t="next"></span> ▶</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="qShuffle">🔀 <span data-t="shuffle"></span></button>
+      <label class="btn" style="cursor:pointer">📂 <span data-t="loadCsv"></span><input type="file" id="csvFile" accept=".csv" hidden></label>
+      <span class="muted" id="csvStatus" style="align-self:center"></span>
+    </div>
+  </section>
+
+  <!-- ===== TARJETAS ===== -->
+  <section id="v-cards" class="hidden">
+    <div class="chips" id="cardBlocks" style="margin-bottom:14px"></div>
+    <div class="flip-wrap">
+      <div class="flip" id="flip">
+        <div class="face front"><span class="label" data-t="front"></span><button class="speak" data-speak="front" aria-label="Escuchar">🔊</button><div class="txt" id="cFront"></div><span class="tap" data-t="tapFlip"></span></div>
+        <div class="face back"><span class="label" data-t="back"></span><button class="speak" data-speak="back" aria-label="Escuchar">🔊</button><div class="txt" id="cBack"></div></div>
+      </div>
+    </div>
+    <div class="cardnav">
+      <button class="btn big" id="cPrev">◀</button>
+      <span class="count" id="cCount"></span>
+      <button class="btn big" id="cNext">▶</button>
+      <button class="btn" id="cShuffle">🔀 <span data-t="shuffle"></span></button>
+    </div>
+  </section>
+
+  <!-- ===== IMÁGENES MUDAS ===== -->
+  <section id="v-mudas" class="hidden">
+    <div class="tabs" id="mudaTabs"></div>
+    <div class="mudas">
+      <div class="card diagram" id="mudaSvg"></div>
+      <div class="card legend">
+        <h3 id="mudaTitle"></h3>
+        <p class="muted" style="margin:0 0 12px" data-t="mudaHelp"></p>
+        <ol id="mudaLegend"></ol>
+        <div class="actions">
+          <button class="btn" id="mudaShow">👁️ <span data-t="showAll"></span></button>
+          <button class="btn" id="mudaReset">↺ <span data-t="reset"></span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VOCABULARIO ===== -->
+  <section id="v-vocab" class="hidden">
+    <div class="vocab-tools">
+      <input class="search" id="vSearch" type="search" data-tp="search">
+      <button class="btn" id="vHideEn">🙈 <span data-t="hideEn"></span></button>
+      <button class="btn" id="vHideEs">🙈 <span data-t="hideEs"></span></button>
+    </div>
+    <div class="vgrid" id="vGrid"></div>
+  </section>
+
+  <p class="footer">Biología y Geología · 4º ESO · Tema 2 — <span data-t="footer"></span></p>
+</div>
+
+<!-- Modal genérico -->
+<div class="overlay hidden" id="overlay"><div class="card modal" id="modal"></div></div>
+
+<script src="datos-tema2.js"></script>
+<script>
+(function () {
+  "use strict";
+  const D = window.TEMA2;
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  // Almacenamiento local (solo en este navegador)
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("tierraviva_" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem("tierraviva_" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  const S = {
+    lang: store.get("lang", "es"),
+    students: store.get("students", []), // {name, pts, turns}
+    current: null,
+    view: "home"
+  };
+  const saveStudents = () => store.set("students", S.students);
+
+  // ---------- Textos de la interfaz ----------
+  const UI = {
+    es: {
+      subtitle: "Tema 2 · Tectónica y procesos internos", navQuiz: "Reto", navCards: "Tarjetas", navMudas: "Imágenes mudas", navVocab: "Vocabulario",
+      ranking: "Ranking", class: "Clase",
+      heroA: "La Tierra", heroB: "se mueve", heroP: "Repasa el tema 2 jugando: gana biopuntos respondiendo, identifica las partes de los dibujos y aprende el vocabulario en español e inglés.",
+      tag1: "Interior terrestre", tag2: "Placas", tag3: "Volcanes", tag4: "Terremotos", tag5: "Metamorfismo", tag6: "Pliegues y fallas",
+      m1t: "Reto Biopuntos", m1p: "Preguntas tipo test. Sale un alumno al azar y, si acierta, gana biopuntos.",
+      m2t: "Tarjetas", m2p: "Toca la tarjeta para darle la vuelta. Con audio en español e inglés.",
+      m3t: "Imágenes mudas", m3p: "Identifica las partes del volcán, del interior terrestre, de pliegues y fallas…",
+      m4t: "Vocabulario", m4p: "Glosario español ↔ inglés para seguir el tema en los dos idiomas.",
+      pick: "¿Quién responde?", noOne: "Toda la clase", noOneSub: "Pulsa «¿Quién responde?» para elegir al azar",
+      noStudents: "Añade la lista de clase en 👥 Clase para repartir biopuntos", answering: "Responde",
+      hint: "Pista", check: "Comprobar", rebound: "Rebote", reveal: "Ver solución", next: "Siguiente", shuffle: "Barajar",
+      loadCsv: "Cargar CSV de NotebookLM", multi: "☝️ Hay varias respuestas correctas: márcalas todas y pulsa Comprobar",
+      right: "¡Correcto!", wrong: "¡Uy! No es correcto", wrongMulti: "No es del todo correcto", reboundTxt: "Puede intentarlo otra persona (rebote).",
+      solution: "Solución", question: "Pregunta", of: "de", front: "Pregunta", back: "Respuesta", tapFlip: "👆 Toca para girar",
+      mudaHelp: "Toca un número del dibujo para identificar esa parte.", showAll: "Mostrar todo", reset: "Reiniciar",
+      whatIs: "¿Qué es el número", search: "Buscar término… / Search…", hideEn: "Ocultar inglés", hideEs: "Ocultar español",
+      classTitle: "👥 Lista de clase", classHelp: "Escribe un nombre por línea. Se guarda solo en este ordenador.", save: "Guardar lista",
+      resetPts: "Poner puntos a 0", resetTurns: "Reiniciar turnos", exportCsv: "Descargar puntos (CSV)", close: "Cerrar",
+      rankTitle: "🏆 Biopuntos", emptyRank: "Todavía no hay alumnado en la lista.", turns: "turnos", pts: "biopuntos",
+      confirmReset: "¿Seguro que quieres poner todos los biopuntos a 0?", allDone: "🎉 ¡Has completado todas las preguntas!",
+      csvOk: "preguntas cargadas", csvErr: "No se ha podido leer el CSV", loaded: "Cargadas", openQ: "Pregunta abierta: responde en voz alta y luego muestra la solución.",
+      footer: "ES = español · EN = inglés · ES+EN = los dos a la vez", block: "Bloque"
+    },
+    en: {
+      subtitle: "Unit 2 · Plate tectonics & internal processes", navQuiz: "Challenge", navCards: "Flashcards", navMudas: "Label it", navVocab: "Vocabulary",
+      ranking: "Ranking", class: "Class",
+      heroA: "The Earth", heroB: "is moving", heroP: "Review Unit 2 by playing: earn bio‑points by answering, label the parts of the diagrams and learn the vocabulary in Spanish and English.",
+      tag1: "Earth's interior", tag2: "Plates", tag3: "Volcanoes", tag4: "Earthquakes", tag5: "Metamorphism", tag6: "Folds & faults",
+      m1t: "Bio‑point Challenge", m1p: "Multiple‑choice questions. A random student is picked and wins bio‑points for a correct answer.",
+      m2t: "Flashcards", m2p: "Tap a card to flip it. With audio in Spanish and English.",
+      m3t: "Label the diagram", m3p: "Identify the parts of a volcano, the Earth's interior, folds and faults…",
+      m4t: "Vocabulary", m4p: "Spanish ↔ English glossary to follow the unit in both languages.",
+      pick: "Who answers?", noOne: "Whole class", noOneSub: "Tap “Who answers?” to pick someone at random",
+      noStudents: "Add your class list in 👥 Class to award bio‑points", answering: "Answering",
+      hint: "Hint", check: "Check", rebound: "Pass it on", reveal: "Show answer", next: "Next", shuffle: "Shuffle",
+      loadCsv: "Load NotebookLM CSV", multi: "☝️ More than one answer is correct: select them all and tap Check",
+      right: "Correct!", wrong: "Oops! That's not right", wrongMulti: "Not quite right", reboundTxt: "Someone else can try (pass it on).",
+      solution: "Answer", question: "Question", of: "of", front: "Question", back: "Answer", tapFlip: "👆 Tap to flip",
+      mudaHelp: "Tap a number on the diagram to identify that part.", showAll: "Show all", reset: "Reset",
+      whatIs: "What is number", search: "Search… / Buscar término…", hideEn: "Hide English", hideEs: "Hide Spanish",
+      classTitle: "👥 Class list", classHelp: "One name per line. Only saved on this computer.", save: "Save list",
+      resetPts: "Reset points to 0", resetTurns: "Reset turns", exportCsv: "Download points (CSV)", close: "Close",
+      rankTitle: "🏆 Bio‑points", emptyRank: "No students on the list yet.", turns: "turns", pts: "bio‑points",
+      confirmReset: "Are you sure you want to reset all bio‑points to 0?", allDone: "🎉 You have finished all the questions!",
+      csvOk: "questions loaded", csvErr: "Could not read the CSV", loaded: "Loaded", openQ: "Open question: answer out loud, then show the answer.",
+      footer: "ES = Spanish · EN = English · ES+EN = both at once", block: "Topic"
+    }
+  };
+  const uiLang = () => (S.lang === "en" ? "en" : "es");
+  const t = k => UI[uiLang()][k] || UI.es[k] || k;
+
+  // Texto de contenido según idioma: ES, EN o ambos
+  function bi(es, en) {
+    if (S.lang === "en") return esc(en || es);
+    if (S.lang === "both" && en && en !== es) return esc(es) + `<span class="en">${esc(en)}</span>`;
+    return esc(es);
+  }
+  const blockName = b => { const x = D.bloques[b] || { icon: "📂", es: t("loaded"), en: t("loaded") }; return x.icon + " " + (S.lang === "en" ? x.en : x.es); };
+
+  function applyUI() {
+    document.documentElement.lang = uiLang();
+    $$("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
+    $$("[data-tp]").forEach(el => el.placeholder = t(el.dataset.tp));
+    $$("#langs button").forEach(b => b.classList.toggle("on", b.dataset.lang === S.lang));
+    renderWho();
+    if (S.view === "quiz") renderQuiz();
+    if (S.view === "cards") { renderBlockChips("cardBlocks", C.blocks, rebuildCards); renderCard(); }
+    if (S.view === "mudas") renderMuda();
+    if (S.view === "vocab") renderVocab();
+    if (S.view === "quiz") renderBlockChips("quizBlocks", Q.blocks, rebuildQuiz);
+  }
+
+  // ---------- Navegación ----------
+  function go(view) {
+    S.view = view;
+    ["home", "quiz", "cards", "mudas", "vocab"].forEach(v => $("#v-" + v).classList.toggle("hidden", v !== view));
+    $$("#nav [data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === view));
+    $("#turnBar").classList.toggle("hidden", !(view === "quiz" || view === "mudas"));
+    applyUI();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  $$("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+  $$("#langs button").forEach(b => b.addEventListener("click", () => { S.lang = b.dataset.lang; store.set("lang", S.lang); applyUI(); }));
+  $("#btnFull").addEventListener("click", () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {});
+    else document.exitFullscreen();
+  });
+
+  // ---------- Alumnado, turnos y biopuntos ----------
+  function renderWho() {
+    const s = S.students[S.current];
+    if (s) { $("#whoName").textContent = s.name; $("#whoSub").textContent = `${t("answering")} · ${s.pts} ${t("pts")}`; }
+    else { $("#whoName").textContent = t("noOne"); $("#whoSub").textContent = S.students.length ? t("noOneSub") : t("noStudents"); }
+  }
+
+  function pickStudent(excludeCurrent) {
+    if (!S.students.length) { openClass(); return Promise.resolve(null); }
+    let pool = S.students.map((s, i) => i).filter(i => !(excludeCurrent && i === S.current && S.students.length > 1));
+    const min = Math.min(...pool.map(i => S.students[i].turns || 0));
+    const fair = pool.filter(i => (S.students[i].turns || 0) === min);
+    const chosen = fair[Math.floor(Math.random() * fair.length)];
+    return new Promise(resolve => {
+      openModal(`<div class="picker" id="picker"><div class="vol">🌋</div><div class="pname" id="pname">…</div></div>`, true);
+      let n = 0; const total = 22;
+      const tick = () => {
+        n++;
+        const show = n >= total ? chosen : pool[Math.floor(Math.random() * pool.length)];
+        $("#pname").textContent = S.students[show].name;
+        if (n < total) setTimeout(tick, 40 + n * n * 0.7);
+        else {
+          $("#picker").classList.add("done");
+          S.students[chosen].turns = (S.students[chosen].turns || 0) + 1;
+          S.current = chosen; saveStudents(); renderWho();
+          setTimeout(() => { closeModal(); resolve(chosen); }, 1300);
+        }
+      };
+      tick();
+    });
+  }
+  $("#btnPick").addEventListener("click", () => pickStudent(false));
+
+  function award(pts) {
+    const s = S.students[S.current];
+    const el = document.createElement("div");
+    el.className = "float-pts";
+    el.textContent = s ? `+${pts} 🌋 ${s.name}` : "🌋 ¡Bien!";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1700);
+    if (!s) return;
+    s.pts += pts; saveStudents(); renderWho();
+  }
+
+  // ---------- Modal ----------
+  let modalLocked = false;
+  function openModal(html, locked) { $("#modal").innerHTML = html; $("#overlay").classList.remove("hidden"); modalLocked = !!locked; }
+  function closeModal() { $("#overlay").classList.add("hidden"); $("#modal").innerHTML = ""; modalLocked = false; }
+  $("#overlay").addEventListener("click", e => { if (e.target.id === "overlay" && !modalLocked) closeModal(); });
+
+  function openClass() {
+    const rows = S.students.map((s, i) => `
+      <div class="row"><span class="nm">${esc(s.name)}</span><span class="turns">${s.turns || 0} ${t("turns")}</span>
+      <button data-d="${i}" data-v="-1">−</button><span class="pts">${s.pts}</span><button data-d="${i}" data-v="1">+</button></div>`).join("");
+    openModal(`
+      <h2>${t("classTitle")}</h2>
+      <p class="muted">${t("classHelp")}</p>
+      <textarea id="names" placeholder="Ana\nBruno\nCarla…">${esc(S.students.map(s => s.name).join("\n"))}</textarea>
+      <div class="actions"><button class="btn hot" id="saveNames">💾 ${t("save")}</button>
+        <button class="btn" id="resetTurns">↺ ${t("resetTurns")}</button>
+        <button class="btn" id="resetPts">0️⃣ ${t("resetPts")}</button>
+        <button class="btn" id="exportCsv">⬇️ ${t("exportCsv")}</button>
+        <span class="spacer" style="flex:1"></span><button class="btn" id="closeM">✖ ${t("close")}</button></div>
+      <div class="roster">${rows}</div>`);
+    $("#saveNames").onclick = () => {
+      const names = $("#names").value.split(/\n/).map(x => x.trim()).filter(Boolean);
+      const old = Object.fromEntries(S.students.map(s => [s.name, s]));
+      S.students = names.map(n => old[n] || { name: n, pts: 0, turns: 0 });
+      S.current = null; saveStudents(); renderWho(); openClass();
+    };
+    $("#resetTurns").onclick = () => { S.students.forEach(s => s.turns = 0); saveStudents(); openClass(); };
+    $("#resetPts").onclick = () => { if (confirm(t("confirmReset"))) { S.students.forEach(s => s.pts = 0); saveStudents(); renderWho(); openClass(); } };
+    $("#exportCsv").onclick = () => {
+      const csv = "Alumno;Biopuntos\n" + S.students.map(s => `"${s.name.replace(/"/g, '""')}";${s.pts}`).join("\n");
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv" }));
+      a.download = "biopuntos-tema2.csv"; a.click();
+    };
+    $("#closeM").onclick = closeModal;
+    $$("#modal [data-d]").forEach(b => b.onclick = () => { const s = S.students[+b.dataset.d]; s.pts = Math.max(0, s.pts + +b.dataset.v); saveStudents(); renderWho(); openClass(); });
+  }
+  $("#btnClass").addEventListener("click", openClass);
+
+  function openRank() {
+    const list = S.students.slice().sort((a, b) => b.pts - a.pts);
+    const medal = i => ["🥇", "🥈", "🥉"][i] || `${i + 1}.`;
+    openModal(`<h2>${t("rankTitle")}</h2>
+      ${list.length ? `<div class="roster podium">${list.map((s, i) => `<div class="row"><span style="font-size:1.6rem;min-width:2.2rem">${medal(i)}</span><span class="nm">${esc(s.name)}</span><span class="pts">${s.pts}</span></div>`).join("")}</div>` : `<p class="muted">${t("emptyRank")}</p>`}
+      <div class="actions"><span class="spacer" style="flex:1"></span><button class="btn" id="closeM">✖ ${t("close")}</button></div>`);
+    $("#closeM").onclick = closeModal;
+  }
+  $("#btnRank").addEventListener("click", openRank);
+
+  // ---------- Filtros por bloque ----------
+  function renderBlockChips(id, set, onChange) {
+    const keys = Object.keys(D.bloques).concat(Q.extra.length && id === "quizBlocks" ? ["cargado"] : []);
+    $("#" + id).innerHTML = keys.map(k => `<button class="chip ${set.has(k) ? "on" : ""}" data-b="${k}">${blockName(k)}</button>`).join("");
+    $$("#" + id + " .chip").forEach(c => c.onclick = () => {
+      const k = c.dataset.b;
+      if (set.has(k) && set.size > 1) set.delete(k); else set.add(k);
+      onChange(); renderBlockChips(id, set, onChange);
+    });
+  }
+
+  // ---------- CUESTIONARIO ----------
+  const Q = { blocks: new Set(Object.keys(D.bloques)), pool: [], pos: 0, order: [], sel: new Set(), tried: new Set(), done: false, hint: false, extra: [] };
+  const allQuestions = () => D.preguntas.concat(Q.extra);
+
+  function rebuildQuiz() {
+    Q.pool = shuffle(allQuestions().filter(q => Q.blocks.has(q.b)));
+    Q.pos = 0; resetQuestion(); renderQuiz();
+  }
+  function resetQuestion() {
+    const q = Q.pool[Q.pos];
+    Q.order = q && q.es.o.length ? shuffle(q.es.o.map((_, i) => i)) : [];
+    Q.sel = new Set(); Q.tried = new Set(); Q.done = false; Q.hint = false; Q.result = null;
+  }
+  const L = q => (S.lang === "en" ? q.en : q.es);
+
+  function renderQuiz() {
+    const q = Q.pool[Q.pos];
+    if (!q) { $("#qText").textContent = t("allDone"); $("#qOpts").innerHTML = ""; return; }
+    const open = !q.es.o.length;
+    $("#qTag").textContent = blockName(q.b);
+    $("#qCount").textContent = `${t("question")} ${Q.pos + 1} ${t("of")} ${Q.pool.length}`;
+    $("#qProg").style.width = ((Q.pos + 1) / Q.pool.length * 100) + "%";
+    $("#qText").innerHTML = bi(q.es.q, q.en.q);
+    $("#qMulti").innerHTML = q.multi ? `<span class="multi-note">${t("multi")}</span>` : open ? `<span class="multi-note">${t("openQ")}</span>` : "";
+    $("#qHint").innerHTML = Q.hint && q.es.h ? `<div class="hint">💡 ${bi(q.es.h, q.en.h)}</div>` : "";
+    const letters = "ABCD";
+    $("#qOpts").innerHTML = Q.order.map((oi, k) => {
+      let cls = "";
+      if (Q.sel.has(oi)) cls = "sel";
+      if (Q.tried.has(oi)) cls = "wrong";
+      if (Q.done && q.c.includes(oi)) cls = "right";
+      return `<button class="opt ${cls}" data-o="${oi}" ${Q.done || Q.tried.has(oi) ? "disabled" : ""}><span class="let">${letters[k]}</span><span>${bi(q.es.o[oi], q.en.o[oi])}</span></button>`;
+    }).join("");
+    $$("#qOpts .opt").forEach(b => b.onclick = () => choose(+b.dataset.o));
+
+    let fb = "";
+    if (Q.result === "ok") fb = `<div class="feedback ok"><span class="big">🌋</span><div><b>${t("right")}</b>${bi(q.es.w, q.en.w)}</div></div>`;
+    else if (Q.result === "ko") fb = `<div class="feedback ko"><span class="big">💥</span><div><b>${q.multi ? t("wrongMulti") : t("wrong")}</b>${t("reboundTxt")}</div></div>`;
+    else if (Q.result === "sol") fb = `<div class="feedback info"><span class="big">📘</span><div><b>${t("solution")}</b>${bi(q.es.w, q.en.w)}</div></div>`;
+    $("#qFeedback").innerHTML = fb;
+
+    $("#qCheck").classList.toggle("hidden", !q.multi || Q.done);
+    $("#qRebound").classList.toggle("hidden", Q.result !== "ko");
+    $("#qReveal").classList.toggle("hidden", Q.done || !(Q.result === "ko" || open));
+    $("#qHintBtn").classList.toggle("hidden", Q.done || !q.es.h || Q.hint);
+    $("#qPrev").disabled = Q.pos === 0;
+  }
+
+  function choose(oi) {
+    const q = Q.pool[Q.pos];
+    if (Q.done) return;
+    if (q.multi) { Q.sel.has(oi) ? Q.sel.delete(oi) : Q.sel.add(oi); Q.result = null; renderQuiz(); return; }
+    if (q.c.includes(oi)) { Q.done = true; Q.result = "ok"; award(1); }
+    else { Q.tried.add(oi); Q.result = "ko"; }
+    renderQuiz();
+  }
+  $("#qCheck").onclick = () => {
+    const q = Q.pool[Q.pos];
+    if (!Q.sel.size) return;
+    const ok = Q.sel.size === q.c.length && q.c.every(i => Q.sel.has(i));
+    if (ok) { Q.done = true; Q.result = "ok"; award(2); }
+    else { Q.result = "ko"; Q.sel = new Set(); }
+    renderQuiz();
+  };
+  $("#qRebound").onclick = () => pickStudent(true).then(() => { Q.result = null; renderQuiz(); });
+  $("#qReveal").onclick = () => { Q.done = true; Q.result = "sol"; renderQuiz(); };
+  $("#qHintBtn").onclick = () => { Q.hint = true; renderQuiz(); };
+  $("#qNext").onclick = () => { if (Q.pos < Q.pool.length - 1) { Q.pos++; resetQuestion(); S.current = null; renderWho(); renderQuiz(); } else { $("#qText").textContent = t("allDone"); } };
+  $("#qPrev").onclick = () => { if (Q.pos > 0) { Q.pos--; resetQuestion(); renderQuiz(); } };
+  $("#qShuffle").onclick = rebuildQuiz;
+
+  // Cargar un CSV exportado de NotebookLM (#, Question, Hint, Option A-D, Correct Answer, Rationale)
+  function parseCSV(text) {
+    const rows = []; let row = [], cur = "", q = false;
+    text = text.replace(/^﻿/, "");
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) { if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += ch; }
+      else if (ch === '"') q = true;
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n" || ch === "\r") { if (ch === "\r" && text[i + 1] === "\n") i++; row.push(cur); rows.push(row); row = []; cur = ""; }
+      else cur += ch;
+    }
+    if (cur || row.length) { row.push(cur); rows.push(row); }
+    return rows.filter(r => r.some(c => c.trim()));
+  }
+  $("#csvFile").addEventListener("change", e => {
+    const f = e.target.files[0]; if (!f) return;
+    f.text().then(txt => {
+      const rows = parseCSV(txt);
+      const head = rows.shift().map(h => h.trim().toLowerCase());
+      const col = n => head.indexOf(n);
+      const qs = rows.map(r => {
+        const opts = ["option a", "option b", "option c", "option d"].map(n => (r[col(n)] || "").trim()).filter(Boolean);
+        const letter = ((r[col("correct answer")] || "").trim().match(/^([A-D])[.)]/) || [])[1];
+        const es = { q: r[col("question")] || "", h: r[col("hint")] || "", o: opts, w: r[col("rationale")] || r[col("correct answer")] || r[col("hint")] || "" };
+        return { b: "cargado", c: letter ? ["ABCD".indexOf(letter)] : [], es, en: es };
+      }).filter(q => q.es.q);
+      if (!qs.length) throw new Error();
+      Q.extra = Q.extra.concat(qs); Q.blocks = new Set(["cargado"]);
+      $("#csvStatus").textContent = `✅ ${qs.length} ${t("csvOk")}`;
+      renderBlockChips("quizBlocks", Q.blocks, rebuildQuiz); rebuildQuiz();
+    }).catch(() => { $("#csvStatus").textContent = "⚠️ " + t("csvErr"); });
+    e.target.value = "";
+  });
+
+  // ---------- TARJETAS ----------
+  const C = { blocks: new Set(Object.keys(D.bloques)), pool: [], pos: 0 };
+  function rebuildCards() { C.pool = D.tarjetas.filter(c => C.blocks.has(c.b)); C.pos = 0; $("#flip").classList.remove("turned"); renderCard(); }
+  function renderCard() {
+    const c = C.pool[C.pos]; if (!c) return;
+    $("#cFront").innerHTML = bi(c.es[0], c.en[0]);
+    $("#cBack").innerHTML = bi(c.es[1], c.en[1]);
+    $("#cCount").textContent = `${C.pos + 1} / ${C.pool.length}`;
+  }
+  function moveCard(d) {
+    if (!C.pool.length) return;
+    $("#flip").classList.remove("turned");
+    setTimeout(() => { C.pos = (C.pos + d + C.pool.length) % C.pool.length; renderCard(); }, 180);
+  }
+  $("#flip").addEventListener("click", e => { if (!e.target.closest(".speak")) $("#flip").classList.toggle("turned"); });
+  $("#cPrev").onclick = () => moveCard(-1);
+  $("#cNext").onclick = () => moveCard(1);
+  $("#cShuffle").onclick = () => { C.pool = shuffle(C.pool); C.pos = 0; $("#flip").classList.remove("turned"); renderCard(); };
+  let touchX = null;
+  $("#flip").addEventListener("touchstart", e => touchX = e.touches[0].clientX, { passive: true });
+  $("#flip").addEventListener("touchend", e => { if (touchX == null) return; const dx = e.changedTouches[0].clientX - touchX; if (Math.abs(dx) > 70) moveCard(dx < 0 ? 1 : -1); touchX = null; });
+
+  // Lectura en voz alta: español y, si procede, inglés
+  function say(es, en) {
+    if (!("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    const u = (txt, lang) => { const x = new SpeechSynthesisUtterance(txt); x.lang = lang; x.rate = .92; return x; };
+    if (S.lang !== "en") speechSynthesis.speak(u(es, "es-ES"));
+    if (S.lang !== "es" && en) speechSynthesis.speak(u(en, "en-AU"));
+  }
+  $$("[data-speak]").forEach(b => b.addEventListener("click", e => {
+    e.stopPropagation();
+    const c = C.pool[C.pos]; const i = b.dataset.speak === "front" ? 0 : 1;
+    say(c.es[i], c.en[i]);
+  }));
+
+  // ---------- IMÁGENES MUDAS ----------
+  // Cada dibujo: marcadores {x,y} = punto señalado; {mx,my} = posición del número (si es distinta, se dibuja una línea guía)
+  const arcHalf = (cx, cy, r) => `M${cx - r} ${cy} A${r} ${r} 0 0 1 ${cx + r} ${cy} Z`;
+  function foldPath(c, x0 = 0, x1 = 800) {
+    const y = x => c - 70 * Math.cos((x - 250) / 300 * Math.PI);
+    let d = `M${x0} ${y(x0).toFixed(1)}`;
+    for (let x = x0 + 10; x <= x1; x += 10) d += ` L${x} ${y(x).toFixed(1)}`;
+    return d;
+  }
+  function foldLayers() {
+    const cols = ["#c2703d", "#e9c89b", "#8c3b2a", "#f2a65a", "#5b3a29"];
+    const cs = [150, 190, 230, 270, 310];
+    let out = "";
+    cs.forEach((c, i) => { out += `<path d="${foldPath(c)} L800 420 L0 420 Z" fill="${cols[i]}" stroke="#2a160c" stroke-width="2"/>`; });
+    return out;
+  }
+
+  const DIAGRAMS = [
+    { id: "geoq", es: "Interior: modelo geoquímico", en: "Interior: geochemical model",
+      svg: () => `<svg viewBox="0 0 800 400"><rect width="800" height="400" fill="#140c08"/>
+        <path d="${arcHalf(400, 375, 330)}" fill="#7b5a3c"/>
+        <path d="${arcHalf(400, 375, 316)}" fill="#c2552a"/>
+        <path d="${arcHalf(400, 375, 180)}" fill="#f2a516"/>
+        <path d="M${400 - 316} 375 A316 316 0 0 1 ${400 + 316} 375" fill="none" stroke="#fff6ec" stroke-width="3" stroke-dasharray="10 7"/>
+        <path d="M${400 - 180} 375 A180 180 0 0 1 ${400 + 180} 375" fill="none" stroke="#fff6ec" stroke-width="3" stroke-dasharray="10 7"/>
+        <rect y="375" width="800" height="25" fill="#140c08"/></svg>`,
+      m: [ { x: 235, y: 93, mx: 110, my: 70, es: "Corteza", en: "Crust" },
+           { x: 530, y: 160, es: "Manto", en: "Mantle" },
+           { x: 400, y: 295, es: "Núcleo", en: "Core" },
+           { x: 674, y: 217, mx: 745, my: 150, es: "Discontinuidad de Mohorovičić", en: "Mohorovičić discontinuity" },
+           { x: 244, y: 285, mx: 85, my: 270, es: "Discontinuidad de Gutenberg", en: "Gutenberg discontinuity" } ] },
+
+    { id: "geod", es: "Interior: modelo geodinámico", en: "Interior: geodynamic model",
+      svg: () => `<svg viewBox="0 0 800 400"><rect width="800" height="400" fill="#140c08"/>
+        <path d="${arcHalf(400, 375, 330)}" fill="#6d4128"/>
+        <path d="${arcHalf(400, 375, 312)}" fill="#ef7d3c"/>
+        <path d="${arcHalf(400, 375, 292)}" fill="#b8431c"/>
+        <path d="${arcHalf(400, 375, 180)}" fill="#f59e0b"/>
+        <path d="${arcHalf(400, 375, 63)}" fill="#fde047"/>
+        <path d="M${400 - 63} 375 A63 63 0 0 1 ${400 + 63} 375" fill="none" stroke="#fff6ec" stroke-width="3" stroke-dasharray="8 6"/>
+        <path d="M${400 - 180} 375 A180 180 0 0 1 ${400 + 180} 375" fill="none" stroke="#fff6ec" stroke-width="3" stroke-dasharray="10 7"/>
+        <rect y="375" width="800" height="25" fill="#140c08"/></svg>`,
+      m: [ { x: 287, y: 73, mx: 175, my: 45, es: "Litosfera", en: "Lithosphere" },
+           { x: 505, y: 90, mx: 640, my: 50, es: "Astenosfera", en: "Asthenosphere" },
+           { x: 230, y: 205, es: "Mesosfera (manto inferior)", en: "Mesosphere (lower mantle)" },
+           { x: 485, y: 290, es: "Núcleo externo", en: "Outer core" },
+           { x: 400, y: 340, es: "Núcleo interno", en: "Inner core" },
+           { x: 341, y: 353, mx: 160, my: 360, es: "Discontinuidad de Lehmann", en: "Lehmann discontinuity" },
+           { x: 569, y: 313, mx: 735, my: 300, es: "Discontinuidad de Gutenberg", en: "Gutenberg discontinuity" } ] },
+
+    { id: "volcan", es: "Partes de un volcán", en: "Parts of a volcano",
+      svg: () => `<svg viewBox="0 0 800 460"><defs>
+          <linearGradient id="vsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1a2e"/><stop offset="1" stop-color="#8a4a2a"/></linearGradient>
+          <radialGradient id="vch"><stop offset="0" stop-color="#ffe066"/><stop offset="1" stop-color="#ff5a1f"/></radialGradient></defs>
+        <rect width="800" height="460" fill="url(#vsky)"/>
+        <rect y="300" width="800" height="160" fill="#4a2e1f"/>
+        <path d="M0 340 H800 M0 380 H800 M0 420 H800" stroke="#3a2216" stroke-width="6"/>
+        <path d="M170 300 L355 125 Q400 150 445 125 L630 300 Z" fill="#5d3b28"/>
+        <path d="M230 245 Q400 215 570 245 M285 190 Q400 170 515 190" stroke="#46291a" stroke-width="7" fill="none"/>
+        <rect x="389" y="140" width="22" height="240" fill="#ff8a3d"/>
+        <ellipse cx="400" cy="405" rx="140" ry="42" fill="url(#vch)"/>
+        <path d="M440 132 Q470 170 500 210 Q535 255 610 298" stroke="#ff5a1f" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <path d="M440 132 Q470 170 500 210 Q535 255 610 298" stroke="#ffb703" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <g fill="#cbbfb4" opacity=".92"><circle cx="400" cy="85" r="34"/><circle cx="440" cy="62" r="38"/><circle cx="370" cy="52" r="30"/><circle cx="410" cy="30" r="28"/></g>
+        <g fill="#241510"><path d="M290 95 l10 -6 l6 10 l-12 4z"/><path d="M315 60 l9 -3 l3 9 l-10 2z"/><path d="M505 100 l11 -4 l3 11 l-12 2z"/><path d="M530 70 l8 -5 l5 9 l-10 3z"/><path d="M275 130 l9 -2 l2 8 l-9 2z"/></g>
+      </svg>`,
+      m: [ { x: 400, y: 405, es: "Cámara magmática", en: "Magma chamber" },
+           { x: 400, y: 330, mx: 250, my: 390, es: "Chimenea volcánica", en: "Vent (conduit)" },
+           { x: 398, y: 140, mx: 295, my: 170, es: "Cráter", en: "Crater" },
+           { x: 255, y: 255, mx: 120, my: 225, es: "Cono volcánico", en: "Volcanic cone" },
+           { x: 525, y: 240, mx: 670, my: 215, es: "Colada de lava", en: "Lava flow" },
+           { x: 445, y: 55, mx: 600, my: 40, es: "Gases", en: "Gases" },
+           { x: 296, y: 95, mx: 185, my: 70, es: "Piroclastos", en: "Pyroclasts" } ] },
+
+    { id: "sismo", es: "Un terremoto", en: "An earthquake",
+      svg: () => `<svg viewBox="0 0 800 440"><defs><clipPath id="under"><rect y="120" width="800" height="320"/></clipPath></defs>
+        <rect width="800" height="440" fill="#23324a"/>
+        <rect y="120" width="800" height="320" fill="#6b4a33"/>
+        <path d="M0 190 H800 M0 260 H800 M0 330 H800 M0 400 H800" stroke="#5a3d29" stroke-width="10"/>
+        <rect y="110" width="800" height="14" fill="#4f7a3a"/>
+        <g clip-path="url(#under)" fill="none" stroke="#ffb703" stroke-width="4" opacity=".85">
+          <circle cx="420" cy="300" r="50"/><circle cx="420" cy="300" r="90" opacity=".75"/><circle cx="420" cy="300" r="130" opacity=".6"/><circle cx="420" cy="300" r="170" opacity=".45"/></g>
+        <path d="M540 112 L331 440" stroke="#1a0b05" stroke-width="6" stroke-dasharray="14 6"/>
+        <path d="M420 270 l8 22 l23 0 l-18 14 l7 22 l-20 -13 l-20 13 l7 -22 l-18 -14 l23 0 z" fill="#ff4d6d" stroke="#fff6ec" stroke-width="3"/>
+        <circle cx="420" cy="116" r="11" fill="#ff4d6d" stroke="#fff6ec" stroke-width="3"/>
+        <line x1="420" y1="128" x2="420" y2="268" stroke="#fff6ec" stroke-width="2" stroke-dasharray="4 6" opacity=".7"/>
+        <g fill="#e9e1d8"><rect x="560" y="80" width="40" height="32"/><path d="M555 82 L580 60 L605 82Z" fill="#b5523b"/>
+          <rect x="250" y="76" width="50" height="36"/><path d="M244 78 L275 54 L306 78Z" fill="#b5523b"/>
+          <rect x="660" y="64" width="26" height="48"/></g>
+      </svg>`,
+      m: [ { x: 420, y: 300, mx: 240, my: 320, es: "Hipocentro (foco)", en: "Hypocentre (focus)" },
+           { x: 420, y: 112, mx: 330, my: 40, es: "Epicentro", en: "Epicentre" },
+           { x: 533, y: 235, mx: 680, my: 250, es: "Ondas sísmicas", en: "Seismic waves" },
+           { x: 369, y: 380, mx: 170, my: 405, es: "Falla", en: "Fault" } ] },
+
+    { id: "pliegue", es: "Pliegues", en: "Folds",
+      svg: () => `<svg viewBox="0 0 800 420"><rect width="800" height="420" fill="#2a3b4f"/>
+        ${foldLayers()}
+        <line x1="250" y1="40" x2="250" y2="410" stroke="#fff6ec" stroke-width="4" stroke-dasharray="12 8"/>
+        <circle cx="250" cy="80" r="7" fill="#fff6ec"/></svg>`,
+      m: [ { x: 250, y: 30, es: "Anticlinal", en: "Anticline" },
+           { x: 550, y: 130, es: "Sinclinal", en: "Syncline" },
+           { x: 244, y: 82, mx: 100, my: 110, es: "Charnela", en: "Hinge" },
+           { x: 400, y: 170, mx: 440, my: 60, es: "Flanco", en: "Limb" },
+           { x: 250, y: 370, mx: 120, my: 380, es: "Plano axial", en: "Axial plane" },
+           { x: 250, y: 222, mx: 100, my: 250, es: "Núcleo del pliegue", en: "Core of the fold" } ] },
+
+    { id: "falla", es: "Elementos de una falla", en: "Parts of a fault",
+      svg: () => {
+        const cols = ["#7a9a4a", "#c2703d", "#e9c89b", "#8c3b2a", "#f2a65a", "#5b3a29", "#c2703d", "#e9c89b"];
+        const bands = top => cols.map((c, i) => `<rect x="0" y="${top + i * 45}" width="800" height="45" fill="${c}"/>`).join("");
+        return `<svg viewBox="0 0 800 420"><defs>
+          <clipPath id="fR"><polygon points="470,60 800,60 800,420 322,420"/></clipPath>
+          <clipPath id="fL"><polygon points="0,120 445,120 322,420 0,420"/></clipPath></defs>
+          <rect width="800" height="420" fill="#2a3b4f"/>
+          <g clip-path="url(#fR)">${bands(60)}</g>
+          <g clip-path="url(#fL)">${bands(120)}</g>
+          <line x1="470" y1="60" x2="322" y2="420" stroke="#1a0b05" stroke-width="6"/>
+          <line x1="408" y1="210" x2="560" y2="210" stroke="#fff6ec" stroke-width="3" stroke-dasharray="6 6"/>
+          <line x1="560" y1="150" x2="560" y2="210" stroke="#fff6ec" stroke-width="5"/>
+          <path d="M552 160 L560 148 L568 160 M552 200 L560 212 L568 200" stroke="#fff6ec" stroke-width="5" fill="none"/>
+          <line x1="338" y1="380" x2="430" y2="380" stroke="#fff6ec" stroke-width="3" stroke-dasharray="6 6"/>
+          <path d="M388 380 A50 50 0 0 0 357 334" stroke="#ffb703" stroke-width="5" fill="none"/></svg>`;
+      },
+      m: [ { x: 458, y: 90, mx: 360, my: 45, es: "Plano de falla", en: "Fault plane" },
+           { x: 680, y: 300, es: "Labio levantado", en: "Raised block (footwall)" },
+           { x: 130, y: 300, es: "Labio hundido", en: "Sunken block (hanging wall)" },
+           { x: 560, y: 180, mx: 650, my: 30, es: "Salto de falla", en: "Fault throw" },
+           { x: 372, y: 358, mx: 230, my: 392, es: "Buzamiento", en: "Dip" } ] },
+
+    { id: "placas", es: "Bordes de placa y subducción", en: "Plate boundaries & subduction",
+      svg: () => `<svg viewBox="0 0 900 420"><defs>
+          <linearGradient id="pa" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8692c"/><stop offset="1" stop-color="#9a2a0c"/></linearGradient></defs>
+        <rect width="900" height="420" fill="#2a3b4f"/>
+        <rect y="95" width="900" height="325" fill="url(#pa)"/>
+        <path d="M150 420 C140 330 160 220 150 140" stroke="#ffe066" stroke-width="12" fill="none"/>
+        <path d="M0 95 L600 95 L575 150 Q560 140 540 140 L0 140 Z" fill="#1f7fa8"/>
+        <path d="M0 140 L540 140 Q585 142 625 185 L790 420 L745 420 L595 210 Q560 177 530 177 L0 177 Z" fill="#5a3320"/>
+        <path d="M140 140 L150 128 L160 140 Z" fill="#5a3320"/>
+        <path d="M600 95 L900 95 L900 228 L655 228 L605 175 Q588 152 575 150 Z" fill="#7a5a44"/>
+        <path d="M575 150 Q590 120 610 98 L625 120 Z" fill="#a07f5a"/>
+        <path d="M615 95 L650 70 L680 95 Z M760 95 L800 62 L840 80 L870 95 Z" fill="#8a6a50"/>
+        <path d="M680 95 L716 40 L728 40 L764 95 Z" fill="#5d3b28"/>
+        <path d="M700 300 C690 220 735 140 722 45" stroke="#ffb703" stroke-width="6" fill="none" stroke-dasharray="14 8"/>
+        <g fill="#cbbfb4" opacity=".9"><circle cx="722" cy="30" r="14"/><circle cx="738" cy="20" r="12"/></g>
+        <g stroke="#fff6ec" stroke-width="5" fill="none" stroke-linecap="round"><path d="M260 158 h60 m-14 -10 l14 10 l-14 10"/><path d="M100 158 h-50 m14 -10 l-14 10 l14 10"/></g>
+      </svg>`,
+      m: [ { x: 150, y: 135, mx: 150, my: 45, es: "Dorsal oceánica (borde divergente)", en: "Mid‑ocean ridge (divergent boundary)" },
+           { x: 400, y: 160, mx: 380, my: 45, es: "Litosfera oceánica", en: "Oceanic lithosphere" },
+           { x: 575, y: 148, mx: 530, my: 45, es: "Fosa oceánica", en: "Ocean trench" },
+           { x: 690, y: 290, mx: 560, my: 330, es: "Zona de subducción (borde convergente)", en: "Subduction zone (convergent boundary)" },
+           { x: 722, y: 45, mx: 830, my: 35, es: "Volcán (cordillera de tipo andino)", en: "Volcano (Andean‑type range)" },
+           { x: 820, y: 170, es: "Litosfera continental", en: "Continental lithosphere" },
+           { x: 300, y: 320, es: "Astenosfera", en: "Asthenosphere" } ] }
+  ];
+
+  const M = { idx: 0, solved: DIAGRAMS.map(() => new Set()) };
+  const mLabel = mk => bi(mk.es, mk.en);
+
+  function renderMuda() {
+    const d = DIAGRAMS[M.idx], solved = M.solved[M.idx];
+    $("#mudaTabs").innerHTML = DIAGRAMS.map((x, i) => `<button class="chip ${i === M.idx ? "on" : ""}" data-i="${i}">${esc(S.lang === "en" ? x.en : x.es)}</button>`).join("");
+    $$("#mudaTabs .chip").forEach(c => c.onclick = () => { M.idx = +c.dataset.i; renderMuda(); });
+    $("#mudaTitle").textContent = S.lang === "en" ? d.en : d.es;
+    const svg = d.svg();
+    const marks = d.m.map((mk, i) => {
+      const mx = mk.mx ?? mk.x, my = mk.my ?? mk.y;
+      const line = (mx !== mk.x || my !== mk.y) ? `<line class="leader" x1="${mx}" y1="${my}" x2="${mk.x}" y2="${mk.y}"/><circle cx="${mk.x}" cy="${mk.y}" r="6" fill="#fff6ec" stroke="#1a0b05" stroke-width="2"/>` : "";
+      return `${line}<g class="mk ${solved.has(i) ? "solved" : ""}" data-m="${i}"><circle class="pulse" cx="${mx}" cy="${my}" r="24"/><circle class="dot" cx="${mx}" cy="${my}" r="24"/><text x="${mx}" y="${my + 10}" text-anchor="middle">${i + 1}</text></g>`;
+    }).join("");
+    $("#mudaSvg").innerHTML = svg.replace("</svg>", marks + "</svg>");
+    $$("#mudaSvg .mk").forEach(g => g.addEventListener("click", () => askMarker(+g.dataset.m)));
+    $("#mudaLegend").innerHTML = d.m.map((mk, i) => `<li class="${solved.has(i) ? "solved" : ""}"><button data-m="${i}"><span class="n">${i + 1}</span><span class="lt">${solved.has(i) ? mLabel(mk) : "? ? ?"}</span></button></li>`).join("");
+    $$("#mudaLegend button").forEach(b => b.onclick = () => askMarker(+b.dataset.m));
+  }
+
+  function askMarker(i) {
+    const d = DIAGRAMS[M.idx], solved = M.solved[M.idx];
+    if (solved.has(i)) return;
+    // Opciones: la correcta + hasta 3 de otras partes del mismo dibujo
+    const others = shuffle(d.m.map((_, k) => k).filter(k => k !== i)).slice(0, 3);
+    const opts = shuffle([i, ...others]);
+    const tried = new Set();
+    const draw = (state) => {
+      const who = S.students[S.current];
+      openModal(`
+        <h2>${t("whatIs")} <span style="display:inline-grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--ink);color:#1a0b05">${i + 1}</span> ?</h2>
+        <p class="muted">${who ? "🌋 " + t("answering") + ": <b>" + esc(who.name) + "</b>" : ""}</p>
+        <div class="options">${opts.map((o, k) => `<button class="opt ${tried.has(o) ? "wrong" : ""} ${state === "ok" && o === i ? "right" : ""}" data-o="${o}" ${tried.has(o) || state ? "disabled" : ""}><span class="let">${"ABCD"[k]}</span><span>${mLabel(d.m[o])}</span></button>`).join("")}</div>
+        ${state === "ko" ? `<div class="feedback ko"><span class="big">💥</span><div><b>${t("wrong")}</b>${t("reboundTxt")}</div></div>` : ""}
+        <div class="actions">
+          ${state === "ko" ? `<button class="btn" id="mReb">🔁 ${t("rebound")}</button><button class="btn" id="mSol">👁️ ${t("reveal")}</button>` : ""}
+          <span class="spacer" style="flex:1"></span><button class="btn" id="closeM">✖ ${t("close")}</button></div>`);
+      $$("#modal .opt").forEach(b => b.onclick = () => {
+        const o = +b.dataset.o;
+        if (o === i) { solved.add(i); draw("ok"); award(1); setTimeout(() => { closeModal(); renderMuda(); }, 1300); }
+        else { tried.add(o); draw("ko"); }
+      });
+      $("#closeM").onclick = () => { closeModal(); renderMuda(); };
+      if (state === "ko") {
+        $("#mReb").onclick = () => pickStudent(true).then(() => { askAgain(); });
+        $("#mSol").onclick = () => { solved.add(i); closeModal(); renderMuda(); };
+      }
+    };
+    const askAgain = () => { draw(null); };
+    draw(null);
+  }
+  $("#mudaShow").onclick = () => { DIAGRAMS[M.idx].m.forEach((_, i) => M.solved[M.idx].add(i)); renderMuda(); };
+  $("#mudaReset").onclick = () => { M.solved[M.idx] = new Set(); renderMuda(); };
+
+  // ---------- VOCABULARIO ----------
+  const V = { hideEn: false, hideEs: false };
+  function renderVocab() {
+    const qy = ($("#vSearch").value || "").toLowerCase().trim();
+    const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const list = D.vocabulario.filter(v => !qy || norm(v[0] + " " + v[1]).includes(norm(qy)));
+    $("#vGrid").innerHTML = list.map(v => `
+      <button class="vcard ${V.hideEn ? "masked" : ""} ${V.hideEs ? "masked-es" : ""}" data-es="${esc(v[0])}" data-en="${esc(v[1])}">
+        <span class="speak" aria-hidden="true">🔊</span>
+        <div class="emo">${v[2]}</div><div class="es">${esc(v[0])}</div><div class="eng">${esc(v[1])}</div></button>`).join("");
+    $$("#vGrid .vcard").forEach(c => c.onclick = () => {
+      if (c.classList.contains("masked") || c.classList.contains("masked-es")) { c.classList.remove("masked", "masked-es"); }
+      const u1 = new SpeechSynthesisUtterance(c.dataset.es); u1.lang = "es-ES"; u1.rate = .9;
+      const u2 = new SpeechSynthesisUtterance(c.dataset.en); u2.lang = "en-AU"; u2.rate = .9;
+      if ("speechSynthesis" in window) { speechSynthesis.cancel(); speechSynthesis.speak(u1); speechSynthesis.speak(u2); }
+    });
+    $("#vHideEn").classList.toggle("on", V.hideEn);
+    $("#vHideEs").classList.toggle("on", V.hideEs);
+  }
+  $("#vSearch").addEventListener("input", renderVocab);
+  $("#vHideEn").onclick = () => { V.hideEn = !V.hideEn; if (V.hideEn) V.hideEs = false; renderVocab(); };
+  $("#vHideEs").onclick = () => { V.hideEs = !V.hideEs; if (V.hideEs) V.hideEn = false; renderVocab(); };
+
+  // ---------- Ascuas decorativas ----------
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce) {
+    const box = $("#embers");
+    for (let i = 0; i < 26; i++) {
+      const e = document.createElement("i");
+      e.style.left = Math.random() * 100 + "%";
+      e.style.setProperty("--dx", (Math.random() * 120 - 60) + "px");
+      e.style.animationDuration = (9 + Math.random() * 12) + "s";
+      e.style.animationDelay = (-Math.random() * 20) + "s";
+      const s = 3 + Math.random() * 6; e.style.width = e.style.height = s + "px";
+      box.appendChild(e);
+    }
+  }
+
+  // ---------- Inicio ----------
+  rebuildQuiz();
+  rebuildCards();
+  // Enlaces directos: #quiz, #cards, #vocab, #mudas o #mudas-3 (dibujo concreto)
+  const [hv, hn] = location.hash.slice(1).split("-");
+  if (hv === "mudas" && DIAGRAMS[+hn]) M.idx = +hn;
+  go(["quiz", "cards", "mudas", "vocab"].includes(hv) ? hv : "home");
+})();
+</script>
+</body>
+</html>
