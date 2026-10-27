@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tierra Viva · Tema 2</title>
+<meta name="author" content="María Dolores Gámez Ortiz">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
@@ -75,7 +77,7 @@
   .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
   .tag { padding: .3rem .8rem; border-radius: 99px; background: rgba(255,255,255,.07); border: 1px solid var(--line); font-size: .9rem; font-weight: 700; }
   .scene { width: 100%; height: auto; border-radius: 18px; }
-  .modes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 18px; }
+  .modes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 18px; }
   .mode { text-align: left; padding: 22px; border-radius: var(--radius); border: 2px solid var(--line); background: var(--panel); position: relative; overflow: hidden; min-height: 11rem; transition: transform .15s, border-color .2s; }
   .mode:hover { border-color: var(--ember); transform: translateY(-3px); }
   .mode .ico { font-size: 2.6rem; }
@@ -85,6 +87,7 @@
   .mode:nth-child(2)::after { background: radial-gradient(circle, rgba(255,183,3,.3), transparent 70%); }
   .mode:nth-child(3)::after { background: radial-gradient(circle, rgba(46,196,182,.3), transparent 70%); }
   .mode:nth-child(4)::after { background: radial-gradient(circle, rgba(141,110,99,.45), transparent 70%); }
+  .mode:nth-child(5)::after { background: radial-gradient(circle, rgba(142,107,214,.4), transparent 70%); }
 
   /* Animaciones de la escena */
   .plate-l { animation: driftL 6s ease-in-out infinite alternate; }
@@ -99,12 +102,6 @@
   .conv { animation: spin 14s linear infinite; transform-origin: center; transform-box: fill-box; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ---------- Barra de alumno / biopuntos ---------- */
-  .bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; margin-bottom: 14px; }
-  .who { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px; }
-  .who .avatar { width: 3.2rem; height: 3.2rem; border-radius: 50%; display: grid; place-items: center; font-size: 1.6rem; background: radial-gradient(circle at 35% 30%, var(--lava), var(--magma)); box-shadow: 0 0 22px rgba(255,90,31,.6); flex: none; }
-  .who .name { font-family: "Baloo 2", sans-serif; font-size: 1.9rem; line-height: 1; }
-  .who .sub { color: var(--muted); font-size: .9rem; }
   .chips { display: flex; gap: 8px; flex-wrap: wrap; }
   .chip { min-height: 2.6rem; padding: .3rem .9rem; border-radius: 99px; border: 2px solid var(--line); background: rgba(255,255,255,.05); font-weight: 800; font-size: .92rem; }
   .chip.on { background: rgba(255,183,3,.2); border-color: var(--lava); }
@@ -186,41 +183,76 @@
   .vcard .emo { font-size: 1.8rem; }
   .vcard .es { font-family: "Baloo 2", sans-serif; font-size: 1.6rem; line-height: 1.05; margin-top: 4px; }
   .vcard .eng { color: #9fe8e0; font-weight: 800; font-size: 1.15rem; margin-top: 4px; }
-  .vcard.masked .eng, .vcard.masked-es .es { filter: blur(9px); }
+  .vcard.masked .eng, .vcard.masked-es .es, .vcard.masked .vdef .en { filter: blur(9px); }
   .vcard .speak { width: 2.6rem; height: 2.6rem; font-size: 1.1rem; }
+  .vcard { display: flex; flex-direction: column; padding: 0; }
+  .vcard .vmain { position: relative; width: 100%; padding: 16px 16px 10px; background: none; border: 0; text-align: left; border-radius: 16px 16px 0 0; }
+  .vcard .vdef-btn { align-self: flex-start; margin: 0 12px 12px; min-height: 2.4rem; padding: .25rem .8rem; border-radius: 99px; border: 2px solid rgba(46,196,182,.55); background: rgba(46,196,182,.12); font-weight: 800; font-size: .9rem; }
+  .vcard .vdef { margin: 0 12px 14px; padding: 10px 12px; border-radius: 12px; background: rgba(0,0,0,.25); border-left: 4px solid var(--sea); font-size: 1rem; line-height: 1.4; }
+  .vcard .vdef .en { display: block; margin-top: 6px; color: #9fe8e0; }
+  .vcard.open .vdef-btn { background: var(--sea); color: #04201d; border-color: transparent; }
+  .vocab-tools .btn.on { background: rgba(46,196,182,.25); border-color: var(--sea); }
+
+  /* ---------- PLANETAS MISTERIOSOS ---------- */
+  .mission-intro { display: flex; gap: 14px; align-items: flex-start; padding: 14px 18px; margin-bottom: 12px; }
+  .mission-intro .rk { font-size: 2.4rem; line-height: 1; }
+  .mission-intro h3 { font-size: 1.4rem; margin-bottom: 4px; }
+  .mission-intro p { margin: 0; color: var(--muted); font-size: .98rem; }
+  .chip .lvl { font-size: .75em; letter-spacing: -.1em; }
+  .planets { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr); gap: 16px; align-items: start; }
+  .mission { padding: 16px; }
+  .mission .story { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
+  .mission h2 { font-size: 2.1rem; }
+  .mission .story p { margin: 2px 0 0; color: var(--muted); }
+  .globe { flex: none; width: 4.4rem; height: 4.4rem; border-radius: 50%; background: radial-gradient(circle at 32% 28%, #fff8, transparent 35%), var(--g); box-shadow: inset -12px -10px 20px rgba(0,0,0,.6), 0 0 26px var(--g); }
+  .graph svg { width: 100%; height: auto; display: block; border-radius: 16px; background: #170d08; }
+  .glegend { display: flex; gap: 22px; justify-content: center; margin-top: 8px; font-weight: 800; }
+  .glegend i { display: inline-block; width: 2rem; height: 6px; border-radius: 3px; vertical-align: middle; margin-right: 8px; }
+  .ask { padding: 18px; }
+  .ask h3 { font-size: 1.4rem; margin: 14px 0 10px; }
+  .ask-top { display: flex; gap: 8px; flex-wrap: wrap; }
+  .clues { margin: 12px 0 0; padding: 12px 16px 12px 34px; border-radius: 14px; background: rgba(255,183,3,.12); border: 2px dashed rgba(255,183,3,.5); display: grid; gap: 6px; }
+  .counts { display: flex; gap: 10px; flex-wrap: wrap; }
+  .counts .btn { min-width: 4rem; min-height: 4rem; font-family: "Baloo 2", sans-serif; font-size: 1.8rem; }
+  .btn.wrong { border-color: var(--bad); background: rgba(255,77,109,.18); opacity: .6; }
+  .lrow { padding: 10px; border-radius: 14px; border: 2px solid var(--line); margin-bottom: 8px; background: rgba(255,255,255,.03); }
+  .lrow .lh { display: flex; justify-content: space-between; gap: 8px; font-weight: 800; margin-bottom: 6px; }
+  .lrow.ok { border-color: var(--ok); background: rgba(52,211,153,.1); }
+  .lrow.ko { border-color: var(--bad); background: rgba(255,77,109,.1); }
+  .sts { display: flex; gap: 6px; }
+  .st { flex: 1 1 0; min-height: 2.8rem; padding: .3rem .4rem; border-radius: 12px; border: 2px solid var(--c); background: rgba(255,255,255,.04); font-weight: 800; font-size: .88rem; line-height: 1.1; }
+  .st.on { background: var(--c); color: #1a0b05; }
+  .st[disabled] { cursor: default; }
+  .solution { padding: clamp(16px, 2.5vw, 28px); margin-top: 16px; }
+  .solution h3 { font-size: 1.8rem; margin-bottom: 12px; }
+  .inside { display: grid; grid-template-columns: minmax(200px, 300px) 1fr; gap: 22px; align-items: center; }
+  .inside svg { width: 100%; height: auto; }
+  .why { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .why li { display: flex; gap: 12px; align-items: flex-start; }
+  .why .sw { flex: none; width: 1.5rem; height: 1.5rem; border-radius: 6px; margin-top: .15rem; border: 2px solid rgba(0,0,0,.4); }
+  .think { margin-top: 16px; padding: 12px 16px; border-radius: 14px; background: rgba(142,107,214,.16); border: 2px solid rgba(142,107,214,.6); font-size: 1.05rem; }
 
   /* ---------- MODALES ---------- */
   .overlay { position: fixed; inset: 0; z-index: 50; background: rgba(10,5,3,.78); backdrop-filter: blur(4px); display: grid; place-items: center; padding: 16px; }
   .modal { width: min(900px, 100%); max-height: 92vh; overflow: auto; padding: clamp(18px, 3vw, 34px); }
   .modal h2 { font-size: 2rem; margin-bottom: 10px; }
-  .modal textarea { width: 100%; min-height: 9rem; padding: 12px; border-radius: 14px; border: 2px solid var(--line); background: rgba(0,0,0,.3); font-size: 1.1rem; }
-  .roster { display: grid; gap: 8px; margin-top: 14px; }
-  .row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 14px; background: rgba(255,255,255,.05); }
-  .row .nm { flex: 1; font-weight: 800; font-size: 1.15rem; }
-  .row .pts { font-family: "Baloo 2", sans-serif; font-size: 1.6rem; min-width: 3ch; text-align: right; color: var(--lava); }
-  .row .turns { color: var(--muted); font-size: .85rem; min-width: 6ch; }
-  .row button { width: 2.8rem; height: 2.8rem; border-radius: 12px; border: 2px solid var(--line); background: rgba(255,255,255,.07); font-size: 1.3rem; font-weight: 800; }
   .muted { color: var(--muted); }
-
-  .picker { text-align: center; padding: 40px 20px; }
-  .picker .vol { font-size: 5rem; animation: wobble .25s infinite alternate; display: inline-block; }
-  @keyframes wobble { from { transform: rotate(-6deg) } to { transform: rotate(6deg) } }
-  .picker .pname { font-family: "Baloo 2", sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); line-height: 1.1; margin-top: 10px; min-height: 1.2em; }
-  .picker.done .pname { color: var(--lava); text-shadow: 0 0 30px rgba(255,90,31,.8); animation: pop .5s; }
-  .picker.done .vol { animation: none; }
-
-  .podium { display: grid; gap: 10px; }
-  .podium .row:nth-child(1) { background: rgba(255,183,3,.22); } .podium .row:nth-child(2) { background: rgba(220,220,220,.14); } .podium .row:nth-child(3) { background: rgba(205,127,50,.2); }
 
   .float-pts { position: fixed; z-index: 80; left: 50%; top: 40%; transform: translate(-50%, -50%); font-family: "Baloo 2", sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: var(--lava); text-shadow: 0 0 30px rgba(255,90,31,.9), 0 4px 0 #7a2a08; pointer-events: none; animation: floatUp 1.6s ease-out forwards; white-space: nowrap; }
   @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, -20%) scale(.6) } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) } 100% { opacity: 0; transform: translate(-50%, -140%) scale(1) } }
 
   .footer { margin-top: 26px; color: var(--muted); font-size: .85rem; text-align: center; }
+  .credits { margin: 10px auto 0; max-width: 60rem; color: var(--muted); font-size: .8rem; text-align: center; line-height: 1.5; }
+  .credits a { color: #9fe8e0; }
 
   @media (max-width: 1000px) {
     .hero { grid-template-columns: 1fr; }
     .modes { grid-template-columns: 1fr 1fr; }
-    .mudas { grid-template-columns: 1fr; }
+    .mudas, .planets { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .inside { grid-template-columns: 1fr; }
+    .inside svg { max-width: 300px; margin: 0 auto; }
   }
   @media (max-width: 640px) {
     .shell { width: calc(100% - 32px); }
@@ -251,8 +283,6 @@
         <button data-lang="both">ES+EN</button>
         <button data-lang="en">EN</button>
       </div>
-      <button id="btnRank">🏆 <span data-t="ranking"></span></button>
-      <button id="btnClass">👥 <span data-t="class"></span></button>
       <button id="btnFull" title="Pantalla completa">⛶</button>
     </div>
     <nav class="nav modetabs" id="nav">
@@ -260,6 +290,7 @@
       <button data-go="cards">🃏 <span data-t="navCards"></span></button>
       <button data-go="mudas">🖼️ <span data-t="navMudas"></span></button>
       <button data-go="vocab">📖 <span data-t="navVocab"></span></button>
+      <button data-go="planetas">🪐 <span data-t="navPlan"></span></button>
     </nav>
   </header>
 
@@ -311,17 +342,9 @@
       <button class="mode" data-go="cards"><div class="ico">🃏</div><h3 data-t="m2t"></h3><p data-t="m2p"></p></button>
       <button class="mode" data-go="mudas"><div class="ico">🖼️</div><h3 data-t="m3t"></h3><p data-t="m3p"></p></button>
       <button class="mode" data-go="vocab"><div class="ico">📖</div><h3 data-t="m4t"></h3><p data-t="m4p"></p></button>
+      <button class="mode" data-go="planetas"><div class="ico">🪐</div><h3 data-t="m5t"></h3><p data-t="m5p"></p></button>
     </div>
   </section>
-
-  <!-- Barra de turno (compartida por cuestionario e imágenes mudas) -->
-  <div class="card bar hidden" id="turnBar">
-    <div class="who">
-      <div class="avatar">🌋</div>
-      <div><div class="name" id="whoName"></div><div class="sub" id="whoSub"></div></div>
-    </div>
-    <button class="btn hot big" id="btnPick">🎲 <span data-t="pick"></span></button>
-  </div>
 
   <!-- ===== CUESTIONARIO ===== -->
   <section id="v-quiz" class="hidden">
@@ -391,11 +414,28 @@
       <input class="search" id="vSearch" type="search" data-tp="search">
       <button class="btn" id="vHideEn">🙈 <span data-t="hideEn"></span></button>
       <button class="btn" id="vHideEs">🙈 <span data-t="hideEs"></span></button>
+      <button class="btn sea" id="vDefsAll">📘 <span data-t="defsAll"></span></button>
     </div>
     <div class="vgrid" id="vGrid"></div>
   </section>
 
+  <!-- ===== PLANETAS MISTERIOSOS ===== -->
+  <section id="v-planetas" class="hidden">
+    <div class="card mission-intro"><span class="rk">🚀</span><div><h3 data-t="plStoryT"></h3><p id="plStory"></p></div></div>
+    <div class="tabs" id="plTabs"></div>
+    <div class="planets">
+      <div class="card mission" id="plMission"></div>
+      <div class="card ask" id="plAsk"></div>
+    </div>
+    <div class="card solution hidden" id="plSolution"></div>
+  </section>
+
   <p class="footer">Biología y Geología · 4º ESO · Tema 2 — <span data-t="footer"></span></p>
+  <p class="credits">
+    <span data-t="author"></span>: <b>María Dolores Gámez Ortiz</b> · © 2026 ·
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="license noopener">CC BY‑NC‑SA 4.0</a><br>
+    <span data-t="license"></span>
+  </p>
 </div>
 
 <!-- Modal genérico -->
@@ -419,59 +459,78 @@
 
   const S = {
     lang: store.get("lang", "es"),
-    students: store.get("students", []), // {name, pts, turns}
-    current: null,
     view: "home"
   };
-  const saveStudents = () => store.set("students", S.students);
 
   // ---------- Textos de la interfaz ----------
   const UI = {
     es: {
       subtitle: "Tema 2 · Tectónica y procesos internos", navQuiz: "Reto", navCards: "Tarjetas", navMudas: "Imágenes mudas", navVocab: "Vocabulario",
-      ranking: "Ranking", class: "Clase",
-      heroA: "La Tierra", heroB: "se mueve", heroP: "Repasa el tema 2 jugando: gana biopuntos respondiendo, identifica las partes de los dibujos y aprende el vocabulario en español e inglés.",
+      heroA: "La Tierra", heroB: "se mueve", heroP: "Repasa el tema 2 jugando: responde al reto, identifica las partes de los dibujos, descubre planetas misteriosos y aprende el vocabulario en español e inglés.",
       tag1: "Interior terrestre", tag2: "Placas", tag3: "Volcanes", tag4: "Terremotos", tag5: "Metamorfismo", tag6: "Pliegues y fallas",
-      m1t: "Reto Biopuntos", m1p: "Preguntas tipo test. Sale un alumno al azar y, si acierta, gana biopuntos.",
+      m1t: "Reto", m1p: "Preguntas tipo test con pistas y rebote para que lo intente otra persona.",
       m2t: "Tarjetas", m2p: "Toca la tarjeta para darle la vuelta. Con audio en español e inglés.",
       m3t: "Imágenes mudas", m3p: "Identifica las partes del volcán, del interior terrestre, de pliegues y fallas…",
-      m4t: "Vocabulario", m4p: "Glosario español ↔ inglés para seguir el tema en los dos idiomas.",
-      pick: "¿Quién responde?", noOne: "Toda la clase", noOneSub: "Pulsa «¿Quién responde?» para elegir al azar",
-      noStudents: "Añade la lista de clase en 👥 Clase para repartir biopuntos", answering: "Responde",
+      m4t: "Vocabulario", m4p: "Glosario español ↔ inglés con la definición de cada concepto.",
       hint: "Pista", check: "Comprobar", rebound: "Rebote", reveal: "Ver solución", next: "Siguiente", shuffle: "Barajar",
       loadCsv: "Cargar CSV de NotebookLM", multi: "☝️ Hay varias respuestas correctas: márcalas todas y pulsa Comprobar",
       right: "¡Correcto!", wrong: "¡Uy! No es correcto", wrongMulti: "No es del todo correcto", reboundTxt: "Puede intentarlo otra persona (rebote).",
       solution: "Solución", question: "Pregunta", of: "de", front: "Pregunta", back: "Respuesta", tapFlip: "👆 Toca para girar",
       mudaHelp: "Toca un número del dibujo para identificar esa parte.", showAll: "Mostrar todo", reset: "Reiniciar",
       whatIs: "¿Qué es el número", search: "Buscar término… / Search…", hideEn: "Ocultar inglés", hideEs: "Ocultar español",
-      classTitle: "👥 Lista de clase", classHelp: "Escribe un nombre por línea. Se guarda solo en este ordenador.", save: "Guardar lista",
-      resetPts: "Poner puntos a 0", resetTurns: "Reiniciar turnos", exportCsv: "Descargar puntos (CSV)", close: "Cerrar",
-      rankTitle: "🏆 Biopuntos", emptyRank: "Todavía no hay alumnado en la lista.", turns: "turnos", pts: "biopuntos",
-      confirmReset: "¿Seguro que quieres poner todos los biopuntos a 0?", allDone: "🎉 ¡Has completado todas las preguntas!",
+      defsAll: "Ver todas las definiciones", defsHide: "Ocultar definiciones", def: "Definición", defHide: "Ocultar definición",
+      navPlan: "Planetas", m5t: "Planetas misteriosos", m5p: "Analiza las ondas sísmicas de planetas ficticios y descubre cómo son por dentro.",
+      plStoryT: "Misión Alba",
+      plStory: "Año 2090. Con los nuevos motores de la nave Ícaro, viajar 4 años luz ya solo lleva unos meses. La tripulación ha llegado al sistema de la estrella Alba y ha encontrado varios planetas rocosos. En cada uno ha colocado una red de sismógrafos y ha registrado las ondas sísmicas de sus terremotos. Con esos datos ha hecho una gráfica de la velocidad de las ondas P y S según la profundidad. Tu misión: descubrir cómo es cada planeta por dentro.",
+      plDepth: "Profundidad (km)", plVel: "Velocidad (km/s)", plSurf: "superficie", plCenter: "centro", plP: "Ondas P", plS: "Ondas S",
+      plQ1: "¿Cuántas capas tiene", plLayers: "capas", plQ2: "¿En qué estado está cada capa?", plLayer: "Capa",
+      stRig: "Sólida rígida", stPla: "Sólida plástica", stLiq: "Líquida", plClueBtn: "Pistas",
+      plClues: "Las ondas P atraviesan sólidos y líquidos.|Las ondas S solo atraviesan sólidos: si desaparecen, la capa es líquida.|Un salto brusco de velocidad indica una discontinuidad: empieza otra capa.|Si P y S se frenan pero las S no desaparecen, la capa es sólida pero plástica.|Si las ondas S vuelven a aparecer, la capa vuelve a ser sólida.",
+      plCountKo: "Cuenta los saltos bruscos de velocidad: cada salto es una discontinuidad que separa dos capas.",
+      plStatesKo: "Hay capas mal clasificadas (en rojo). Revisa las pistas y vuelve a comprobar.",
+      plSolved: "¡Planeta descifrado!", plInside: "Así es por dentro", plThink: "Para pensar:", plNext: "Siguiente planeta",
+      whyFirst: "Las ondas P y S la atraviesan: es sólida y rígida.",
+      whyRig: "Las ondas P y S aumentan de velocidad de golpe: hay una discontinuidad y empieza otra capa sólida y rígida.",
+      whyBack: "Las ondas S vuelven a aparecer: la capa vuelve a ser sólida.",
+      whyPla: "Las ondas S siguen pasando (es sólida), pero P y S se frenan: es un material sólido pero muy plástico.",
+      whyLiq: "Las ondas S desaparecen y las P se frenan de golpe: la capa es líquida.",
+      close: "Cerrar", allDone: "🎉 ¡Has completado todas las preguntas!",
+      author: "Autoría", license: "Puedes usar, compartir y adaptar estos materiales citando la autoría, sin fines comerciales y con la misma licencia.",
       csvOk: "preguntas cargadas", csvErr: "No se ha podido leer el CSV", loaded: "Cargadas", openQ: "Pregunta abierta: responde en voz alta y luego muestra la solución.",
       footer: "ES = español · EN = inglés · ES+EN = los dos a la vez", block: "Bloque"
     },
     en: {
       subtitle: "Unit 2 · Plate tectonics & internal processes", navQuiz: "Challenge", navCards: "Flashcards", navMudas: "Label it", navVocab: "Vocabulary",
-      ranking: "Ranking", class: "Class",
-      heroA: "The Earth", heroB: "is moving", heroP: "Review Unit 2 by playing: earn bio‑points by answering, label the parts of the diagrams and learn the vocabulary in Spanish and English.",
+      heroA: "The Earth", heroB: "is moving", heroP: "Review Unit 2 by playing: take the challenge, label the parts of the diagrams, explore mystery planets and learn the vocabulary in Spanish and English.",
       tag1: "Earth's interior", tag2: "Plates", tag3: "Volcanoes", tag4: "Earthquakes", tag5: "Metamorphism", tag6: "Folds & faults",
-      m1t: "Bio‑point Challenge", m1p: "Multiple‑choice questions. A random student is picked and wins bio‑points for a correct answer.",
+      m1t: "Challenge", m1p: "Multiple‑choice questions with hints and a pass‑it‑on option so someone else can try.",
       m2t: "Flashcards", m2p: "Tap a card to flip it. With audio in Spanish and English.",
       m3t: "Label the diagram", m3p: "Identify the parts of a volcano, the Earth's interior, folds and faults…",
-      m4t: "Vocabulary", m4p: "Spanish ↔ English glossary to follow the unit in both languages.",
-      pick: "Who answers?", noOne: "Whole class", noOneSub: "Tap “Who answers?” to pick someone at random",
-      noStudents: "Add your class list in 👥 Class to award bio‑points", answering: "Answering",
+      m4t: "Vocabulary", m4p: "Spanish ↔ English glossary with a definition for each concept.",
       hint: "Hint", check: "Check", rebound: "Pass it on", reveal: "Show answer", next: "Next", shuffle: "Shuffle",
       loadCsv: "Load NotebookLM CSV", multi: "☝️ More than one answer is correct: select them all and tap Check",
       right: "Correct!", wrong: "Oops! That's not right", wrongMulti: "Not quite right", reboundTxt: "Someone else can try (pass it on).",
       solution: "Answer", question: "Question", of: "of", front: "Question", back: "Answer", tapFlip: "👆 Tap to flip",
       mudaHelp: "Tap a number on the diagram to identify that part.", showAll: "Show all", reset: "Reset",
       whatIs: "What is number", search: "Search… / Buscar término…", hideEn: "Hide English", hideEs: "Hide Spanish",
-      classTitle: "👥 Class list", classHelp: "One name per line. Only saved on this computer.", save: "Save list",
-      resetPts: "Reset points to 0", resetTurns: "Reset turns", exportCsv: "Download points (CSV)", close: "Close",
-      rankTitle: "🏆 Bio‑points", emptyRank: "No students on the list yet.", turns: "turns", pts: "bio‑points",
-      confirmReset: "Are you sure you want to reset all bio‑points to 0?", allDone: "🎉 You have finished all the questions!",
+      defsAll: "Show all definitions", defsHide: "Hide definitions", def: "Definition", defHide: "Hide definition",
+      navPlan: "Planets", m5t: "Mystery planets", m5p: "Analyse the seismic waves of fictional planets and find out what they are like inside.",
+      plStoryT: "Mission Alba",
+      plStory: "Year 2090. With the new engines of the starship Icarus, travelling 4 light‑years only takes a few months. The crew has reached the system of the star Alba and found several rocky planets. On each one they set up a network of seismographs and recorded the seismic waves from its quakes. With that data they plotted the speed of P and S waves against depth. Your mission: find out what each planet is like inside.",
+      plDepth: "Depth (km)", plVel: "Speed (km/s)", plSurf: "surface", plCenter: "centre", plP: "P waves", plS: "S waves",
+      plQ1: "How many layers does", plLayers: "layers", plQ2: "What state is each layer in?", plLayer: "Layer",
+      stRig: "Rigid solid", stPla: "Plastic solid", stLiq: "Liquid", plClueBtn: "Clues",
+      plClues: "P waves travel through solids and liquids.|S waves only travel through solids: if they disappear, the layer is liquid.|A sudden jump in speed shows a discontinuity: a new layer begins.|If P and S slow down but S waves don't disappear, the layer is solid but plastic.|If S waves appear again, the layer is solid again.",
+      plCountKo: "Count the sudden jumps in speed: each jump is a discontinuity between two layers.",
+      plStatesKo: "Some layers are wrong (in red). Check the clues and try again.",
+      plSolved: "Planet decoded!", plInside: "What it's like inside", plThink: "Think about it:", plNext: "Next planet",
+      whyFirst: "P and S waves travel through it: it is a rigid solid.",
+      whyRig: "P and S waves suddenly speed up: there is a discontinuity and a new rigid solid layer begins.",
+      whyBack: "S waves appear again: the layer is solid again.",
+      whyPla: "S waves still pass (it is solid), but P and S slow down: it is a solid but very plastic material.",
+      whyLiq: "S waves disappear and P waves suddenly slow down: the layer is liquid.",
+      close: "Close", allDone: "🎉 You have finished all the questions!",
+      author: "Author", license: "You may use, share and adapt these materials with credit to the author, for non‑commercial purposes and under the same licence.",
       csvOk: "questions loaded", csvErr: "Could not read the CSV", loaded: "Loaded", openQ: "Open question: answer out loud, then show the answer.",
       footer: "ES = Spanish · EN = English · ES+EN = both at once", block: "Topic"
     }
@@ -492,20 +551,19 @@
     $$("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
     $$("[data-tp]").forEach(el => el.placeholder = t(el.dataset.tp));
     $$("#langs button").forEach(b => b.classList.toggle("on", b.dataset.lang === S.lang));
-    renderWho();
     if (S.view === "quiz") renderQuiz();
     if (S.view === "cards") { renderBlockChips("cardBlocks", C.blocks, rebuildCards); renderCard(); }
     if (S.view === "mudas") renderMuda();
     if (S.view === "vocab") renderVocab();
+    if (S.view === "planetas") renderPlanets();
     if (S.view === "quiz") renderBlockChips("quizBlocks", Q.blocks, rebuildQuiz);
   }
 
   // ---------- Navegación ----------
   function go(view) {
     S.view = view;
-    ["home", "quiz", "cards", "mudas", "vocab"].forEach(v => $("#v-" + v).classList.toggle("hidden", v !== view));
+    ["home", "quiz", "cards", "mudas", "vocab", "planetas"].forEach(v => $("#v-" + v).classList.toggle("hidden", v !== view));
     $$("#nav [data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === view));
-    $("#turnBar").classList.toggle("hidden", !(view === "quiz" || view === "mudas"));
     applyUI();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -516,98 +574,19 @@
     else document.exitFullscreen();
   });
 
-  // ---------- Alumnado, turnos y biopuntos ----------
-  function renderWho() {
-    const s = S.students[S.current];
-    if (s) { $("#whoName").textContent = s.name; $("#whoSub").textContent = `${t("answering")} · ${s.pts} ${t("pts")}`; }
-    else { $("#whoName").textContent = t("noOne"); $("#whoSub").textContent = S.students.length ? t("noOneSub") : t("noStudents"); }
-  }
-
-  function pickStudent(excludeCurrent) {
-    if (!S.students.length) { openClass(); return Promise.resolve(null); }
-    let pool = S.students.map((s, i) => i).filter(i => !(excludeCurrent && i === S.current && S.students.length > 1));
-    const min = Math.min(...pool.map(i => S.students[i].turns || 0));
-    const fair = pool.filter(i => (S.students[i].turns || 0) === min);
-    const chosen = fair[Math.floor(Math.random() * fair.length)];
-    return new Promise(resolve => {
-      openModal(`<div class="picker" id="picker"><div class="vol">🌋</div><div class="pname" id="pname">…</div></div>`, true);
-      let n = 0; const total = 22;
-      const tick = () => {
-        n++;
-        const show = n >= total ? chosen : pool[Math.floor(Math.random() * pool.length)];
-        $("#pname").textContent = S.students[show].name;
-        if (n < total) setTimeout(tick, 40 + n * n * 0.7);
-        else {
-          $("#picker").classList.add("done");
-          S.students[chosen].turns = (S.students[chosen].turns || 0) + 1;
-          S.current = chosen; saveStudents(); renderWho();
-          setTimeout(() => { closeModal(); resolve(chosen); }, 1300);
-        }
-      };
-      tick();
-    });
-  }
-  $("#btnPick").addEventListener("click", () => pickStudent(false));
-
-  function award(pts) {
-    const s = S.students[S.current];
+  // Animación de acierto
+  function cheer() {
     const el = document.createElement("div");
     el.className = "float-pts";
-    el.textContent = s ? `+${pts} 🌋 ${s.name}` : "🌋 ¡Bien!";
+    el.textContent = "🌋 " + t("right");
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 1700);
-    if (!s) return;
-    s.pts += pts; saveStudents(); renderWho();
   }
 
   // ---------- Modal ----------
-  let modalLocked = false;
-  function openModal(html, locked) { $("#modal").innerHTML = html; $("#overlay").classList.remove("hidden"); modalLocked = !!locked; }
-  function closeModal() { $("#overlay").classList.add("hidden"); $("#modal").innerHTML = ""; modalLocked = false; }
-  $("#overlay").addEventListener("click", e => { if (e.target.id === "overlay" && !modalLocked) closeModal(); });
-
-  function openClass() {
-    const rows = S.students.map((s, i) => `
-      <div class="row"><span class="nm">${esc(s.name)}</span><span class="turns">${s.turns || 0} ${t("turns")}</span>
-      <button data-d="${i}" data-v="-1">−</button><span class="pts">${s.pts}</span><button data-d="${i}" data-v="1">+</button></div>`).join("");
-    openModal(`
-      <h2>${t("classTitle")}</h2>
-      <p class="muted">${t("classHelp")}</p>
-      <textarea id="names" placeholder="Ana\nBruno\nCarla…">${esc(S.students.map(s => s.name).join("\n"))}</textarea>
-      <div class="actions"><button class="btn hot" id="saveNames">💾 ${t("save")}</button>
-        <button class="btn" id="resetTurns">↺ ${t("resetTurns")}</button>
-        <button class="btn" id="resetPts">0️⃣ ${t("resetPts")}</button>
-        <button class="btn" id="exportCsv">⬇️ ${t("exportCsv")}</button>
-        <span class="spacer" style="flex:1"></span><button class="btn" id="closeM">✖ ${t("close")}</button></div>
-      <div class="roster">${rows}</div>`);
-    $("#saveNames").onclick = () => {
-      const names = $("#names").value.split(/\n/).map(x => x.trim()).filter(Boolean);
-      const old = Object.fromEntries(S.students.map(s => [s.name, s]));
-      S.students = names.map(n => old[n] || { name: n, pts: 0, turns: 0 });
-      S.current = null; saveStudents(); renderWho(); openClass();
-    };
-    $("#resetTurns").onclick = () => { S.students.forEach(s => s.turns = 0); saveStudents(); openClass(); };
-    $("#resetPts").onclick = () => { if (confirm(t("confirmReset"))) { S.students.forEach(s => s.pts = 0); saveStudents(); renderWho(); openClass(); } };
-    $("#exportCsv").onclick = () => {
-      const csv = "Alumno;Biopuntos\n" + S.students.map(s => `"${s.name.replace(/"/g, '""')}";${s.pts}`).join("\n");
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv" }));
-      a.download = "biopuntos-tema2.csv"; a.click();
-    };
-    $("#closeM").onclick = closeModal;
-    $$("#modal [data-d]").forEach(b => b.onclick = () => { const s = S.students[+b.dataset.d]; s.pts = Math.max(0, s.pts + +b.dataset.v); saveStudents(); renderWho(); openClass(); });
-  }
-  $("#btnClass").addEventListener("click", openClass);
-
-  function openRank() {
-    const list = S.students.slice().sort((a, b) => b.pts - a.pts);
-    const medal = i => ["🥇", "🥈", "🥉"][i] || `${i + 1}.`;
-    openModal(`<h2>${t("rankTitle")}</h2>
-      ${list.length ? `<div class="roster podium">${list.map((s, i) => `<div class="row"><span style="font-size:1.6rem;min-width:2.2rem">${medal(i)}</span><span class="nm">${esc(s.name)}</span><span class="pts">${s.pts}</span></div>`).join("")}</div>` : `<p class="muted">${t("emptyRank")}</p>`}
-      <div class="actions"><span class="spacer" style="flex:1"></span><button class="btn" id="closeM">✖ ${t("close")}</button></div>`);
-    $("#closeM").onclick = closeModal;
-  }
-  $("#btnRank").addEventListener("click", openRank);
+  function openModal(html) { $("#modal").innerHTML = html; $("#overlay").classList.remove("hidden"); }
+  function closeModal() { $("#overlay").classList.add("hidden"); $("#modal").innerHTML = ""; }
+  $("#overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeModal(); });
 
   // ---------- Filtros por bloque ----------
   function renderBlockChips(id, set, onChange) {
@@ -672,7 +651,7 @@
     const q = Q.pool[Q.pos];
     if (Q.done) return;
     if (q.multi) { Q.sel.has(oi) ? Q.sel.delete(oi) : Q.sel.add(oi); Q.result = null; renderQuiz(); return; }
-    if (q.c.includes(oi)) { Q.done = true; Q.result = "ok"; award(1); }
+    if (q.c.includes(oi)) { Q.done = true; Q.result = "ok"; cheer(); }
     else { Q.tried.add(oi); Q.result = "ko"; }
     renderQuiz();
   }
@@ -680,14 +659,14 @@
     const q = Q.pool[Q.pos];
     if (!Q.sel.size) return;
     const ok = Q.sel.size === q.c.length && q.c.every(i => Q.sel.has(i));
-    if (ok) { Q.done = true; Q.result = "ok"; award(2); }
+    if (ok) { Q.done = true; Q.result = "ok"; cheer(); }
     else { Q.result = "ko"; Q.sel = new Set(); }
     renderQuiz();
   };
-  $("#qRebound").onclick = () => pickStudent(true).then(() => { Q.result = null; renderQuiz(); });
+  $("#qRebound").onclick = () => { Q.result = null; renderQuiz(); };
   $("#qReveal").onclick = () => { Q.done = true; Q.result = "sol"; renderQuiz(); };
   $("#qHintBtn").onclick = () => { Q.hint = true; renderQuiz(); };
-  $("#qNext").onclick = () => { if (Q.pos < Q.pool.length - 1) { Q.pos++; resetQuestion(); S.current = null; renderWho(); renderQuiz(); } else { $("#qText").textContent = t("allDone"); } };
+  $("#qNext").onclick = () => { if (Q.pos < Q.pool.length - 1) { Q.pos++; resetQuestion(); renderQuiz(); } else { $("#qText").textContent = t("allDone"); } };
   $("#qPrev").onclick = () => { if (Q.pos > 0) { Q.pos--; resetQuestion(); renderQuiz(); } };
   $("#qShuffle").onclick = rebuildQuiz;
 
@@ -946,10 +925,8 @@
     const opts = shuffle([i, ...others]);
     const tried = new Set();
     const draw = (state) => {
-      const who = S.students[S.current];
       openModal(`
         <h2>${t("whatIs")} <span style="display:inline-grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--ink);color:#1a0b05">${i + 1}</span> ?</h2>
-        <p class="muted">${who ? "🌋 " + t("answering") + ": <b>" + esc(who.name) + "</b>" : ""}</p>
         <div class="options">${opts.map((o, k) => `<button class="opt ${tried.has(o) ? "wrong" : ""} ${state === "ok" && o === i ? "right" : ""}" data-o="${o}" ${tried.has(o) || state ? "disabled" : ""}><span class="let">${"ABCD"[k]}</span><span>${mLabel(d.m[o])}</span></button>`).join("")}</div>
         ${state === "ko" ? `<div class="feedback ko"><span class="big">💥</span><div><b>${t("wrong")}</b>${t("reboundTxt")}</div></div>` : ""}
         <div class="actions">
@@ -957,12 +934,12 @@
           <span class="spacer" style="flex:1"></span><button class="btn" id="closeM">✖ ${t("close")}</button></div>`);
       $$("#modal .opt").forEach(b => b.onclick = () => {
         const o = +b.dataset.o;
-        if (o === i) { solved.add(i); draw("ok"); award(1); setTimeout(() => { closeModal(); renderMuda(); }, 1300); }
+        if (o === i) { solved.add(i); draw("ok"); cheer(); setTimeout(() => { closeModal(); renderMuda(); }, 1300); }
         else { tried.add(o); draw("ko"); }
       });
       $("#closeM").onclick = () => { closeModal(); renderMuda(); };
       if (state === "ko") {
-        $("#mReb").onclick = () => pickStudent(true).then(() => { askAgain(); });
+        $("#mReb").onclick = () => askAgain();
         $("#mSol").onclick = () => { solved.add(i); closeModal(); renderMuda(); };
       }
     };
@@ -973,27 +950,173 @@
   $("#mudaReset").onclick = () => { M.solved[M.idx] = new Set(); renderMuda(); };
 
   // ---------- VOCABULARIO ----------
-  const V = { hideEn: false, hideEs: false };
+  const V = { hideEn: false, hideEs: false, allDefs: false, open: new Set() };
   function renderVocab() {
     const qy = ($("#vSearch").value || "").toLowerCase().trim();
     const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
     const list = D.vocabulario.filter(v => !qy || norm(v[0] + " " + v[1]).includes(norm(qy)));
-    $("#vGrid").innerHTML = list.map(v => `
-      <button class="vcard ${V.hideEn ? "masked" : ""} ${V.hideEs ? "masked-es" : ""}" data-es="${esc(v[0])}" data-en="${esc(v[1])}">
-        <span class="speak" aria-hidden="true">🔊</span>
-        <div class="emo">${v[2]}</div><div class="es">${esc(v[0])}</div><div class="eng">${esc(v[1])}</div></button>`).join("");
-    $$("#vGrid .vcard").forEach(c => c.onclick = () => {
+    $("#vGrid").innerHTML = list.map(v => {
+      const open = V.allDefs || V.open.has(v[0]);
+      return `
+      <div class="vcard ${V.hideEn ? "masked" : ""} ${V.hideEs ? "masked-es" : ""} ${open ? "open" : ""}" data-key="${esc(v[0])}">
+        <button class="vmain" data-es="${esc(v[0])}" data-en="${esc(v[1])}">
+          <span class="speak" aria-hidden="true">🔊</span>
+          <div class="emo">${v[2]}</div><div class="es">${esc(v[0])}</div><div class="eng">${esc(v[1])}</div></button>
+        ${v[3] ? `<button class="vdef-btn" aria-expanded="${open}">📘 ${t(open ? "defHide" : "def")}</button>
+        ${open ? `<p class="vdef">${bi(v[3], v[4])}</p>` : ""}` : ""}
+      </div>`;
+    }).join("");
+    $$("#vGrid .vmain").forEach(b => b.onclick = () => {
+      const c = b.parentElement;
       if (c.classList.contains("masked") || c.classList.contains("masked-es")) { c.classList.remove("masked", "masked-es"); }
-      const u1 = new SpeechSynthesisUtterance(c.dataset.es); u1.lang = "es-ES"; u1.rate = .9;
-      const u2 = new SpeechSynthesisUtterance(c.dataset.en); u2.lang = "en-AU"; u2.rate = .9;
+      const u1 = new SpeechSynthesisUtterance(b.dataset.es); u1.lang = "es-ES"; u1.rate = .9;
+      const u2 = new SpeechSynthesisUtterance(b.dataset.en); u2.lang = "en-AU"; u2.rate = .9;
       if ("speechSynthesis" in window) { speechSynthesis.cancel(); speechSynthesis.speak(u1); speechSynthesis.speak(u2); }
+    });
+    $$("#vGrid .vdef-btn").forEach(b => b.onclick = () => {
+      const k = b.parentElement.dataset.key;
+      if (V.allDefs) { V.allDefs = false; D.vocabulario.forEach(v => V.open.add(v[0])); }
+      V.open.has(k) ? V.open.delete(k) : V.open.add(k);
+      renderVocab();
     });
     $("#vHideEn").classList.toggle("on", V.hideEn);
     $("#vHideEs").classList.toggle("on", V.hideEs);
+    $("#vDefsAll").classList.toggle("on", V.allDefs);
+    $("#vDefsAll span").textContent = t(V.allDefs ? "defsHide" : "defsAll");
   }
+  $("#vDefsAll").onclick = () => { V.allDefs = !V.allDefs; V.open.clear(); renderVocab(); };
   $("#vSearch").addEventListener("input", renderVocab);
   $("#vHideEn").onclick = () => { V.hideEn = !V.hideEn; if (V.hideEn) V.hideEs = false; renderVocab(); };
   $("#vHideEs").onclick = () => { V.hideEs = !V.hideEs; if (V.hideEs) V.hideEn = false; renderVocab(); };
+
+  // ---------- PLANETAS MISTERIOSOS ----------
+  const ST = { rig: "#b08968", pla: "#ff8a3d", liq: "#3fa7f5" };
+  const P_COL = "#ffb703", S_COL = "#2ec4b6";
+  const stName = k => t({ rig: "stRig", pla: "stPla", liq: "stLiq" }[k]);
+  const plFresh = () => ({ count: false, wrong: new Set(), pick: [], checked: false, solved: false });
+  const PL = { idx: 0, clues: false, s: D.planetas.map(plFresh) };
+  const plTop = (p, i) => (i ? p.capas[i - 1].to : 0);
+  const plRange = (p, i) => `${plTop(p, i)}–${p.capas[i].to} km`;
+
+  // Gráfica velocidad–profundidad. Las capas solo se marcan cuando ya se han contado.
+  function plGraph(p, st) {
+    const W = 900, H = 480, ml = 78, mr = 28, mt = 44, mb = 82, R = p.r, VMAX = 14;
+    const X = d => ml + d / R * (W - ml - mr), Y = v => H - mb - v / VMAX * (H - mt - mb);
+    const txt = (x, y, s, a = "middle", extra = "") => `<text x="${x}" y="${y}" text-anchor="${a}" fill="#e0c9b4" font-size="17" font-weight="700" font-family="Nunito" ${extra}>${esc(s)}</text>`;
+    let g = "";
+    if (st.count) p.capas.forEach((c, i) => {
+      const a = X(plTop(p, i)), b = X(c.to);
+      g += `<rect x="${a}" y="${mt}" width="${b - a}" height="${H - mt - mb}" fill="${st.solved ? ST[c.st] : "#fff"}" opacity="${st.solved ? .18 : i % 2 ? .06 : 0}"/>`;
+      g += `<circle cx="${(a + b) / 2}" cy="${mt - 20}" r="15" fill="#fff6ec"/><text x="${(a + b) / 2}" y="${mt - 14}" text-anchor="middle" font-size="18" font-weight="800" font-family="Nunito" fill="#1a0b05">${i + 1}</text>`;
+    });
+    for (let v = 0; v <= VMAX; v += 2) g += `<line x1="${ml}" x2="${W - mr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#fff" opacity="${v ? .08 : .5}"/>` + txt(ml - 12, Y(v) + 6, v, "end");
+    const step = R > 4500 ? 1000 : 500;
+    for (let d = 0; d <= R; d += step) g += `<line x1="${X(d)}" x2="${X(d)}" y1="${mt}" y2="${H - mb}" stroke="#fff" opacity="${d ? .08 : .5}"/>` + txt(X(d), H - mb + 26, d);
+    if (st.count) p.capas.slice(0, -1).forEach(c => g += `<line x1="${X(c.to)}" x2="${X(c.to)}" y1="${mt}" y2="${H - mb}" stroke="#fff6ec" stroke-width="2.5" stroke-dasharray="8 6" opacity=".8"/>`);
+    // Ondas P: línea continua con saltos verticales en cada discontinuidad
+    const pd = p.capas.map((c, i) => `${i ? "L" : "M"}${X(plTop(p, i))},${Y(c.p[0])} L${X(c.to)},${Y(c.p[1])}`).join(" ");
+    // Ondas S: caen a 0 al entrar en una capa líquida y reaparecen al salir
+    let sd = "", pen = false;
+    p.capas.forEach((c, i) => {
+      const a = X(plTop(p, i));
+      if (c.s) {
+        sd += pen ? ` L${a},${Y(c.s[0])}` : (i ? ` M${a},${Y(0)} L${a},${Y(c.s[0])}` : `M${a},${Y(c.s[0])}`);
+        sd += ` L${X(c.to)},${Y(c.s[1])}`; pen = true;
+      } else { if (pen) sd += ` L${a},${Y(0)}`; pen = false; }
+    });
+    g += `<path d="${pd}" fill="none" stroke="${P_COL}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    g += `<path d="${sd}" fill="none" stroke="${S_COL}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    g += txt((ml + W - mr) / 2, H - 14, t("plDepth"), "middle", 'font-size="19" font-weight="800"');
+    g += txt(ml, H - 14, "↑ " + t("plSurf"), "start", 'font-size="15"') + txt(W - mr, H - 14, t("plCenter") + " ↑", "end", 'font-size="15"');
+    g += txt(22, (mt + H - mb) / 2, t("plVel"), "middle", `font-size="19" font-weight="800" transform="rotate(-90 22 ${(mt + H - mb) / 2})"`);
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("plVel") + " / " + t("plDepth"))}">${g}</svg>`;
+  }
+
+  // Corte del planeta: anillos concéntricos coloreados según el estado de cada capa
+  function plInside(p) {
+    const C = 160, RD = 150;
+    let g = `<circle cx="${C}" cy="${C}" r="${RD + 6}" fill="${p.color}" opacity=".35"/>`;
+    p.capas.forEach((c, i) => {
+      const r = (p.r - plTop(p, i)) / p.r * RD, same = i && p.capas[i - 1].st === c.st;
+      g += `<circle cx="${C}" cy="${C}" r="${r}" fill="${ST[c.st]}" fill-opacity="${same ? .72 : 1}" stroke="#1a0b05" stroke-width="2"/>`;
+    });
+    p.capas.forEach((c, i) => {
+      const r0 = (p.r - plTop(p, i)) / p.r * RD, r1 = (p.r - c.to) / p.r * RD;
+      if (r0 - r1 >= 16) g += `<text x="${C + (r0 + r1) / 2}" y="${C + 7}" text-anchor="middle" font-size="19" font-weight="800" font-family="Nunito" fill="#1a0b05">${i + 1}</text>`;
+    });
+    return `<svg viewBox="0 0 320 320" role="img" aria-label="${esc(p.nombre)}">${g}</svg>`;
+  }
+
+  function plWhy(p, i) {
+    const c = p.capas[i], prev = p.capas[i - 1];
+    const k = c.st === "liq" ? "whyLiq" : c.st === "pla" ? "whyPla" : !prev ? "whyFirst" : prev.st === "liq" ? "whyBack" : "whyRig";
+    return bi(UI.es[k], UI.en[k]);
+  }
+
+  function renderPlanets() {
+    const p = D.planetas[PL.idx], st = PL.s[PL.idx], n = p.capas.length;
+    $("#plStory").innerHTML = bi(UI.es.plStory, UI.en.plStory);
+    $("#plTabs").innerHTML = D.planetas.map((x, i) => `<button class="chip ${i === PL.idx ? "on" : ""}" data-i="${i}">${PL.s[i].solved ? "✅" : "🪐"} ${esc(x.nombre)} <span class="lvl">${"⭐".repeat(x.nivel)}</span></button>`).join("");
+    $$("#plTabs .chip").forEach(c => c.onclick = () => { PL.idx = +c.dataset.i; renderPlanets(); });
+
+    $("#plMission").innerHTML = `
+      <div class="story"><div class="globe" style="--g:${p.color}"></div><div><h2>${esc(p.nombre)}</h2><p>${bi(p.desc.es, p.desc.en)}</p></div></div>
+      <div class="graph">${plGraph(p, st)}</div>
+      <div class="glegend"><span><i style="background:${P_COL}"></i>${t("plP")}</span><span><i style="background:${S_COL}"></i>${t("plS")}</span></div>`;
+
+    let h = `<div class="ask-top"><button class="btn ${PL.clues ? "sea" : ""}" id="plClueBtn">💡 ${t("plClueBtn")}</button><button class="btn" id="plReset">↺ ${t("reset")}</button></div>`;
+    if (PL.clues) h += `<ul class="clues">${t("plClues").split("|").map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+    if (!st.count) {
+      h += `<h3>1. ${t("plQ1")} ${esc(p.nombre)}?</h3>
+        <div class="counts">${[2, 3, 4, 5, 6].map(k => `<button class="btn ${st.wrong.has(k) ? "wrong" : ""}" data-n="${k}" ${st.wrong.has(k) ? "disabled" : ""}>${k}</button>`).join("")}</div>`;
+      if (st.wrong.size) h += `<div class="feedback ko"><span class="big">🔍</span><div>${t("plCountKo")}</div></div>`;
+      h += `<div class="actions"><button class="btn" id="plSol">👁️ ${t("reveal")}</button></div>`;
+    } else {
+      h += `<h3>1. ✅ ${n} ${t("plLayers")}</h3><h3>2. ${t("plQ2")}</h3>`;
+      h += p.capas.map((c, i) => `
+        <div class="lrow ${st.checked ? (st.pick[i] === c.st ? "ok" : "ko") : ""}">
+          <div class="lh"><span>${t("plLayer")} ${i + 1}</span><span class="muted">${plRange(p, i)}</span></div>
+          <div class="sts">${["rig", "pla", "liq"].map(k => `<button class="st ${st.pick[i] === k ? "on" : ""}" style="--c:${ST[k]}" data-i="${i}" data-k="${k}" ${st.solved ? "disabled" : ""}>${stName(k)}</button>`).join("")}</div>
+        </div>`).join("");
+      if (st.solved) h += `<div class="feedback ok"><span class="big">🪐</span><div><b>${t("plSolved")}</b></div></div>`;
+      else {
+        if (st.checked) h += `<div class="feedback ko"><span class="big">🔍</span><div>${t("plStatesKo")}</div></div>`;
+        h += `<div class="actions"><button class="btn sea big" id="plCheck">✔️ ${t("check")}</button><button class="btn" id="plSol">👁️ ${t("reveal")}</button></div>`;
+      }
+    }
+    $("#plAsk").innerHTML = h;
+
+    $("#plClueBtn").onclick = () => { PL.clues = !PL.clues; renderPlanets(); };
+    $("#plReset").onclick = () => { PL.s[PL.idx] = plFresh(); renderPlanets(); };
+    $$("#plAsk .counts .btn").forEach(b => b.onclick = () => {
+      const k = +b.dataset.n;
+      if (k === n) { st.count = true; cheer(); } else st.wrong.add(k);
+      renderPlanets();
+    });
+    $$("#plAsk .st").forEach(b => b.onclick = () => { st.pick[+b.dataset.i] = b.dataset.k; st.checked = false; renderPlanets(); });
+    if ($("#plCheck")) $("#plCheck").onclick = () => {
+      st.checked = true;
+      if (p.capas.every((c, i) => st.pick[i] === c.st)) { st.solved = true; cheer(); }
+      renderPlanets();
+      if (st.solved) $("#plSolution").scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    if ($("#plSol")) $("#plSol").onclick = () => {
+      Object.assign(st, { count: true, pick: p.capas.map(c => c.st), checked: true, solved: true });
+      renderPlanets();
+      $("#plSolution").scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const sol = $("#plSolution");
+    sol.classList.toggle("hidden", !st.solved);
+    sol.innerHTML = !st.solved ? "" : `
+      <h3>🔭 ${t("plInside")}: ${esc(p.nombre)}</h3>
+      <div class="inside">${plInside(p)}
+        <ol class="why">${p.capas.map((c, i) => `<li><span class="sw" style="background:${ST[c.st]}"></span><div><b>${i + 1}. ${bi(c.es, c.en)}</b> <span class="muted">· ${plRange(p, i)} · ${stName(c.st)}</span><br>${plWhy(p, i)}</div></li>`).join("")}</ol>
+      </div>
+      <div class="think"><b>🤔 ${t("plThink")}</b> ${bi(p.think.es, p.think.en)}</div>
+      <div class="actions"><span class="spacer"></span><button class="btn hot big" id="plNext">${t("plNext")} ▶</button></div>`;
+    if (st.solved) $("#plNext").onclick = () => { PL.idx = (PL.idx + 1) % D.planetas.length; renderPlanets(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  }
 
   // ---------- Ascuas decorativas ----------
   const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1013,10 +1136,11 @@
   // ---------- Inicio ----------
   rebuildQuiz();
   rebuildCards();
-  // Enlaces directos: #quiz, #cards, #vocab, #mudas o #mudas-3 (dibujo concreto)
+  // Enlaces directos: #quiz, #cards, #vocab, #planetas, #mudas o #mudas-3 / #planetas-2 (uno concreto)
   const [hv, hn] = location.hash.slice(1).split("-");
   if (hv === "mudas" && DIAGRAMS[+hn]) M.idx = +hn;
-  go(["quiz", "cards", "mudas", "vocab"].includes(hv) ? hv : "home");
+  if (hv === "planetas" && D.planetas[+hn]) PL.idx = +hn;
+  go(["quiz", "cards", "mudas", "vocab", "planetas"].includes(hv) ? hv : "home");
 })();
 </script>
 </body>

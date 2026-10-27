@@ -570,24 +570,123 @@ window.TEMA2 = {
   ],
 
   // Vocabulario bilingüe (pensado para alumnado que está aprendiendo español)
+  // [término ES, término EN, emoji, definición ES, definición EN]
   vocabulario: [
-    ["corteza", "crust", "🥧"], ["manto", "mantle", "🔶"], ["núcleo", "core", "🔴"],
-    ["litosfera", "lithosphere", "🧱"], ["astenosfera", "asthenosphere", "🫠"], ["mesosfera", "mesosphere", "🟠"],
-    ["discontinuidad", "discontinuity (boundary)", "〰️"], ["onda sísmica", "seismic wave", "📈"], ["sismógrafo", "seismograph", "📟"],
-    ["placa litosférica", "tectonic plate", "🧩"], ["borde / límite de placa", "plate boundary", "🚧"], ["subducción", "subduction", "⤵️"],
-    ["dorsal oceánica", "mid‑ocean ridge", "🌊"], ["fosa oceánica", "ocean trench", "🕳️"], ["deriva continental", "continental drift", "🗺️"],
-    ["expansión del fondo oceánico", "sea‑floor spreading", "↔️"], ["corriente de convección", "convection current", "🔄"], ["penacho térmico", "mantle plume", "🔥"],
-    ["punto caliente", "hotspot", "📍"], ["terremoto / seísmo", "earthquake", "📳"], ["hipocentro (foco)", "hypocentre (focus)", "🎯"],
-    ["epicentro", "epicentre", "⬆️"], ["volcán", "volcano", "🌋"], ["cráter", "crater", "⭕"],
-    ["chimenea", "vent / conduit", "🕳️"], ["cámara magmática", "magma chamber", "🫕"], ["colada de lava", "lava flow", "🔥"],
-    ["piroclastos", "pyroclasts", "🪨"], ["ceniza", "ash", "🌫️"], ["magma", "magma", "🟧"],
-    ["fusión", "melting", "🫠"], ["roca plutónica", "plutonic rock", "⬇️"], ["roca volcánica", "volcanic rock", "⬆️"],
-    ["cordillera", "mountain range", "⛰️"], ["arco de islas", "island arc", "🏝️"], ["prisma de acreción", "accretionary wedge", "🔺"],
-    ["metamorfismo", "metamorphism", "💎"], ["presión", "pressure", "🗜️"], ["temperatura", "temperature", "🌡️"],
-    ["pliegue", "fold", "〰️"], ["anticlinal", "anticline", "⛰️"], ["sinclinal", "syncline", "🥣"],
-    ["charnela", "hinge", "🔁"], ["flanco", "limb", "📐"], ["falla", "fault", "⚡"],
-    ["falla normal", "normal fault", "↘️"], ["falla inversa", "reverse fault", "↗️"], ["falla de desgarre", "strike‑slip fault", "↔️"],
-    ["diaclasa", "joint", "🪓"], ["labio levantado / hundido", "raised / sunken block", "↕️"], ["horst / graben", "horst / graben", "🏔️"],
-    ["esfuerzo compresivo", "compression", "➡️⬅️"], ["esfuerzo distensivo", "extension (stretching)", "⬅️➡️"], ["isostasia", "isostasy", "⚖️"]
+    ["corteza", "crust", "🥧", "Capa más externa y delgada de la Tierra. Puede ser continental (más gruesa y antigua) u oceánica (más fina y densa).", "Thinnest, outermost layer of the Earth. It can be continental (thicker, older) or oceanic (thinner, denser)."],
+    ["manto", "mantle", "🔶", "Capa intermedia entre la corteza y el núcleo, formada por rocas ricas en silicatos de hierro y magnesio. Es la capa más voluminosa.", "Middle layer between the crust and the core, made of rocks rich in iron and magnesium silicates. It is the largest layer."],
+    ["núcleo", "core", "🔴", "Capa más interna de la Tierra, formada sobre todo por hierro y níquel. El externo es líquido y el interno, sólido.", "Innermost layer of the Earth, mostly iron and nickel. The outer core is liquid and the inner core is solid."],
+    ["litosfera", "lithosphere", "🧱", "Capa rígida formada por la corteza y la parte superior del manto. Está dividida en placas.", "Rigid layer made of the crust and the uppermost mantle. It is broken into plates."],
+    ["astenosfera", "asthenosphere", "🫠", "Zona del manto superior, bajo la litosfera, más plástica, sobre la que se desplazan las placas.", "Softer, plastic zone of the upper mantle, below the lithosphere, on which the plates move."],
+    ["mesosfera", "mesosphere", "🟠", "Parte del manto situada bajo la astenosfera, sólida y más rígida, hasta el núcleo.", "Part of the mantle below the asthenosphere, solid and more rigid, down to the core."],
+    ["discontinuidad", "discontinuity (boundary)", "〰️", "Superficie del interior terrestre donde cambia bruscamente la velocidad de las ondas sísmicas; separa dos capas (p. ej., Mohorovičić y Gutenberg).", "Surface inside the Earth where seismic wave speed changes suddenly; it separates two layers (e.g. Moho and Gutenberg)."],
+    ["onda sísmica", "seismic wave", "📈", "Vibración que se propaga desde el hipocentro de un terremoto. Las ondas P atraviesan sólidos y líquidos; las S, solo sólidos.", "Vibration spreading out from an earthquake's focus. P waves cross solids and liquids; S waves only solids."],
+    ["sismógrafo", "seismograph", "📟", "Aparato que detecta y registra las ondas sísmicas. Su registro se llama sismograma.", "Instrument that detects and records seismic waves. Its record is called a seismogram."],
+    ["placa litosférica", "tectonic plate", "🧩", "Cada uno de los fragmentos rígidos en que está dividida la litosfera, que se mueven unos respecto a otros.", "Each of the rigid pieces the lithosphere is broken into, moving relative to one another."],
+    ["borde / límite de placa", "plate boundary", "🚧", "Zona de contacto entre dos placas. Puede ser constructivo (divergente), destructivo (convergente) o pasivo (transformante).", "Zone where two plates meet. It can be constructive (divergent), destructive (convergent) or passive (transform)."],
+    ["subducción", "subduction", "⤵️", "Proceso por el que una placa oceánica, más densa, se hunde bajo otra placa hacia el manto.", "Process in which a denser oceanic plate sinks beneath another plate into the mantle."],
+    ["dorsal oceánica", "mid‑ocean ridge", "🌊", "Gran cordillera submarina donde dos placas se separan y sale magma que forma nueva litosfera oceánica.", "Huge underwater mountain range where two plates move apart and magma rises to form new oceanic lithosphere."],
+    ["fosa oceánica", "ocean trench", "🕳️", "Depresión alargada y muy profunda del fondo marino donde una placa subduce bajo otra.", "Long, very deep depression in the sea floor where one plate subducts beneath another."],
+    ["deriva continental", "continental drift", "🗺️", "Teoría de Wegener (1912): los continentes estuvieron unidos en Pangea y se han ido desplazando.", "Wegener's theory (1912): the continents were once joined in Pangaea and have been moving apart."],
+    ["expansión del fondo oceánico", "sea‑floor spreading", "↔️", "Formación de nuevo fondo oceánico en las dorsales, que se va separando a ambos lados. Por eso las rocas son más jóvenes cerca de la dorsal.", "New ocean floor forms at ridges and moves away on both sides, so rocks are younger near the ridge."],
+    ["corriente de convección", "convection current", "🔄", "Movimiento circular del material del manto: el caliente sube y el frío baja. Contribuye a mover las placas.", "Circular movement of mantle material: hot rock rises and cold rock sinks. It helps move the plates."],
+    ["penacho térmico", "mantle plume", "🔥", "Columna de material caliente que asciende desde zonas profundas del manto hasta la litosfera.", "Column of hot material rising from deep in the mantle up to the lithosphere."],
+    ["punto caliente", "hotspot", "📍", "Zona de volcanismo en el interior de una placa causada por un penacho térmico (p. ej., Hawái o Canarias).", "Area of volcanic activity inside a plate caused by a mantle plume (e.g. Hawaii or the Canary Islands)."],
+    ["terremoto / seísmo", "earthquake", "📳", "Vibración brusca del terreno producida por la liberación repentina de energía acumulada en las rocas, normalmente al romperse una falla.", "Sudden shaking of the ground caused by the release of energy stored in rocks, usually when a fault breaks."],
+    ["hipocentro (foco)", "hypocentre (focus)", "🎯", "Punto del interior de la Tierra donde se origina un terremoto.", "Point inside the Earth where an earthquake starts."],
+    ["epicentro", "epicentre", "⬆️", "Punto de la superficie situado justo encima del hipocentro; allí el terremoto suele ser más intenso.", "Point on the surface directly above the focus; the earthquake is usually strongest there."],
+    ["volcán", "volcano", "🌋", "Lugar de la superficie por donde sale el magma del interior, junto con gases y piroclastos.", "Place on the surface where magma from inside the Earth comes out, together with gases and pyroclasts."],
+    ["cráter", "crater", "⭕", "Abertura en la parte superior del volcán por donde salen los materiales.", "Opening at the top of a volcano where materials come out."],
+    ["chimenea", "vent / conduit", "🕳️", "Conducto por el que asciende el magma desde la cámara magmática hasta el cráter.", "Pipe through which magma rises from the magma chamber to the crater."],
+    ["cámara magmática", "magma chamber", "🫕", "Zona del interior donde se acumula el magma antes de una erupción.", "Underground area where magma collects before an eruption."],
+    ["colada de lava", "lava flow", "🔥", "Río de lava que sale del volcán y se desplaza por la superficie hasta enfriarse.", "Stream of lava coming out of a volcano and moving over the surface until it cools."],
+    ["piroclastos", "pyroclasts", "🪨", "Fragmentos sólidos expulsados por un volcán: cenizas, lapilli y bombas volcánicas.", "Solid fragments thrown out by a volcano: ash, lapilli and volcanic bombs."],
+    ["ceniza", "ash", "🌫️", "Piroclastos de tamaño muy pequeño (menos de 2 mm) que pueden viajar lejos con el viento.", "Very small pyroclasts (under 2 mm) that can travel far in the wind."],
+    ["magma", "magma", "🟧", "Roca fundida, con gases y cristales, que se encuentra en el interior de la Tierra. Al salir a la superficie se llama lava.", "Molten rock, with gases and crystals, found inside the Earth. When it reaches the surface it is called lava."],
+    ["fusión", "melting", "🫠", "Paso de roca sólida a magma por aumento de temperatura, descenso de presión o llegada de agua.", "Change of solid rock into magma due to higher temperature, lower pressure or added water."],
+    ["roca plutónica", "plutonic rock", "⬇️", "Roca magmática que se enfría lentamente en el interior; tiene cristales grandes (p. ej., granito).", "Igneous rock that cools slowly underground; it has large crystals (e.g. granite)."],
+    ["roca volcánica", "volcanic rock", "⬆️", "Roca magmática que se enfría rápido en la superficie; tiene cristales pequeños o vidrio (p. ej., basalto).", "Igneous rock that cools quickly at the surface; it has tiny crystals or glass (e.g. basalt)."],
+    ["cordillera", "mountain range", "⛰️", "Conjunto de montañas formado, sobre todo, por la compresión en bordes convergentes (p. ej., Himalaya, Andes).", "Chain of mountains formed mainly by compression at convergent boundaries (e.g. Himalayas, Andes)."],
+    ["arco de islas", "island arc", "🏝️", "Cadena curva de islas volcánicas formada cuando una placa oceánica subduce bajo otra oceánica (p. ej., Japón).", "Curved chain of volcanic islands formed when an oceanic plate subducts under another oceanic plate (e.g. Japan)."],
+    ["prisma de acreción", "accretionary wedge", "🔺", "Acumulación de sedimentos rascados de la placa que subduce y amontonados junto a la fosa.", "Pile of sediments scraped off the subducting plate and stacked next to the trench."],
+    ["metamorfismo", "metamorphism", "💎", "Transformación de una roca en estado sólido por cambios de presión y/o temperatura, sin llegar a fundirse.", "Change of a rock in the solid state due to changes in pressure and/or temperature, without melting."],
+    ["presión", "pressure", "🗜️", "Fuerza que soportan las rocas, sobre todo por el peso de los materiales de encima. Aumenta con la profundidad.", "Force acting on rocks, mainly from the weight of the material above. It increases with depth."],
+    ["temperatura", "temperature", "🌡️", "Grado de calor. En el interior terrestre aumenta con la profundidad (gradiente geotérmico).", "How hot something is. Inside the Earth it increases with depth (geothermal gradient)."],
+    ["pliegue", "fold", "〰️", "Deformación plástica de los estratos, que se curvan sin romperse, por esfuerzos compresivos.", "Plastic bending of rock layers, without breaking, caused by compression."],
+    ["anticlinal", "anticline", "⛰️", "Pliegue con forma de arco hacia arriba; en su núcleo están los materiales más antiguos.", "Upward‑arching fold; the oldest rocks are in its core."],
+    ["sinclinal", "syncline", "🥣", "Pliegue con forma de cubeta hacia abajo; en su núcleo están los materiales más modernos.", "Downward, bowl‑shaped fold; the youngest rocks are in its core."],
+    ["charnela", "hinge", "🔁", "Zona de máxima curvatura de un pliegue, donde se unen los dos flancos.", "Zone of greatest curvature of a fold, where the two limbs meet."],
+    ["flanco", "limb", "📐", "Cada uno de los dos lados de un pliegue, a ambos lados de la charnela.", "Each of the two sides of a fold, on either side of the hinge."],
+    ["falla", "fault", "⚡", "Fractura de las rocas en la que los bloques se desplazan uno respecto al otro.", "Break in rocks along which the blocks move relative to each other."],
+    ["falla normal", "normal fault", "↘️", "Falla producida por distensión: el bloque de techo baja respecto al otro.", "Fault caused by extension: the hanging‑wall block moves down."],
+    ["falla inversa", "reverse fault", "↗️", "Falla producida por compresión: el bloque de techo sube sobre el otro.", "Fault caused by compression: the hanging‑wall block moves up over the other."],
+    ["falla de desgarre", "strike‑slip fault", "↔️", "Falla en la que los bloques se desplazan horizontalmente, uno junto al otro.", "Fault where the blocks slide past each other horizontally."],
+    ["diaclasa", "joint", "🪓", "Fractura de las rocas sin desplazamiento de los bloques.", "Crack in rocks with no movement of the blocks."],
+    ["labio levantado / hundido", "raised / sunken block", "↕️", "Los dos bloques de una falla: el que queda más alto (levantado) y el que queda más bajo (hundido).", "The two blocks of a fault: the one left higher (raised) and the one left lower (sunken)."],
+    ["horst / graben", "horst / graben", "🏔️", "Horst: bloque elevado entre dos fallas normales. Graben (fosa tectónica): bloque hundido entre dos fallas.", "Horst: block raised between two normal faults. Graben (rift valley): block dropped between two faults."],
+    ["esfuerzo compresivo", "compression", "➡️⬅️", "Fuerzas que empujan las rocas unas contra otras; producen pliegues y fallas inversas.", "Forces pushing rocks together; they produce folds and reverse faults."],
+    ["esfuerzo distensivo", "extension (stretching)", "⬅️➡️", "Fuerzas que estiran y separan las rocas; producen fallas normales.", "Forces pulling rocks apart; they produce normal faults."],
+    ["isostasia", "isostasy", "⚖️", "Equilibrio de la litosfera, que «flota» sobre el manto: se hunde si gana peso y se eleva si lo pierde (p. ej., al fundirse el hielo o erosionarse).", "Balance of the lithosphere “floating” on the mantle: it sinks when it gains weight and rises when it loses it (e.g. when ice melts or land is eroded)."]
+  ],
+
+  // Planetas ficticios del sistema Alba (a 4 años luz) para la actividad de ondas sísmicas.
+  // r = radio (km). Cada capa: to = profundidad a la que acaba (km), st = estado
+  // (rig = sólida rígida, pla = sólida plástica, liq = líquida), p / s = velocidad (km/s)
+  // de las ondas P y S al principio y al final de la capa (s: null = las S no pasan).
+  planetas: [
+    {
+      nombre: "Áurea", nivel: 2, r: 4800, color: "#e0a83a",
+      desc: { es: "Planeta rocoso de tonos dorados, algo más pequeño que la Tierra (radio: 4800 km).", en: "Golden rocky planet, a little smaller than the Earth (radius: 4,800 km)." },
+      capas: [
+        { to: 400, st: "rig", p: [6, 7], s: [3.4, 3.9], es: "Corteza", en: "Crust" },
+        { to: 1800, st: "rig", p: [8.2, 11], s: [4.6, 6.1], es: "Manto rígido", en: "Rigid mantle" },
+        { to: 2800, st: "pla", p: [9.2, 9.8], s: [4.2, 4.5], es: "Capa sólida muy plástica", en: "Very plastic solid layer" },
+        { to: 4800, st: "liq", p: [7.4, 8.8], s: null, es: "Núcleo líquido", en: "Liquid core" }
+      ],
+      think: { es: "Si el núcleo es de metal líquido y está en movimiento, ¿qué podría generar alrededor de Áurea? (Pista: en la Tierra hace que funcionen las brújulas).", en: "If the core is moving liquid metal, what could it create around Áurea? (Hint: on Earth it makes compasses work)." }
+    },
+    {
+      nombre: "Brumaria", nivel: 1, r: 3600, color: "#9aa5b1",
+      desc: { es: "Planeta pequeño, gris y lleno de cráteres (radio: 3600 km).", en: "Small grey planet covered in craters (radius: 3,600 km)." },
+      capas: [
+        { to: 300, st: "rig", p: [5.8, 6.6], s: [3.3, 3.8], es: "Corteza", en: "Crust" },
+        { to: 2000, st: "rig", p: [7.8, 10.2], s: [4.4, 5.6], es: "Manto", en: "Mantle" },
+        { to: 3600, st: "rig", p: [11, 12.2], s: [6.4, 6.9], es: "Núcleo sólido", en: "Solid core" }
+      ],
+      think: { es: "Brumaria no tiene ninguna capa líquida ni plástica. ¿Crees que tendrá volcanes activos y placas en movimiento? ¿Por qué?", en: "Brumaria has no liquid or plastic layer. Do you think it has active volcanoes and moving plates? Why?" }
+    },
+    {
+      nombre: "Tálasa", nivel: 3, r: 4200, color: "#5fb3d9",
+      desc: { es: "Planeta blanco azulado cubierto por una gruesa capa de hielo (radio: 4200 km).", en: "Bluish‑white planet covered by a thick layer of ice (radius: 4,200 km)." },
+      capas: [
+        { to: 250, st: "rig", p: [3.8, 4.2], s: [1.9, 2.1], es: "Corteza de hielo", en: "Ice crust" },
+        { to: 700, st: "liq", p: [1.5, 1.6], s: null, es: "Océano subterráneo de agua", en: "Underground water ocean" },
+        { to: 2900, st: "rig", p: [7.8, 10], s: [4.4, 5.5], es: "Manto rocoso", en: "Rocky mantle" },
+        { to: 4200, st: "rig", p: [11.2, 12], s: [6.2, 6.6], es: "Núcleo metálico sólido", en: "Solid metal core" }
+      ],
+      think: { es: "Bajo el hielo hay un océano de agua líquida. ¿Podría haber vida en Tálasa? ¿Qué más necesitaría?", en: "There is a liquid water ocean under the ice. Could there be life on Tálasa? What else would it need?" }
+    },
+    {
+      nombre: "Ferrox", nivel: 3, r: 6000, color: "#c4553a",
+      desc: { es: "Planeta rojizo, rico en hierro y con mucha actividad volcánica (radio: 6000 km).", en: "Reddish, iron‑rich planet with lots of volcanic activity (radius: 6,000 km)." },
+      capas: [
+        { to: 300, st: "rig", p: [6.4, 8.3], s: [3.7, 4.7], es: "Litosfera", en: "Lithosphere" },
+        { to: 800, st: "pla", p: [7.7, 8], s: [4.2, 4.4], es: "Capa plástica (como la astenosfera)", en: "Plastic layer (like the asthenosphere)" },
+        { to: 2900, st: "rig", p: [8.9, 13], s: [5, 7], es: "Manto rígido", en: "Rigid mantle" },
+        { to: 5000, st: "liq", p: [8, 10], s: null, es: "Núcleo externo líquido", en: "Liquid outer core" },
+        { to: 6000, st: "rig", p: [11, 11.3], s: [3.5, 3.7], es: "Núcleo interno sólido", en: "Solid inner core" }
+      ],
+      think: { es: "Ferrox se parece mucho a un planeta que conoces muy bien… ¿a cuál? Compara sus capas una a una.", en: "Ferrox looks a lot like a planet you know very well… which one? Compare their layers one by one." }
+    },
+    {
+      nombre: "Nebulón", nivel: 4, r: 5200, color: "#8e6bd6",
+      desc: { es: "Planeta violáceo envuelto en nubes de gases volcánicos (radio: 5200 km).", en: "Purple planet wrapped in clouds of volcanic gases (radius: 5,200 km)." },
+      capas: [
+        { to: 350, st: "rig", p: [5.5, 6.2], s: [3.2, 3.6], es: "Corteza", en: "Crust" },
+        { to: 900, st: "liq", p: [4.2, 4.6], s: null, es: "Océano de magma", en: "Magma ocean" },
+        { to: 3000, st: "rig", p: [8.5, 11.5], s: [4.8, 6.3], es: "Manto", en: "Mantle" },
+        { to: 5200, st: "liq", p: [8, 9.4], s: null, es: "Núcleo líquido", en: "Liquid core" }
+      ],
+      think: { es: "Justo debajo de la corteza hay una capa de roca fundida. ¿Cómo crees que serán los volcanes de Nebulón? ¿Y su corteza?", en: "Right under the crust there is a layer of molten rock. What do you think Nebulón's volcanoes are like? And its crust?" }
+    }
   ]
 };
