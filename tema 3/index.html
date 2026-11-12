@@ -1,0 +1,1244 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relieve y riesgos · Temas 3 y 4</title>
+<meta name="author" content="María Dolores Gámez Ortiz">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #071318; --bg2: #0d2229; --panel: #0f2930; --panel2: #15353d;
+    --line: rgba(150, 220, 230, .22); --ink: #f1fbff; --muted: #bcd6dc;
+    --magma: #1fa2c4; --lava: #f6c344; --ember: #3fbf7f; --sea: #2ec4b6;
+    --ok: #34d399; --bad: #ff4d6d; --rock: #8d6e63;
+    --radius: 22px; --shadow: 0 18px 50px rgba(0,0,0,.45);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { font-size: clamp(17px, 0.9vw + 9px, 26px); background: var(--bg); }
+  body {
+    margin: 0; min-height: 100vh; color: var(--ink); overflow-x: hidden;
+    font-family: "Nunito", "Segoe UI", sans-serif; line-height: 1.35;
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(31,162,196,.25), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(63,191,127,.14), transparent 60%),
+      linear-gradient(180deg, var(--bg2), var(--bg));
+    background-attachment: fixed;
+  }
+  h1, h2, h3, .display { font-family: "Baloo 2", "Trebuchet MS", sans-serif; line-height: 1.05; margin: 0; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  button { cursor: pointer; touch-action: manipulation; user-select: none; }
+  .hidden { display: none !important; }
+
+  /* Gotas de lluvia */
+  .embers { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .embers i { position: absolute; top: -40px; width: 2px; height: 18px; border-radius: 2px;
+    background: linear-gradient(180deg, transparent, rgba(159,232,255,.75));
+    animation: fall linear infinite; opacity: 0; }
+  @keyframes fall { 0% { transform: translate(0,0); opacity: 0 } 10% { opacity: .7 } 100% { transform: translate(var(--dx), 110vh); opacity: 0 } }
+
+  .shell { position: relative; z-index: 1; width: min(1500px, calc(100% - 32px)); margin: 0 auto; padding: 14px 0 40px; }
+
+  /* Barra superior */
+  .topbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+  .brand { display: flex; align-items: center; gap: 12px; background: none; border: 0; padding: 0; text-align: left; }
+  .brand svg { width: 3rem; height: 3rem; flex: none; }
+  .brand strong { display: block; font-family: "Baloo 2", sans-serif; font-size: 1.5rem; line-height: 1; }
+  .brand small { color: var(--muted); font-size: .8rem; }
+  .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+  .nav button, .btn {
+    min-height: 3rem; padding: .5rem .9rem; border-radius: 16px; border: 2px solid var(--line);
+    background: rgba(255,255,255,.06); font-weight: 800; font-size: 1rem; display: inline-flex; align-items: center; gap: .45rem; justify-content: center;
+    transition: transform .12s ease, background .2s, border-color .2s;
+  }
+  .nav button:active, .btn:active { transform: scale(.96); }
+  .nav button.on { background: linear-gradient(135deg, var(--magma), var(--ember)); border-color: transparent; color: #1a0b05; }
+  .btn.hot { background: linear-gradient(135deg, var(--magma), var(--lava)); color: #1a0b05; border-color: transparent; }
+  .btn.sea { background: rgba(46,196,182,.18); border-color: rgba(46,196,182,.55); }
+  .btn.big { min-height: 3.6rem; font-size: 1.15rem; padding: .6rem 1.4rem; }
+  .modetabs { width: 100%; margin-left: 0; }
+  .modetabs button { flex: 1 1 0; min-height: 3.5rem; font-size: 1.15rem; }
+  .langs { display: flex; border: 2px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .nav .langs button { min-height: 2.75rem; border: 0; border-radius: 0; padding: .4rem .85rem; border: 0; background: transparent; font-weight: 800; }
+  .nav .langs button.on { background: var(--sea); color: #04201d; }
+
+  .card { background: linear-gradient(180deg, rgba(21,53,61,.92), rgba(15,41,48,.92)); border: 2px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .en { display: block; color: #9fe8e0; font-style: italic; font-size: .82em; margin-top: .25em; font-weight: 700; }
+  .en::before { content: "🇬🇧 "; font-style: normal; }
+
+  /* ---------- PORTADA ---------- */
+  .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; align-items: center; padding: clamp(18px, 3vw, 40px); overflow: hidden; position: relative; }
+  .hero h1 { font-size: clamp(2.6rem, 5vw, 4.6rem); letter-spacing: -.01em; }
+  .hero h1 span { background: linear-gradient(90deg, var(--lava), var(--magma)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { color: var(--muted); font-size: 1.15rem; max-width: 36ch; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .tag { padding: .3rem .8rem; border-radius: 99px; background: rgba(255,255,255,.07); border: 1px solid var(--line); font-size: .9rem; font-weight: 700; }
+  .scene { width: 100%; height: auto; border-radius: 18px; }
+  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 18px; }
+  .mode { text-align: left; padding: 22px; border-radius: var(--radius); border: 2px solid var(--line); background: var(--panel); position: relative; overflow: hidden; min-height: 11rem; transition: transform .15s, border-color .2s; }
+  .mode:hover { border-color: var(--ember); transform: translateY(-3px); }
+  .mode .ico { font-size: 2.6rem; }
+  .mode h3 { font-size: 1.55rem; margin: .3rem 0 .2rem; }
+  .mode p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .mode::after { content: ""; position: absolute; right: -40px; bottom: -40px; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, rgba(255,90,31,.35), transparent 70%); }
+  .mode:nth-child(2)::after { background: radial-gradient(circle, rgba(255,183,3,.3), transparent 70%); }
+  .mode:nth-child(3)::after { background: radial-gradient(circle, rgba(46,196,182,.3), transparent 70%); }
+  .mode:nth-child(4)::after { background: radial-gradient(circle, rgba(141,110,99,.45), transparent 70%); }
+  .mode:nth-child(5)::after { background: radial-gradient(circle, rgba(142,107,214,.4), transparent 70%); }
+  .mode:nth-child(6)::after { background: radial-gradient(circle, rgba(63,191,127,.4), transparent 70%); }
+
+  /* Animaciones de la escena */
+  .flow { stroke-dasharray: 16 12; animation: flow 1.4s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -28; } }
+  .rain line { animation: drop 1s linear infinite; }
+  .rain line:nth-child(2n) { animation-delay: .35s; } .rain line:nth-child(3n) { animation-delay: .7s; }
+  @keyframes drop { 0% { transform: translateY(-14px); opacity: 0 } 30% { opacity: 1 } 100% { transform: translateY(26px); opacity: 0 } }
+  .waves path { animation: wave 3s ease-in-out infinite alternate; }
+  @keyframes wave { to { transform: translateX(-18px); } }
+  .cloud { animation: driftC 9s ease-in-out infinite alternate; }
+  @keyframes driftC { to { transform: translateX(22px); } }
+
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { min-height: 2.6rem; padding: .3rem .9rem; border-radius: 99px; border: 2px solid var(--line); background: rgba(255,255,255,.05); font-weight: 800; font-size: .92rem; }
+  .chip.on { background: rgba(255,183,3,.2); border-color: var(--lava); }
+
+  /* ---------- CUESTIONARIO ---------- */
+  .quiz { padding: clamp(18px, 2.5vw, 34px); }
+  .qhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .qtag { font-weight: 800; color: var(--lava); letter-spacing: .04em; font-size: 1rem; }
+  .qcount { color: var(--muted); font-weight: 800; }
+  .progress { height: 10px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; margin-bottom: 18px; }
+  .progress i { display: block; height: 100%; background: linear-gradient(90deg, var(--sea), var(--lava), var(--magma)); transition: width .4s; }
+  .question { font-size: clamp(1.6rem, 2.4vw, 2.5rem); font-weight: 800; margin: 0 0 6px; }
+  .multi-note { display: inline-block; margin: 6px 0 4px; padding: .25rem .8rem; border-radius: 99px; background: rgba(46,196,182,.18); border: 2px solid var(--sea); font-weight: 800; font-size: .95rem; }
+  .hint { margin-top: 10px; padding: 12px 16px; border-radius: 14px; background: rgba(255,183,3,.12); border: 2px dashed rgba(255,183,3,.5); font-size: 1.1rem; }
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  .opt { display: flex; align-items: center; gap: 14px; text-align: left; min-height: 5.2rem; padding: 14px 18px; border-radius: 18px; border: 3px solid var(--line); background: rgba(255,255,255,.05); font-size: clamp(1.1rem, 1.5vw, 1.5rem); font-weight: 700; transition: transform .12s, background .2s, border-color .2s; }
+  .opt:active { transform: scale(.98); }
+  .opt .let { flex: none; width: 2.6rem; height: 2.6rem; border-radius: 12px; display: grid; place-items: center; font-family: "Baloo 2", sans-serif; font-size: 1.5rem; background: rgba(255,255,255,.1); }
+  .opt:nth-child(1) .let { background: #ff5a1f; color: #1a0b05; } .opt:nth-child(2) .let { background: #ffb703; color: #1a0b05; }
+  .opt:nth-child(3) .let { background: #2ec4b6; color: #04201d; } .opt:nth-child(4) .let { background: #c084fc; color: #1d0a33; }
+  .opt.sel { border-color: var(--sea); background: rgba(46,196,182,.2); }
+  .opt.right { border-color: var(--ok); background: rgba(52,211,153,.25); animation: pop .4s; }
+  .opt.wrong { border-color: var(--bad); background: rgba(255,77,109,.18); opacity: .7; animation: shake .4s; }
+  .opt[disabled] { cursor: default; }
+  @keyframes pop { 50% { transform: scale(1.03); } }
+  @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .actions .spacer { flex: 1; }
+  .feedback { margin-top: 18px; padding: 16px 20px; border-radius: 18px; font-size: 1.2rem; display: flex; gap: 14px; align-items: flex-start; }
+  .feedback .big { font-size: 2.4rem; line-height: 1; }
+  .feedback.ok { background: rgba(52,211,153,.16); border: 2px solid var(--ok); }
+  .feedback.ko { background: rgba(255,77,109,.14); border: 2px solid var(--bad); }
+  .feedback.info { background: rgba(46,196,182,.14); border: 2px solid var(--sea); }
+  .feedback b { font-family: "Baloo 2", sans-serif; font-size: 1.5rem; display: block; }
+
+  /* ---------- TARJETAS ---------- */
+  .flip-wrap { perspective: 1600px; margin: 6px auto 0; max-width: 1100px; }
+  .flip { position: relative; width: 100%; min-height: min(24rem, 55vh); transform-style: preserve-3d; transition: transform .6s cubic-bezier(.3,1.4,.5,1); cursor: pointer; }
+  .flip.turned { transform: rotateY(180deg); }
+  .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 28px; padding: clamp(22px, 4vw, 54px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border: 3px solid var(--line); box-shadow: var(--shadow); }
+  .face.front { background: radial-gradient(circle at 20% 0%, rgba(246,195,68,.22), transparent 50%), linear-gradient(160deg, #12343c, #0b1f25); }
+  .face.back { transform: rotateY(180deg); background: radial-gradient(circle at 80% 100%, rgba(46,196,182,.28), transparent 50%), linear-gradient(160deg, #0f2a2a, #10201d); }
+  .face .label { position: absolute; top: 18px; left: 22px; font-weight: 800; color: var(--muted); font-size: .95rem; letter-spacing: .08em; text-transform: uppercase; }
+  .face .txt { font-size: clamp(1.7rem, 3vw, 3rem); font-weight: 800; }
+  .face.back .txt { font-size: clamp(1.4rem, 2.4vw, 2.3rem); }
+  .face .tap { position: absolute; bottom: 16px; color: var(--muted); font-size: .9rem; }
+  .speak { position: absolute; top: 12px; right: 14px; width: 3.2rem; height: 3.2rem; border-radius: 50%; border: 2px solid var(--line); background: rgba(255,255,255,.08); font-size: 1.4rem; }
+  .cardnav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+  .cardnav .count { font-family: "Baloo 2", sans-serif; font-size: 1.6rem; min-width: 6ch; text-align: center; }
+
+  /* ---------- IMÁGENES MUDAS ---------- */
+  .mudas { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(300px, 1fr); gap: 16px; align-items: start; }
+  .diagram { padding: 12px; }
+  .diagram svg { width: 100%; height: auto; max-height: max(340px, calc(100vh - 380px)); display: block; border-radius: 16px; }
+  .mk { cursor: pointer; }
+  .mk circle.dot { fill: #fff6ec; stroke: #1a0b05; stroke-width: 4; transition: fill .2s; }
+  .mk text { font-family: "Baloo 2", sans-serif; font-size: 30px; font-weight: 800; fill: #1a0b05; pointer-events: none; }
+  .mk:hover circle.dot { fill: var(--lava); }
+  .mk.solved circle.dot { fill: var(--ok); }
+  .mk .pulse { fill: none; stroke: #fff6ec; stroke-width: 3; opacity: .7; animation: ring 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  .mk.solved .pulse { display: none; }
+  @keyframes ring { 0% { transform: scale(1); opacity: .7 } 100% { transform: scale(1.7); opacity: 0 } }
+  .leader { stroke: #fff6ec; stroke-width: 3; stroke-dasharray: 6 5; opacity: .9; }
+  .legend { padding: 16px; }
+  .legend h3 { font-size: 1.6rem; margin-bottom: 10px; }
+  .legend ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .legend li button { width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; min-height: 3.2rem; padding: 8px 12px; border-radius: 14px; border: 2px solid var(--line); background: rgba(255,255,255,.04); font-size: 1.1rem; font-weight: 800; }
+  .legend .n { flex: none; width: 2.3rem; height: 2.3rem; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #1a0b05; font-family: "Baloo 2", sans-serif; font-size: 1.3rem; }
+  .legend li.solved .n { background: var(--ok); }
+  .legend li:not(.solved) .lt { color: var(--muted); letter-spacing: .3em; }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tabs .chip { font-size: .85rem; min-height: 2.4rem; }
+
+  /* ---------- VOCABULARIO ---------- */
+  .vocab-tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  .search { flex: 1; min-width: 240px; min-height: 3.2rem; padding: .4rem 1rem; border-radius: 16px; border: 2px solid var(--line); background: rgba(0,0,0,.25); font-size: 1.1rem; }
+  .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 12px; }
+  .vcard { position: relative; padding: 16px 16px 14px; border-radius: 18px; border: 2px solid var(--line); background: var(--panel); text-align: left; min-height: 8.2rem; }
+  .vcard .emo { font-size: 1.8rem; }
+  .vcard .es { font-family: "Baloo 2", sans-serif; font-size: 1.6rem; line-height: 1.05; margin-top: 4px; }
+  .vcard .eng { color: #9fe8e0; font-weight: 800; font-size: 1.15rem; margin-top: 4px; }
+  .vcard.masked .eng, .vcard.masked-es .es, .vcard.masked .vdef .en { filter: blur(9px); }
+  .vcard .speak { width: 2.6rem; height: 2.6rem; font-size: 1.1rem; }
+  .vcard { display: flex; flex-direction: column; padding: 0; }
+  .vcard .vmain { position: relative; width: 100%; padding: 16px 16px 10px; background: none; border: 0; text-align: left; border-radius: 16px 16px 0 0; }
+  .vcard .vdef-btn { align-self: flex-start; margin: 0 12px 12px; min-height: 2.4rem; padding: .25rem .8rem; border-radius: 99px; border: 2px solid rgba(46,196,182,.55); background: rgba(46,196,182,.12); font-weight: 800; font-size: .9rem; }
+  .vcard .vdef { margin: 0 12px 14px; padding: 10px 12px; border-radius: 12px; background: rgba(0,0,0,.25); border-left: 4px solid var(--sea); font-size: 1rem; line-height: 1.4; }
+  .vcard .vdef .en { display: block; margin-top: 6px; color: #9fe8e0; }
+  .vcard.open .vdef-btn { background: var(--sea); color: #04201d; border-color: transparent; }
+  .vocab-tools .btn.on { background: rgba(46,196,182,.25); border-color: var(--sea); }
+
+  /* ---------- VISU ---------- */
+  .mission-intro { display: flex; gap: 14px; align-items: flex-start; padding: 14px 18px; margin-bottom: 12px; }
+  .mission-intro .rk { font-size: 2.4rem; line-height: 1; }
+  .mission-intro h3 { font-size: 1.4rem; margin-bottom: 4px; }
+  .mission-intro p { margin: 0; color: var(--muted); font-size: .98rem; }
+  .visu { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr); gap: 16px; align-items: start; }
+  .vphoto { padding: 12px; }
+  .vphoto img { width: 100%; max-height: calc(100vh - 260px); min-height: 220px; object-fit: contain; border-radius: 14px; background: #000; display: block; cursor: zoom-in; }
+  .vplace { margin: 8px 2px 0; font-weight: 800; }
+  .vcredit { margin: 6px 2px 0; color: var(--muted); font-size: .72rem; line-height: 1.3; }
+  .vcredit a { color: #9fe8e0; }
+  .ask { padding: 18px; }
+  .ask h3 { font-size: 1.3rem; margin: 14px 0 8px; }
+  .ask-top { display: flex; gap: 8px; flex-wrap: wrap; }
+  .vopts { display: grid; gap: 8px; }
+  .vopts .opt { min-height: 3.2rem; font-size: 1.02rem; padding: 10px 14px; border-width: 2px; }
+  .vans { margin: 0 0 4px; padding: 8px 12px; border-radius: 12px; background: rgba(52,211,153,.14); border: 2px solid var(--ok); font-weight: 800; }
+  .ficha { margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: rgba(0,0,0,.25); border-left: 5px solid var(--lava); display: grid; gap: 6px; }
+  .ficha > b { font-family: "Baloo 2", sans-serif; font-size: 1.2rem; }
+  .ficha div span { display: inline-block; min-width: 9.5rem; color: var(--muted); font-weight: 800; }
+  .think { margin-top: 14px; padding: 12px 16px; border-radius: 14px; background: rgba(46,196,182,.14); border: 2px solid rgba(46,196,182,.55); font-size: 1rem; }
+  .score { padding: 40px 16px; text-align: center; }
+  .score .big { font-family: "Baloo 2", sans-serif; font-size: clamp(3.5rem, 9vw, 6rem); color: var(--lava); }
+  .score p { font-size: 1.3rem; font-weight: 800; }
+  .vreview { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .vreview li { display: flex; gap: 10px; align-items: center; padding: 6px; border-radius: 12px; border: 2px solid var(--line); }
+  .vreview li.ok { border-color: var(--ok); } .vreview li.ko { border-color: var(--bad); }
+  .vreview img { width: 72px; height: 52px; object-fit: cover; border-radius: 8px; flex: none; }
+
+  /* ---------- DOSIER ---------- */
+  .dsec { padding: clamp(14px, 2vw, 24px); margin-bottom: 16px; }
+  .dsec h2 { font-size: 1.7rem; margin-bottom: 8px; } .dsec h3 { font-size: 1.4rem; margin-bottom: 10px; }
+  .dsec ul { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+  .dkey .big { font-size: 1.25rem; font-weight: 800; color: var(--lava); }
+  .dgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .dtab { width: 100%; border-collapse: collapse; font-size: .95rem; }
+  .dtab th, .dtab td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  .dtab th { color: var(--lava); font-weight: 800; } .dtab thead th { background: rgba(255,255,255,.06); color: var(--ink); }
+  .rwrap { overflow-x: auto; } .rub { min-width: 760px; font-size: .88rem; }
+  .fform { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+  .fform label { display: grid; gap: 4px; font-weight: 800; font-size: .92rem; }
+  .fform label:last-of-type { grid-column: 1 / -1; }
+  .fform input, .fform select, .fform textarea { min-height: 2.8rem; padding: .4rem .7rem; border-radius: 12px; border: 2px solid var(--line); background: rgba(0,0,0,.25); font-weight: 600; }
+  .fform select option { background: #0f2930; }
+  .vcard .star { position: absolute; top: 14px; right: 58px; font-size: 1.1rem; }
+
+  /* ---------- MODALES ---------- */
+  .overlay { position: fixed; inset: 0; z-index: 50; background: rgba(3,10,12,.8); backdrop-filter: blur(4px); display: grid; place-items: center; padding: 16px; }
+  .modal { width: min(900px, 100%); max-height: 92vh; overflow: auto; padding: clamp(18px, 3vw, 34px); }
+  .modal h2 { font-size: 2rem; margin-bottom: 10px; }
+  .muted { color: var(--muted); }
+
+  .float-pts { position: fixed; z-index: 80; left: 50%; top: 40%; transform: translate(-50%, -50%); font-family: "Baloo 2", sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: var(--lava); text-shadow: 0 0 30px rgba(31,162,196,.9), 0 4px 0 #0b4a5a; pointer-events: none; animation: floatUp 1.6s ease-out forwards; white-space: nowrap; }
+  @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, -20%) scale(.6) } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1) } 100% { opacity: 0; transform: translate(-50%, -140%) scale(1) } }
+
+  .footer { margin-top: 26px; color: var(--muted); font-size: .85rem; text-align: center; }
+  .credits { margin: 10px auto 0; max-width: 60rem; color: var(--muted); font-size: .8rem; text-align: center; line-height: 1.5; }
+  .credits a { color: #9fe8e0; }
+
+  @media (max-width: 1000px) {
+    .hero { grid-template-columns: 1fr; }
+    .modes { grid-template-columns: 1fr 1fr; }
+    .mudas, .visu, .dgrid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .shell { width: calc(100% - 32px); }
+    .modes, .options, .fform { grid-template-columns: 1fr; }
+    .nav { margin-left: 0; }
+    .flip { min-height: 20rem; }
+  }
+</style>
+</head>
+<body>
+<div class="embers" id="embers"></div>
+
+<div class="shell">
+  <header class="topbar">
+    <button class="brand" data-go="home" aria-label="Inicio">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="#0f2930" stroke="#1fa2c4" stroke-width="3"/>
+        <path d="M8 44 L22 22 L30 32 L40 16 L56 44 Z" fill="#7d6a55"/>
+        <path d="M36 22 L40 16 L44 22 Z" fill="#f4f8fb"/>
+        <path d="M10 50 C22 44 30 52 42 46 S54 44 56 46" stroke="#3aa0d8" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span><strong>Relieve vivo</strong><small data-t="subtitle"></small></span>
+    </button>
+    <div class="nav tools">
+      <div class="langs" id="langs" role="group" aria-label="Idioma / Language">
+        <button data-lang="es">ES</button>
+        <button data-lang="both">ES+EN</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <button id="btnFull" title="Pantalla completa">⛶</button>
+    </div>
+    <nav class="nav modetabs" id="nav">
+      <button data-go="quiz">🎯 <span data-t="navQuiz"></span></button>
+      <button data-go="cards">🃏 <span data-t="navCards"></span></button>
+      <button data-go="mudas">🖼️ <span data-t="navMudas"></span></button>
+      <button data-go="vocab">📖 <span data-t="navVocab"></span></button>
+      <button data-go="visu">🔍 <span data-t="navVisu"></span></button>
+      <button data-go="dosier">📒 <span data-t="navDos"></span></button>
+    </nav>
+  </header>
+
+  <!-- ===== PORTADA ===== -->
+  <section id="v-home">
+    <div class="card hero">
+      <div>
+        <h1><span data-t="heroA"></span><br><span data-t="heroB"></span></h1>
+        <p data-t="heroP"></p>
+        <div class="tags">
+          <span class="tag">🏞️ <span data-t="tag1"></span></span><span class="tag">🕳️ <span data-t="tag2"></span></span>
+          <span class="tag">🧊 <span data-t="tag3"></span></span><span class="tag">🌊 <span data-t="tag4"></span></span>
+          <span class="tag">🌬️ <span data-t="tag5"></span></span><span class="tag">⚠️ <span data-t="tag6"></span></span>
+        </div>
+      </div>
+      <svg class="scene" viewBox="0 0 600 340" role="img" aria-label="Paisaje con lluvia, río de montaña hasta el mar y olas">
+        <defs>
+          <linearGradient id="hsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b4f6e"/><stop offset="1" stop-color="#8cc9e6"/></linearGradient>
+          <linearGradient id="hsea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f7fa8"/><stop offset="1" stop-color="#0d4a66"/></linearGradient>
+        </defs>
+        <rect width="600" height="340" fill="url(#hsky)"/>
+        <g class="cloud"><ellipse cx="150" cy="52" rx="70" ry="22" fill="#e7eef4"/><ellipse cx="120" cy="40" rx="36" ry="20" fill="#f4f8fb"/><ellipse cx="180" cy="38" rx="30" ry="18" fill="#f4f8fb"/></g>
+        <g class="rain" stroke="#cfeaf7" stroke-width="3" stroke-linecap="round">
+          <line x1="100" y1="80" x2="96" y2="96"/><line x1="125" y1="84" x2="121" y2="100"/><line x1="150" y1="80" x2="146" y2="96"/>
+          <line x1="175" y1="86" x2="171" y2="102"/><line x1="200" y1="80" x2="196" y2="96"/><line x1="138" y1="96" x2="134" y2="112"/></g>
+        <path d="M0 230 L70 120 L120 165 L190 70 L250 150 L300 110 L380 200 L600 230 L600 340 L0 340 Z" fill="#7d6a55"/>
+        <path d="M176 92 L190 70 L206 96 L192 90 Z M290 124 L300 110 L312 128 Z" fill="#f4f8fb"/>
+        <path d="M0 250 C120 235 260 250 380 230 L600 240 L600 340 L0 340 Z" fill="#5c8a44"/>
+        <path d="M430 340 C470 300 520 285 600 270 L600 340 Z" fill="url(#hsea)"/>
+        <g class="waves" stroke="#cfeaf7" stroke-width="3" fill="none" opacity=".7"><path d="M500 312 q12 -5 24 0 t24 0"/><path d="M545 292 q12 -5 24 0 t24 0"/></g>
+        <path d="M192 96 C196 130 214 150 230 180 C250 215 300 228 320 250 C345 276 290 285 330 300 C370 315 420 300 470 318" stroke="#3aa0d8" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <path class="flow" d="M192 96 C196 130 214 150 230 180 C250 215 300 228 320 250 C345 276 290 285 330 300 C370 315 420 300 470 318" stroke="#bfe6f8" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M455 318 L480 338 L505 325 Z" fill="#dcc48d"/>
+        <text x="300" y="332" text-anchor="middle" fill="#f1fbff" font-size="15" font-weight="800" font-family="Nunito" opacity=".9">erosión · transporte · sedimentación</text>
+      </svg>
+    </div>
+
+    <div class="modes">
+      <button class="mode" data-go="quiz"><div class="ico">🎯</div><h3 data-t="m1t"></h3><p data-t="m1p"></p></button>
+      <button class="mode" data-go="cards"><div class="ico">🃏</div><h3 data-t="m2t"></h3><p data-t="m2p"></p></button>
+      <button class="mode" data-go="mudas"><div class="ico">🖼️</div><h3 data-t="m3t"></h3><p data-t="m3p"></p></button>
+      <button class="mode" data-go="vocab"><div class="ico">📖</div><h3 data-t="m4t"></h3><p data-t="m4p"></p></button>
+      <button class="mode" data-go="visu"><div class="ico">🔍</div><h3 data-t="m5t"></h3><p data-t="m5p"></p></button>
+      <button class="mode" data-go="dosier"><div class="ico">📒</div><h3 data-t="m6t"></h3><p data-t="m6p"></p></button>
+    </div>
+  </section>
+
+  <!-- ===== CUESTIONARIO ===== -->
+  <section id="v-quiz" class="hidden">
+    <div class="chips" id="quizBlocks" style="margin-bottom:12px"></div>
+    <div class="card quiz">
+      <div class="qhead"><span class="qtag" id="qTag"></span><span class="qcount" id="qCount"></span></div>
+      <div class="progress"><i id="qProg"></i></div>
+      <h2 class="question" id="qText"></h2>
+      <div id="qMulti"></div>
+      <div id="qHint"></div>
+      <div class="options" id="qOpts"></div>
+      <div id="qFeedback"></div>
+      <div class="actions">
+        <button class="btn" id="qHintBtn">💡 <span data-t="hint"></span></button>
+        <button class="btn sea hidden" id="qCheck">✔️ <span data-t="check"></span></button>
+        <button class="btn hidden" id="qRebound">🔁 <span data-t="rebound"></span></button>
+        <button class="btn hidden" id="qReveal">👁️ <span data-t="reveal"></span></button>
+        <span class="spacer"></span>
+        <button class="btn" id="qPrev">◀</button>
+        <button class="btn hot big" id="qNext"><span data-t="next"></span> ▶</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="qShuffle">🔀 <span data-t="shuffle"></span></button>
+      <label class="btn" style="cursor:pointer">📂 <span data-t="loadCsv"></span><input type="file" id="csvFile" accept=".csv" hidden></label>
+      <span class="muted" id="csvStatus" style="align-self:center"></span>
+    </div>
+  </section>
+
+  <!-- ===== TARJETAS ===== -->
+  <section id="v-cards" class="hidden">
+    <div class="chips" id="cardBlocks" style="margin-bottom:14px"></div>
+    <div class="flip-wrap">
+      <div class="flip" id="flip">
+        <div class="face front"><span class="label" data-t="front"></span><button class="speak" data-speak="front" aria-label="Escuchar">🔊</button><div class="txt" id="cFront"></div><span class="tap" data-t="tapFlip"></span></div>
+        <div class="face back"><span class="label" data-t="back"></span><button class="speak" data-speak="back" aria-label="Escuchar">🔊</button><div class="txt" id="cBack"></div></div>
+      </div>
+    </div>
+    <div class="cardnav">
+      <button class="btn big" id="cPrev">◀</button>
+      <span class="count" id="cCount"></span>
+      <button class="btn big" id="cNext">▶</button>
+      <button class="btn" id="cShuffle">🔀 <span data-t="shuffle"></span></button>
+    </div>
+  </section>
+
+  <!-- ===== IMÁGENES MUDAS ===== -->
+  <section id="v-mudas" class="hidden">
+    <div class="tabs" id="mudaTabs"></div>
+    <div class="mudas">
+      <div class="card diagram" id="mudaSvg"></div>
+      <div class="card legend">
+        <h3 id="mudaTitle"></h3>
+        <p class="muted" style="margin:0 0 12px" data-t="mudaHelp"></p>
+        <ol id="mudaLegend"></ol>
+        <div class="actions">
+          <button class="btn" id="mudaShow">👁️ <span data-t="showAll"></span></button>
+          <button class="btn" id="mudaReset">↺ <span data-t="reset"></span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VOCABULARIO ===== -->
+  <section id="v-vocab" class="hidden">
+    <div class="vocab-tools">
+      <input class="search" id="vSearch" type="search" data-tp="search">
+      <button class="btn" id="vHideEn">🙈 <span data-t="hideEn"></span></button>
+      <button class="btn" id="vHideEs">🙈 <span data-t="hideEs"></span></button>
+      <button class="btn" id="vStar">⭐ <span data-t="onlyStar"></span></button>
+      <button class="btn sea" id="vDefsAll">📘 <span data-t="defsAll"></span></button>
+    </div>
+    <div class="vgrid" id="vGrid"></div>
+  </section>
+
+  <!-- ===== VISU ===== -->
+  <section id="v-visu" class="hidden">
+    <div class="card mission-intro"><span class="rk">🔍</span><div><h3 data-t="vuIntroT"></h3><p data-t="vuIntro"></p></div></div>
+    <div class="tabs" id="vuTabs"></div>
+    <div class="visu">
+      <div class="card vphoto" id="vuPhoto"></div>
+      <div class="card ask" id="vuAsk"></div>
+    </div>
+  </section>
+
+  <!-- ===== DOSIER ===== -->
+  <section id="v-dosier" class="hidden"><div id="dosRoot"></div></section>
+
+  <p class="footer">Biología y Geología · 4º ESO · Temas 3 y 4 — <span data-t="footer"></span> · <a href="../" style="color:#9fe8e0">🏠 <span data-t="allUnits"></span></a></p>
+  <p class="credits">
+    <span data-t="author"></span>: <b>María Dolores Gámez Ortiz</b> · © 2026 ·
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="license noopener">CC BY‑NC‑SA 4.0</a><br>
+    <span data-t="license"></span>
+  </p>
+</div>
+
+<!-- Modal genérico -->
+<div class="overlay hidden" id="overlay"><div class="card modal" id="modal"></div></div>
+
+<script src="datos-tema3.js?v=20261113a"></script>
+<script src="visu-tema3.js?v=20261113a"></script>
+<script src="dosier-tema3.js?v=20261113a"></script>
+<script>
+(function () {
+  "use strict";
+  const D = window.TEMA3;
+  const VD = window.TEMA3_VISU || { items: [] };
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  // Almacenamiento local (solo en este navegador)
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("tierraviva_" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem("tierraviva_" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  const S = {
+    lang: store.get("lang", "es"),
+    view: "home"
+  };
+
+  // ---------- Textos de la interfaz ----------
+  const UI = {
+    es: {
+      navDos: "Dosier", m6t: "Dosier y rúbrica", m6p: "Guía del dosier «Cazadores de paisajes»: plazos, ficha para rellenar, ejemplo y rúbrica.",
+      dIdea: "La idea clave", dReq: "Requisitos mínimos", dPlazos: "Plazos", dFicha: "Ficha de análisis del paisaje",
+      dFichaHelp: "Rellénala para cada foto. Se guarda en este navegador. Puedes copiarla a tu documento o imprimirla.",
+      f_titulo: "Título de la foto", f_lugar: "Lugar (municipio, provincia)", f_foto: "Foto (propia o fuente de internet)", f_agente: "1. Agente geológico",
+      f_forma: "2. Forma o estructura", f_proceso: "3. Proceso dominante", f_modelado: "4. Tipo de modelado", f_riesgo: "5. Riesgo asociado",
+      f_tipoMedida: "6. Tipo de medida", f_medida: "6. Medida para reducirlo", f_explica: "Explicación (2‑3 líneas)",
+      dCopy: "Copiar ficha", dPrint: "Imprimir ficha", dNew: "Ficha nueva", dCopied: "Ficha copiada: pégala en tu documento.",
+      dEjemplo: "Ejemplo de ficha completa", dAyuda: "Ayuda: agentes, formas y riesgos", dFormas: "Formas", dRubrica: "Rúbrica de evaluación",
+      onlyStar: "Solo imprescindibles",
+      subtitle: "Temas 3 y 4 · Modelado del relieve y riesgos", navQuiz: "Reto", navCards: "Tarjetas", navMudas: "Imágenes mudas", navVocab: "Vocabulario", navVisu: "Visu",
+      heroA: "El relieve", heroB: "cambia", heroP: "Repasa el modelado del relieve y los riesgos geológicos: responde al reto, identifica las partes de los dibujos, practica la visu con fotos reales y aprende el vocabulario en español e inglés.",
+      tag1: "Ríos y torrentes", tag2: "Karst", tag3: "Glaciares", tag4: "Mar", tag5: "Viento", tag6: "Riesgos",
+      m1t: "Reto", m1p: "Preguntas tipo test con pistas y rebote para que lo intente otra persona.",
+      m2t: "Tarjetas", m2p: "Toca la tarjeta para darle la vuelta. Con audio en español e inglés.",
+      m3t: "Imágenes mudas", m3p: "Identifica las partes de un río, un torrente, el karst, un glaciar, la costa y un acuífero.",
+      m4t: "Vocabulario", m4p: "Glosario español ↔ inglés con la definición de cada concepto.",
+      m5t: "Visu", m5p: "Fotos reales de paisajes: ¿qué agente, qué forma y qué proceso? ¿Qué riesgo y qué medida?",
+      hint: "Pista", check: "Comprobar", rebound: "Rebote", reveal: "Ver solución", next: "Siguiente", shuffle: "Barajar",
+      loadCsv: "Cargar CSV de NotebookLM", multi: "☝️ Hay varias respuestas correctas: márcalas todas y pulsa Comprobar",
+      right: "¡Correcto!", wrong: "¡Uy! No es correcto", wrongMulti: "No es del todo correcto", reboundTxt: "Puede intentarlo otra persona (rebote).",
+      solution: "Solución", question: "Pregunta", of: "de", front: "Pregunta", back: "Respuesta", tapFlip: "👆 Toca para girar",
+      mudaHelp: "Toca un número del dibujo para identificar esa parte.", showAll: "Mostrar todo", reset: "Reiniciar",
+      whatIs: "¿Qué es el número", search: "Buscar término… / Search…", hideEn: "Ocultar inglés", hideEs: "Ocultar español",
+      defsAll: "Ver todas las definiciones", defsHide: "Ocultar definiciones", def: "Definición", defHide: "Ocultar definición",
+      vuIntroT: "Analiza el paisaje",
+      vuIntro: "Observa cada foto como un geólogo o una geóloga: 1) ¿qué agente ha actuado? 2) ¿qué forma o estructura ves? 3) ¿qué proceso domina? Toca la foto para verla en grande. En «Riesgos», identifica el riesgo y la medida que lo reduce. En «Examen visu» tienes 10 fotos y una sola oportunidad en cada una.",
+      vuTabMod: "Modelado (práctica)", vuTabRies: "Riesgos (práctica)", vuTabExam: "Examen visu",
+      vuQAgente: "¿Qué agente geológico ha actuado?", vuQForma: "¿Qué forma o estructura es?", vuQProceso: "¿Qué proceso domina?",
+      vuQRiesgo: "¿Qué riesgo geológico muestra la foto?", vuQMedida: "¿Qué medida ayuda a reducir este riesgo?", vuQExam: "¿Qué forma del relieve es?",
+      vuTryAgain: "No es esa. Fíjate bien en la foto y vuelve a intentarlo.", vuFicha: "Ficha de análisis del relieve",
+      vuAgente: "Agente geológico", vuForma: "Forma o estructura", vuProceso: "Proceso dominante", vuModelado: "Tipo de modelado",
+      vuRiesgo: "Riesgo", vuMedida: "Medida", vuNext: "Siguiente foto", vuPhoto: "Foto", vuAlt: "Foto de un paisaje para identificar",
+      vuEmpty: "Todavía no hay fotos cargadas.", vuReview: "Repaso de tus respuestas", vuAgain: "Otro examen",
+      vuGreat: "🏆 ¡Excelente ojo de geóloga o geólogo!", vuGood: "👍 ¡Bien! Repasa las que has fallado.", vuMore: "💪 Practica un poco más en el modo práctica.",
+      close: "Cerrar", allDone: "🎉 ¡Has completado todas las preguntas!",
+      author: "Autoría", license: "Puedes usar, compartir y adaptar estos materiales citando la autoría, sin fines comerciales y con la misma licencia. Las fotos de la visu son de Wikimedia Commons y conservan su propia licencia y autoría (indicadas bajo cada foto).",
+      csvOk: "preguntas cargadas", csvErr: "No se ha podido leer el CSV", loaded: "Cargadas", openQ: "Pregunta abierta: responde en voz alta y luego muestra la solución.",
+      footer: "ES = español · EN = inglés · ES+EN = los dos a la vez", block: "Bloque", allUnits: "Todos los temas"
+    },
+    en: {
+      navDos: "Dossier", m6t: "Dossier & rubric", m6p: "“Landscape hunters” dossier guide: deadlines, fill‑in card, example and rubric.",
+      dIdea: "The key idea", dReq: "Minimum requirements", dPlazos: "Deadlines", dFicha: "Landscape analysis card",
+      dFichaHelp: "Fill it in for each photo. It is saved in this browser. You can copy it into your document or print it.",
+      f_titulo: "Photo title", f_lugar: "Place (town, province)", f_foto: "Photo (own or internet source)", f_agente: "1. Geological agent",
+      f_forma: "2. Landform or feature", f_proceso: "3. Main process", f_modelado: "4. Type of landscape", f_riesgo: "5. Related hazard",
+      f_tipoMedida: "6. Type of measure", f_medida: "6. Measure to reduce it", f_explica: "Explanation (2‑3 lines)",
+      dCopy: "Copy card", dPrint: "Print card", dNew: "New card", dCopied: "Card copied: paste it into your document.",
+      dEjemplo: "Example of a finished card", dAyuda: "Help: agents, landforms and hazards", dFormas: "Landforms", dRubrica: "Assessment rubric",
+      onlyStar: "Must‑know only",
+      subtitle: "Units 3 & 4 · Landforms and geological hazards", navQuiz: "Challenge", navCards: "Flashcards", navMudas: "Label it", navVocab: "Vocabulary", navVisu: "Photo ID",
+      heroA: "The land", heroB: "keeps changing", heroP: "Review landforms and geological hazards: take the challenge, label the diagrams, practise identifying real landscape photos and learn the vocabulary in Spanish and English.",
+      tag1: "Rivers & torrents", tag2: "Karst", tag3: "Glaciers", tag4: "Sea", tag5: "Wind", tag6: "Hazards",
+      m1t: "Challenge", m1p: "Multiple‑choice questions with hints and a pass‑it‑on option so someone else can try.",
+      m2t: "Flashcards", m2p: "Tap a card to flip it. With audio in Spanish and English.",
+      m3t: "Label the diagram", m3p: "Identify the parts of a river, a torrent, karst, a glacier, the coast and an aquifer.",
+      m4t: "Vocabulary", m4p: "Spanish ↔ English glossary with a definition for each concept.",
+      m5t: "Photo ID", m5p: "Real landscape photos: which agent, which landform, which process? Which hazard and which measure?",
+      hint: "Hint", check: "Check", rebound: "Pass it on", reveal: "Show answer", next: "Next", shuffle: "Shuffle",
+      loadCsv: "Load NotebookLM CSV", multi: "☝️ More than one answer is correct: select them all and tap Check",
+      right: "Correct!", wrong: "Oops! That's not right", wrongMulti: "Not quite right", reboundTxt: "Someone else can try (pass it on).",
+      solution: "Answer", question: "Question", of: "of", front: "Question", back: "Answer", tapFlip: "👆 Tap to flip",
+      mudaHelp: "Tap a number on the diagram to identify that part.", showAll: "Show all", reset: "Reset",
+      whatIs: "What is number", search: "Search… / Buscar término…", hideEn: "Hide English", hideEs: "Hide Spanish",
+      defsAll: "Show all definitions", defsHide: "Hide definitions", def: "Definition", defHide: "Hide definition",
+      vuIntroT: "Read the landscape",
+      vuIntro: "Look at each photo like a geologist: 1) which agent shaped it? 2) which landform or feature can you see? 3) which process dominates? Tap the photo to enlarge it. In “Hazards”, identify the hazard and the measure that reduces it. In “Photo ID test” you get 10 photos and one try each.",
+      vuTabMod: "Landforms (practice)", vuTabRies: "Hazards (practice)", vuTabExam: "Photo ID test",
+      vuQAgente: "Which geological agent shaped it?", vuQForma: "Which landform or feature is it?", vuQProceso: "Which process dominates?",
+      vuQRiesgo: "Which geological hazard does the photo show?", vuQMedida: "Which measure helps reduce this hazard?", vuQExam: "Which landform is it?",
+      vuTryAgain: "Not that one. Look carefully at the photo and try again.", vuFicha: "Landscape analysis card",
+      vuAgente: "Geological agent", vuForma: "Landform or feature", vuProceso: "Main process", vuModelado: "Type of landscape",
+      vuRiesgo: "Hazard", vuMedida: "Measure", vuNext: "Next photo", vuPhoto: "Photo", vuAlt: "Landscape photo to identify",
+      vuEmpty: "No photos loaded yet.", vuReview: "Your answers", vuAgain: "New test",
+      vuGreat: "🏆 Excellent geologist's eye!", vuGood: "👍 Good! Review the ones you missed.", vuMore: "💪 Practise a bit more in practice mode.",
+      close: "Close", allDone: "🎉 You have finished all the questions!",
+      author: "Author", license: "You may use, share and adapt these materials with credit to the author, for non‑commercial purposes and under the same licence. The Photo ID pictures come from Wikimedia Commons and keep their own licence and authorship (shown under each photo).",
+      csvOk: "questions loaded", csvErr: "Could not read the CSV", loaded: "Loaded", openQ: "Open question: answer out loud, then show the answer.",
+      footer: "ES = Spanish · EN = English · ES+EN = both at once", block: "Topic", allUnits: "All units"
+    }
+  };
+  const uiLang = () => (S.lang === "en" ? "en" : "es");
+  const t = k => UI[uiLang()][k] || UI.es[k] || k;
+
+  // Texto de contenido según idioma: ES, EN o ambos
+  function bi(es, en) {
+    if (S.lang === "en") return esc(en || es);
+    if (S.lang === "both" && en && en !== es) return esc(es) + `<span class="en">${esc(en)}</span>`;
+    return esc(es);
+  }
+  const blockName = b => { const x = D.bloques[b] || { icon: "📂", es: t("loaded"), en: t("loaded") }; return x.icon + " " + (S.lang === "en" ? x.en : x.es); };
+
+  function applyUI() {
+    document.documentElement.lang = uiLang();
+    $$("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
+    $$("[data-tp]").forEach(el => el.placeholder = t(el.dataset.tp));
+    $$("#langs button").forEach(b => b.classList.toggle("on", b.dataset.lang === S.lang));
+    if (S.view === "quiz") renderQuiz();
+    if (S.view === "cards") { renderBlockChips("cardBlocks", C.blocks, rebuildCards); renderCard(); }
+    if (S.view === "mudas") renderMuda();
+    if (S.view === "vocab") renderVocab();
+    if (S.view === "visu") renderVisu();
+    if (S.view === "dosier") renderDosier();
+    if (S.view === "quiz") renderBlockChips("quizBlocks", Q.blocks, rebuildQuiz);
+  }
+
+  // ---------- Navegación ----------
+  function go(view) {
+    S.view = view;
+    ["home", "quiz", "cards", "mudas", "vocab", "visu", "dosier"].forEach(v => $("#v-" + v).classList.toggle("hidden", v !== view));
+    $$("#nav [data-go]").forEach(b => b.classList.toggle("on", b.dataset.go === view));
+    applyUI();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  $$("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+  $$("#langs button").forEach(b => b.addEventListener("click", () => { S.lang = b.dataset.lang; store.set("lang", S.lang); applyUI(); }));
+  $("#btnFull").addEventListener("click", () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {});
+    else document.exitFullscreen();
+  });
+
+  // Animación de acierto
+  function cheer() {
+    const el = document.createElement("div");
+    el.className = "float-pts";
+    el.textContent = "🌊 " + t("right");
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1700);
+  }
+
+  // ---------- Modal ----------
+  function openModal(html) { $("#modal").innerHTML = html; $("#overlay").classList.remove("hidden"); }
+  function closeModal() { $("#overlay").classList.add("hidden"); $("#modal").innerHTML = ""; }
+  $("#overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeModal(); });
+
+  // ---------- Filtros por bloque ----------
+  function renderBlockChips(id, set, onChange) {
+    const keys = Object.keys(D.bloques).concat(Q.extra.length && id === "quizBlocks" ? ["cargado"] : []);
+    $("#" + id).innerHTML = keys.map(k => `<button class="chip ${set.has(k) ? "on" : ""}" data-b="${k}">${blockName(k)}</button>`).join("");
+    $$("#" + id + " .chip").forEach(c => c.onclick = () => {
+      const k = c.dataset.b;
+      if (set.has(k) && set.size > 1) set.delete(k); else set.add(k);
+      onChange(); renderBlockChips(id, set, onChange);
+    });
+  }
+
+  // ---------- CUESTIONARIO ----------
+  const Q = { blocks: new Set(Object.keys(D.bloques)), pool: [], pos: 0, order: [], sel: new Set(), tried: new Set(), done: false, hint: false, extra: [] };
+  const allQuestions = () => D.preguntas.concat(Q.extra);
+
+  function rebuildQuiz() {
+    Q.pool = shuffle(allQuestions().filter(q => Q.blocks.has(q.b)));
+    Q.pos = 0; resetQuestion(); renderQuiz();
+  }
+  function resetQuestion() {
+    const q = Q.pool[Q.pos];
+    Q.order = q && q.es.o.length ? shuffle(q.es.o.map((_, i) => i)) : [];
+    Q.sel = new Set(); Q.tried = new Set(); Q.done = false; Q.hint = false; Q.result = null;
+  }
+  const L = q => (S.lang === "en" ? q.en : q.es);
+
+  function renderQuiz() {
+    const q = Q.pool[Q.pos];
+    if (!q) { $("#qText").textContent = t("allDone"); $("#qOpts").innerHTML = ""; return; }
+    const open = !q.es.o.length;
+    $("#qTag").textContent = blockName(q.b);
+    $("#qCount").textContent = `${t("question")} ${Q.pos + 1} ${t("of")} ${Q.pool.length}`;
+    $("#qProg").style.width = ((Q.pos + 1) / Q.pool.length * 100) + "%";
+    $("#qText").innerHTML = bi(q.es.q, q.en.q);
+    $("#qMulti").innerHTML = q.multi ? `<span class="multi-note">${t("multi")}</span>` : open ? `<span class="multi-note">${t("openQ")}</span>` : "";
+    $("#qHint").innerHTML = Q.hint && q.es.h ? `<div class="hint">💡 ${bi(q.es.h, q.en.h)}</div>` : "";
+    const letters = "ABCD";
+    $("#qOpts").innerHTML = Q.order.map((oi, k) => {
+      let cls = "";
+      if (Q.sel.has(oi)) cls = "sel";
+      if (Q.tried.has(oi)) cls = "wrong";
+      if (Q.done && q.c.includes(oi)) cls = "right";
+      return `<button class="opt ${cls}" data-o="${oi}" ${Q.done || Q.tried.has(oi) ? "disabled" : ""}><span class="let">${letters[k]}</span><span>${bi(q.es.o[oi], q.en.o[oi])}</span></button>`;
+    }).join("");
+    $$("#qOpts .opt").forEach(b => b.onclick = () => choose(+b.dataset.o));
+
+    let fb = "";
+    if (Q.result === "ok") fb = `<div class="feedback ok"><span class="big">🌊</span><div><b>${t("right")}</b>${bi(q.es.w, q.en.w)}</div></div>`;
+    else if (Q.result === "ko") fb = `<div class="feedback ko"><span class="big">💥</span><div><b>${q.multi ? t("wrongMulti") : t("wrong")}</b>${t("reboundTxt")}</div></div>`;
+    else if (Q.result === "sol") fb = `<div class="feedback info"><span class="big">📘</span><div><b>${t("solution")}</b>${bi(q.es.w, q.en.w)}</div></div>`;
+    $("#qFeedback").innerHTML = fb;
+
+    $("#qCheck").classList.toggle("hidden", !q.multi || Q.done);
+    $("#qRebound").classList.toggle("hidden", Q.result !== "ko");
+    $("#qReveal").classList.toggle("hidden", Q.done || !(Q.result === "ko" || open));
+    $("#qHintBtn").classList.toggle("hidden", Q.done || !q.es.h || Q.hint);
+    $("#qPrev").disabled = Q.pos === 0;
+  }
+
+  function choose(oi) {
+    const q = Q.pool[Q.pos];
+    if (Q.done) return;
+    if (q.multi) { Q.sel.has(oi) ? Q.sel.delete(oi) : Q.sel.add(oi); Q.result = null; renderQuiz(); return; }
+    if (q.c.includes(oi)) { Q.done = true; Q.result = "ok"; cheer(); }
+    else { Q.tried.add(oi); Q.result = "ko"; }
+    renderQuiz();
+  }
+  $("#qCheck").onclick = () => {
+    const q = Q.pool[Q.pos];
+    if (!Q.sel.size) return;
+    const ok = Q.sel.size === q.c.length && q.c.every(i => Q.sel.has(i));
+    if (ok) { Q.done = true; Q.result = "ok"; cheer(); }
+    else { Q.result = "ko"; Q.sel = new Set(); }
+    renderQuiz();
+  };
+  $("#qRebound").onclick = () => { Q.result = null; renderQuiz(); };
+  $("#qReveal").onclick = () => { Q.done = true; Q.result = "sol"; renderQuiz(); };
+  $("#qHintBtn").onclick = () => { Q.hint = true; renderQuiz(); };
+  $("#qNext").onclick = () => { if (Q.pos < Q.pool.length - 1) { Q.pos++; resetQuestion(); renderQuiz(); } else { $("#qText").textContent = t("allDone"); } };
+  $("#qPrev").onclick = () => { if (Q.pos > 0) { Q.pos--; resetQuestion(); renderQuiz(); } };
+  $("#qShuffle").onclick = rebuildQuiz;
+
+  // Cargar un CSV exportado de NotebookLM (#, Question, Hint, Option A-D, Correct Answer, Rationale)
+  function parseCSV(text) {
+    const rows = []; let row = [], cur = "", q = false;
+    text = text.replace(/^﻿/, "");
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) { if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += ch; }
+      else if (ch === '"') q = true;
+      else if (ch === ",") { row.push(cur); cur = ""; }
+      else if (ch === "\n" || ch === "\r") { if (ch === "\r" && text[i + 1] === "\n") i++; row.push(cur); rows.push(row); row = []; cur = ""; }
+      else cur += ch;
+    }
+    if (cur || row.length) { row.push(cur); rows.push(row); }
+    return rows.filter(r => r.some(c => c.trim()));
+  }
+  $("#csvFile").addEventListener("change", e => {
+    const f = e.target.files[0]; if (!f) return;
+    f.text().then(txt => {
+      const rows = parseCSV(txt);
+      const head = rows.shift().map(h => h.trim().toLowerCase());
+      const col = n => head.indexOf(n);
+      const qs = rows.map(r => {
+        const opts = ["option a", "option b", "option c", "option d"].map(n => (r[col(n)] || "").trim()).filter(Boolean);
+        const letter = ((r[col("correct answer")] || "").trim().match(/^([A-D])[.)]/) || [])[1];
+        const es = { q: r[col("question")] || "", h: r[col("hint")] || "", o: opts, w: r[col("rationale")] || r[col("correct answer")] || r[col("hint")] || "" };
+        return { b: "cargado", c: letter ? ["ABCD".indexOf(letter)] : [], es, en: es };
+      }).filter(q => q.es.q);
+      if (!qs.length) throw new Error();
+      Q.extra = Q.extra.concat(qs); Q.blocks = new Set(["cargado"]);
+      $("#csvStatus").textContent = `✅ ${qs.length} ${t("csvOk")}`;
+      renderBlockChips("quizBlocks", Q.blocks, rebuildQuiz); rebuildQuiz();
+    }).catch(() => { $("#csvStatus").textContent = "⚠️ " + t("csvErr"); });
+    e.target.value = "";
+  });
+
+  // ---------- TARJETAS ----------
+  const C = { blocks: new Set(Object.keys(D.bloques)), pool: [], pos: 0 };
+  function rebuildCards() { C.pool = D.tarjetas.filter(c => C.blocks.has(c.b)); C.pos = 0; $("#flip").classList.remove("turned"); renderCard(); }
+  function renderCard() {
+    const c = C.pool[C.pos]; if (!c) return;
+    $("#cFront").innerHTML = bi(c.es[0], c.en[0]);
+    $("#cBack").innerHTML = bi(c.es[1], c.en[1]);
+    $("#cCount").textContent = `${C.pos + 1} / ${C.pool.length}`;
+  }
+  function moveCard(d) {
+    if (!C.pool.length) return;
+    $("#flip").classList.remove("turned");
+    setTimeout(() => { C.pos = (C.pos + d + C.pool.length) % C.pool.length; renderCard(); }, 180);
+  }
+  $("#flip").addEventListener("click", e => { if (!e.target.closest(".speak")) $("#flip").classList.toggle("turned"); });
+  $("#cPrev").onclick = () => moveCard(-1);
+  $("#cNext").onclick = () => moveCard(1);
+  $("#cShuffle").onclick = () => { C.pool = shuffle(C.pool); C.pos = 0; $("#flip").classList.remove("turned"); renderCard(); };
+  let touchX = null;
+  $("#flip").addEventListener("touchstart", e => touchX = e.touches[0].clientX, { passive: true });
+  $("#flip").addEventListener("touchend", e => { if (touchX == null) return; const dx = e.changedTouches[0].clientX - touchX; if (Math.abs(dx) > 70) moveCard(dx < 0 ? 1 : -1); touchX = null; });
+
+  // Lectura en voz alta: español y, si procede, inglés
+  function say(es, en) {
+    if (!("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    const u = (txt, lang) => { const x = new SpeechSynthesisUtterance(txt); x.lang = lang; x.rate = .92; return x; };
+    if (S.lang !== "en") speechSynthesis.speak(u(es, "es-ES"));
+    if (S.lang !== "es" && en) speechSynthesis.speak(u(en, "en-AU"));
+  }
+  $$("[data-speak]").forEach(b => b.addEventListener("click", e => {
+    e.stopPropagation();
+    const c = C.pool[C.pos]; const i = b.dataset.speak === "front" ? 0 : 1;
+    say(c.es[i], c.en[i]);
+  }));
+
+  // ---------- IMÁGENES MUDAS ----------
+  // Cada dibujo: marcadores {x,y} = punto señalado; {mx,my} = posición del número (si es distinta, se dibuja una línea guía)
+  const DIAGRAMS = [
+    { id: "rio", es: "El curso de un río", en: "The course of a river",
+      svg: () => `<svg viewBox="0 0 900 460"><defs>
+          <linearGradient id="rsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aa9d6"/><stop offset="1" stop-color="#bfe3f2"/></linearGradient></defs>
+        <rect width="900" height="460" fill="#6a9a4c"/>
+        <rect width="900" height="70" fill="url(#rsky)"/>
+        <path d="M0 175 L45 70 L95 120 L160 35 L215 110 L265 60 L330 150 L380 120 L440 175 Z" fill="#7d6a55"/>
+        <path d="M145 52 L160 35 L176 55 L166 60 Z M252 72 L265 60 L278 76 Z M32 98 L45 70 L58 100 Z" fill="#f4f8fb"/>
+        <path d="M0 175 L440 175 L440 200 L0 200 Z" fill="#6a9a4c"/>
+        <path d="M128 70 L190 190 L238 72 Z" fill="#4a3a2c" opacity=".55"/>
+        <path d="M420 292 C500 316 560 334 640 358 L652 402 C560 392 490 376 410 342 Z" fill="#b3d77d"/>
+        <path d="M560 460 C620 430 680 405 740 380 S860 330 900 315 L900 460 Z" fill="#1f7fa8"/>
+        <path d="M630 392 L655 448 L725 428 L740 393 Z" fill="#dcc48d"/>
+        <path d="M165 60 L176 100 L162 126 L186 152 L200 186" stroke="#3aa0d8" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M200 186 C230 215 300 200 320 230 C340 265 260 280 300 305 C340 330 420 300 450 320" stroke="#3aa0d8" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M450 320 C490 345 540 358 600 370 L632 392" stroke="#3aa0d8" stroke-width="15" fill="none" stroke-linecap="round"/>
+        <path d="M632 392 L660 444 M632 392 L695 437 M632 392 L728 410" stroke="#3aa0d8" stroke-width="5" fill="none"/>
+        <g stroke="#cfeaf7" stroke-width="3" fill="none" opacity=".6"><path d="M760 420 q15 -6 30 0 t30 0"/><path d="M820 380 q15 -6 30 0 t30 0"/></g></svg>`,
+      m: [ { x: 183, y: 140, mx: 70, my: 255, es: "Curso alto", en: "Upper course" },
+           { x: 166, y: 106, mx: 300, my: 38, es: "Valle en V", en: "V‑shaped valley" },
+           { x: 300, y: 252, mx: 190, my: 330, es: "Curso medio", en: "Middle course" },
+           { x: 324, y: 233, mx: 430, my: 200, es: "Meandro", en: "Meander" },
+           { x: 470, y: 345, mx: 380, my: 415, es: "Llanura aluvial (de inundación)", en: "Floodplain" },
+           { x: 565, y: 362, mx: 520, my: 440, es: "Curso bajo", en: "Lower course" },
+           { x: 690, y: 420, mx: 800, my: 440, es: "Delta", en: "Delta" } ] },
+
+    { id: "torrente", es: "Partes de un torrente", en: "Parts of a torrent",
+      svg: () => `<svg viewBox="0 0 800 460"><defs>
+          <linearGradient id="tsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f8fc0"/><stop offset="1" stop-color="#b9dcef"/></linearGradient></defs>
+        <rect width="800" height="460" fill="url(#tsky)"/>
+        <path d="M0 360 L200 60 L330 120 L460 40 L640 180 L800 260 L800 360 Z" fill="#7d6a55"/>
+        <path d="M188 78 L200 60 L214 86 Z M448 58 L460 40 L474 64 Z" fill="#f4f8fb"/>
+        <rect y="360" width="800" height="100" fill="#8fb069"/>
+        <path d="M290 105 L500 72 L425 225 L395 232 Z" fill="#5d4a39"/>
+        <g stroke="#3aa0d8" stroke-width="3" fill="none" opacity=".9"><path d="M305 112 L400 228"/><path d="M350 100 L404 226"/><path d="M405 88 L408 224"/><path d="M455 80 L413 224"/><path d="M490 78 L418 226"/></g>
+        <path d="M392 232 L380 352 M430 228 L452 352" stroke="#4a3a2c" stroke-width="10"/>
+        <path d="M410 230 C405 270 420 300 415 352" stroke="#3aa0d8" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <path d="M415 350 L325 445 Q430 475 525 445 Z" fill="#cfae6e"/>
+        <g stroke="#9c7f48" stroke-width="3" fill="none"><path d="M415 352 L360 440"/><path d="M415 352 L420 455"/><path d="M415 352 L480 445"/></g></svg>`,
+      m: [ { x: 395, y: 140, mx: 95, my: 130, es: "Cuenca de recepción", en: "Catchment basin" },
+           { x: 413, y: 295, mx: 580, my: 300, es: "Canal de desagüe", en: "Gorge channel" },
+           { x: 430, y: 420, mx: 640, my: 420, es: "Cono de deyección", en: "Alluvial fan" } ] },
+
+    { id: "karst", es: "Modelado kárstico", en: "Karst landscape",
+      svg: () => `<svg viewBox="0 0 900 460">
+        <rect width="900" height="460" fill="#8fc7e8"/>
+        <path d="M0 90 L240 90 Q300 150 360 90 L840 90 L840 460 L0 460 Z" fill="#d6c9a8"/>
+        <g stroke="#b9a983" stroke-width="3"><path d="M0 150 H240 M380 150 H840 M0 210 H840 M0 330 H840"/></g>
+        <rect x="0" y="380" width="900" height="80" fill="#6b5a4a"/>
+        <path d="M840 330 L900 330 L900 380 L840 380 Z" fill="#6a9a4c"/>
+        <path d="M840 90 L840 330" stroke="#a89670" stroke-width="4"/>
+        <g fill="#7d6f52"><path d="M40 90 l7 22 l7 -22 Z M70 90 l6 26 l6 -26 Z M98 90 l7 20 l7 -20 Z M128 90 l6 28 l6 -28 Z M158 90 l7 22 l7 -22 Z M188 90 l6 24 l6 -24 Z"/></g>
+        <rect x="550" y="90" width="22" height="175" fill="#3b3026"/>
+        <rect x="380" y="262" width="465" height="32" rx="14" fill="#3b3026"/>
+        <ellipse cx="680" cy="275" rx="90" ry="50" fill="#3b3026"/>
+        <rect x="380" y="283" width="465" height="10" fill="#3aa0d8"/>
+        <g fill="#efe4c8"><path d="M630 231 L650 231 L640 268 Z M655 228 L671 228 L663 258 Z M600 238 L614 238 L607 262 Z"/>
+          <path d="M690 324 L710 324 L700 288 Z M650 320 L664 320 L657 296 Z"/>
+          <path d="M733 238 L747 238 L742 270 L746 312 L734 312 L738 270 Z"/></g>
+        <path d="M842 288 C860 292 868 310 872 332" stroke="#3aa0d8" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <ellipse cx="878" cy="336" rx="18" ry="5" fill="#3aa0d8"/></svg>`,
+      m: [ { x: 120, y: 100, mx: 120, my: 40, es: "Lapiaz", en: "Limestone pavement (karren)" },
+           { x: 300, y: 110, mx: 300, my: 40, es: "Dolina", en: "Doline (sinkhole)" },
+           { x: 561, y: 170, mx: 470, my: 40, es: "Sima", en: "Pothole (shaft)" },
+           { x: 450, y: 272, mx: 450, my: 360, es: "Galería", en: "Cave passage" },
+           { x: 640, y: 250, mx: 560, my: 190, es: "Estalactita", en: "Stalactite" },
+           { x: 700, y: 305, mx: 640, my: 360, es: "Estalagmita", en: "Stalagmite" },
+           { x: 740, y: 275, mx: 790, my: 190, es: "Columna", en: "Column" },
+           { x: 850, y: 296, mx: 870, my: 420, es: "Manantial (surgencia)", en: "Spring (resurgence)" } ] },
+
+    { id: "glaciar", es: "Un glaciar alpino", en: "An alpine glacier",
+      svg: () => `<svg viewBox="0 0 900 460"><defs>
+          <linearGradient id="gsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f6ea3"/><stop offset="1" stop-color="#a9d3ef"/></linearGradient></defs>
+        <rect width="900" height="460" fill="url(#gsky)"/>
+        <path d="M0 260 L120 120 L190 170 L260 30 L330 160 L420 90 L520 200 L620 120 L760 230 L900 180 L900 460 L0 460 Z" fill="#6f6a72"/>
+        <path d="M232 80 L260 30 L290 86 L262 70 Z M100 145 L120 120 L140 150 Z M400 112 L420 90 L440 116 Z M600 142 L620 120 L642 148 Z" fill="#f4f8fb"/>
+        <path d="M260 30 L262 120 M260 30 L215 110 M260 30 L300 110" stroke="#4e4a52" stroke-width="3"/>
+        <path d="M270 150 Q330 110 400 150 Q420 200 380 215 L300 215 Q260 200 270 150 Z" fill="#eef6fb"/>
+        <path d="M300 222 C360 292 480 362 610 422" stroke="#5a4636" stroke-width="16" fill="none" stroke-dasharray="4 5"/>
+        <path d="M385 185 C440 235 560 300 690 352" stroke="#5a4636" stroke-width="16" fill="none" stroke-dasharray="4 5"/>
+        <path d="M340 200 C400 260 520 330 640 385" stroke="#e8f3fa" stroke-width="72" fill="none" stroke-linecap="round"/>
+        <g stroke="#9db8c9" stroke-width="4"><path d="M470 270 l-22 36 M500 285 l-22 36 M530 300 l-20 34 M560 316 l-18 32"/></g>
+        <path d="M600 432 Q700 440 712 352" stroke="#5a4636" stroke-width="14" fill="none" stroke-dasharray="4 5"/>
+        <rect x="20" y="318" width="210" height="132" rx="10" fill="#2b3a4a" stroke="#fff6ec" stroke-width="2"/>
+        <path d="M30 345 L70 345 Q78 425 125 425 Q172 425 180 345 L220 345 L220 440 L30 440 Z" fill="#6f6a72"/>
+        <text x="125" y="338" text-anchor="middle" fill="#fff6ec" font-size="15" font-weight="800" font-family="Nunito">corte del valle</text></svg>`,
+      m: [ { x: 335, y: 165, mx: 445, my: 140, es: "Circo glaciar", en: "Cirque" },
+           { x: 260, y: 45, mx: 150, my: 45, es: "Horn", en: "Horn (pyramidal peak)" },
+           { x: 422, y: 266, mx: 290, my: 300, es: "Lengua glaciar", en: "Glacier tongue" },
+           { x: 429, y: 324, mx: 380, my: 410, es: "Morrena lateral", en: "Lateral moraine" },
+           { x: 700, y: 395, mx: 810, my: 410, es: "Morrena frontal", en: "Terminal moraine" },
+           { x: 515, y: 305, mx: 610, my: 250, es: "Grietas", en: "Crevasses" },
+           { x: 125, y: 410, mx: 270, my: 420, es: "Valle en U (artesa)", en: "U‑shaped valley" } ] },
+
+    { id: "litoral", es: "Modelado litoral", en: "Coastal landforms",
+      svg: () => `<svg viewBox="0 0 900 460">
+        <rect width="900" height="460" fill="#1f7fa8"/>
+        <path d="M0 0 L900 0 L900 120 L700 140 L620 220 L520 250 L430 230 L330 300 L200 330 L0 340 Z" fill="#7aa35a"/>
+        <path d="M0 380 L200 370 L330 340 L430 270 L478 292 L350 372 L210 402 L0 412 Z" fill="#c9b48a"/>
+        <path d="M0 340 L200 330 L330 300 L430 230 L430 270 L330 340 L200 370 L0 380 Z" fill="#a5835f"/>
+        <g stroke="#8a6a48" stroke-width="3"><path d="M60 342 V378 M140 336 V374 M260 318 V356 M380 262 V302"/></g>
+        <path d="M520 250 L620 220 L700 140 L722 152 L642 238 L532 268 Z" fill="#f0d9a0"/>
+        <path d="M702 146 C760 150 820 170 872 202" stroke="#f0d9a0" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M470 302 L560 290 L576 346 L464 352 Z" fill="#a5835f"/>
+        <ellipse cx="518" cy="337" rx="20" ry="15" fill="#1f7fa8"/>
+        <path d="M588 404 L597 342 L615 338 L624 404 Z" fill="#a5835f"/>
+        <g stroke="#cfeaf7" stroke-width="3" fill="none" opacity=".6"><path d="M560 430 q15 -6 30 0 t30 0"/><path d="M700 300 q15 -6 30 0 t30 0"/><path d="M220 440 q15 -6 30 0 t30 0"/></g></svg>`,
+      m: [ { x: 200, y: 352, mx: 110, my: 265, es: "Acantilado", en: "Cliff" },
+           { x: 130, y: 396, mx: 90, my: 440, es: "Rasa (plataforma de abrasión)", en: "Wave‑cut platform" },
+           { x: 518, y: 318, mx: 470, my: 420, es: "Arco", en: "Sea arch" },
+           { x: 606, y: 372, mx: 720, my: 420, es: "Islote o farallón", en: "Sea stack" },
+           { x: 620, y: 230, mx: 560, my: 150, es: "Playa", en: "Beach" },
+           { x: 820, y: 174, mx: 800, my: 75, es: "Flecha litoral", en: "Spit" } ] },
+
+    { id: "acuifero", es: "Aguas subterráneas", en: "Groundwater",
+      svg: () => `<svg viewBox="0 0 900 440"><defs>
+          <pattern id="sand" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#d9c08a"/><circle cx="4" cy="4" r="1.6" fill="#b89d64"/><circle cx="11" cy="10" r="1.6" fill="#b89d64"/></pattern></defs>
+        <rect width="900" height="440" fill="#9fcbe6"/>
+        <g stroke="#2f6ea3" stroke-width="3" opacity=".7"><path d="M90 20 l-10 30 M140 30 l-10 30 M190 18 l-10 30 M240 32 l-10 30 M290 20 l-10 30 M340 30 l-10 30"/></g>
+        <ellipse cx="220" cy="18" rx="160" ry="22" fill="#e7eef4"/>
+        <path d="M0 120 C150 100 300 110 420 140 C520 165 600 260 700 270 L900 270 L900 440 L0 440 Z" fill="url(#sand)"/>
+        <path d="M0 232 C250 226 500 240 690 268 L700 270 L900 270 L900 340 C600 330 300 322 0 330 Z" fill="#3aa0d8" opacity=".45"/>
+        <path d="M0 232 C250 226 500 240 690 268" stroke="#1f5f8f" stroke-width="4" fill="none" stroke-dasharray="12 8"/>
+        <path d="M0 330 C300 322 600 330 900 340 L900 440 L0 440 Z" fill="#6b5a4a"/>
+        <path d="M700 270 L900 270 L900 284 L720 284 Z" fill="#3aa0d8"/>
+        <path d="M0 120 C150 100 300 110 420 140 C520 165 600 260 700 270 L900 270" stroke="#4f7a3a" stroke-width="10" fill="none"/>
+        <g stroke="#1f5f8f" stroke-width="4" fill="none"><path d="M200 120 V205 m-9 -14 l9 14 l9 -14"/><path d="M300 120 V210 m-9 -14 l9 14 l9 -14"/></g>
+        <rect x="118" y="80" width="18" height="215" fill="#5a4636"/>
+        <path d="M108 82 L127 62 L146 82 Z" fill="#b5523b"/></svg>`,
+      m: [ { x: 250, y: 165, mx: 380, my: 60, es: "Infiltración", en: "Infiltration" },
+           { x: 450, y: 238, mx: 470, my: 160, es: "Nivel freático", en: "Water table" },
+           { x: 450, y: 290, mx: 560, my: 300, es: "Acuífero (zona saturada)", en: "Aquifer (saturated zone)" },
+           { x: 450, y: 385, es: "Roca impermeable", en: "Impermeable rock" },
+           { x: 692, y: 268, mx: 760, my: 210, es: "Manantial", en: "Spring" },
+           { x: 127, y: 250, mx: 50, my: 170, es: "Pozo", en: "Well" } ] }
+  ];
+
+  const M = { idx: 0, solved: DIAGRAMS.map(() => new Set()) };
+  const mLabel = mk => bi(mk.es, mk.en);
+
+  function renderMuda() {
+    const d = DIAGRAMS[M.idx], solved = M.solved[M.idx];
+    $("#mudaTabs").innerHTML = DIAGRAMS.map((x, i) => `<button class="chip ${i === M.idx ? "on" : ""}" data-i="${i}">${esc(S.lang === "en" ? x.en : x.es)}</button>`).join("");
+    $$("#mudaTabs .chip").forEach(c => c.onclick = () => { M.idx = +c.dataset.i; renderMuda(); });
+    $("#mudaTitle").textContent = S.lang === "en" ? d.en : d.es;
+    const svg = d.svg();
+    const marks = d.m.map((mk, i) => {
+      const mx = mk.mx ?? mk.x, my = mk.my ?? mk.y;
+      const line = (mx !== mk.x || my !== mk.y) ? `<line class="leader" x1="${mx}" y1="${my}" x2="${mk.x}" y2="${mk.y}"/><circle cx="${mk.x}" cy="${mk.y}" r="6" fill="#fff6ec" stroke="#1a0b05" stroke-width="2"/>` : "";
+      return `${line}<g class="mk ${solved.has(i) ? "solved" : ""}" data-m="${i}"><circle class="pulse" cx="${mx}" cy="${my}" r="24"/><circle class="dot" cx="${mx}" cy="${my}" r="24"/><text x="${mx}" y="${my + 10}" text-anchor="middle">${i + 1}</text></g>`;
+    }).join("");
+    $("#mudaSvg").innerHTML = svg.replace("</svg>", marks + "</svg>");
+    $$("#mudaSvg .mk").forEach(g => g.addEventListener("click", () => askMarker(+g.dataset.m)));
+    $("#mudaLegend").innerHTML = d.m.map((mk, i) => `<li class="${solved.has(i) ? "solved" : ""}"><button data-m="${i}"><span class="n">${i + 1}</span><span class="lt">${solved.has(i) ? mLabel(mk) : "? ? ?"}</span></button></li>`).join("");
+    $$("#mudaLegend button").forEach(b => b.onclick = () => askMarker(+b.dataset.m));
+  }
+
+  function askMarker(i) {
+    const d = DIAGRAMS[M.idx], solved = M.solved[M.idx];
+    if (solved.has(i)) return;
+    // Opciones: la correcta + hasta 3 de otras partes del mismo dibujo
+    const others = shuffle(d.m.map((_, k) => k).filter(k => k !== i)).slice(0, 3);
+    const opts = shuffle([i, ...others]);
+    const tried = new Set();
+    const draw = (state) => {
+      openModal(`
+        <h2>${t("whatIs")} <span style="display:inline-grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--ink);color:#1a0b05">${i + 1}</span> ?</h2>
+        <div class="options">${opts.map((o, k) => `<button class="opt ${tried.has(o) ? "wrong" : ""} ${state === "ok" && o === i ? "right" : ""}" data-o="${o}" ${tried.has(o) || state ? "disabled" : ""}><span class="let">${"ABCD"[k]}</span><span>${mLabel(d.m[o])}</span></button>`).join("")}</div>
+        ${state === "ko" ? `<div class="feedback ko"><span class="big">💥</span><div><b>${t("wrong")}</b>${t("reboundTxt")}</div></div>` : ""}
+        <div class="actions">
+          ${state === "ko" ? `<button class="btn" id="mReb">🔁 ${t("rebound")}</button><button class="btn" id="mSol">👁️ ${t("reveal")}</button>` : ""}
+          <span class="spacer" style="flex:1"></span><button class="btn" id="closeM">✖ ${t("close")}</button></div>`);
+      $$("#modal .opt").forEach(b => b.onclick = () => {
+        const o = +b.dataset.o;
+        if (o === i) { solved.add(i); draw("ok"); cheer(); setTimeout(() => { closeModal(); renderMuda(); }, 1300); }
+        else { tried.add(o); draw("ko"); }
+      });
+      $("#closeM").onclick = () => { closeModal(); renderMuda(); };
+      if (state === "ko") {
+        $("#mReb").onclick = () => askAgain();
+        $("#mSol").onclick = () => { solved.add(i); closeModal(); renderMuda(); };
+      }
+    };
+    const askAgain = () => { draw(null); };
+    draw(null);
+  }
+  $("#mudaShow").onclick = () => { DIAGRAMS[M.idx].m.forEach((_, i) => M.solved[M.idx].add(i)); renderMuda(); };
+  $("#mudaReset").onclick = () => { M.solved[M.idx] = new Set(); renderMuda(); };
+
+  // ---------- VOCABULARIO ----------
+  const V = { hideEn: false, hideEs: false, allDefs: false, star: false, open: new Set() };
+  const STAR = new Set(D.imprescindibles || []);
+  function renderVocab() {
+    const qy = ($("#vSearch").value || "").toLowerCase().trim();
+    const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+    const list = D.vocabulario.filter(v => (!V.star || STAR.has(v[0])) && (!qy || norm(v[0] + " " + v[1]).includes(norm(qy))));
+    $("#vGrid").innerHTML = list.map(v => {
+      const open = V.allDefs || V.open.has(v[0]);
+      return `
+      <div class="vcard ${V.hideEn ? "masked" : ""} ${V.hideEs ? "masked-es" : ""} ${open ? "open" : ""}" data-key="${esc(v[0])}">
+        <button class="vmain" data-es="${esc(v[0])}" data-en="${esc(v[1])}">
+          <span class="speak" aria-hidden="true">🔊</span>${STAR.has(v[0]) ? `<span class="star" title="⭐">⭐</span>` : ""}
+          <div class="emo">${v[2]}</div><div class="es">${esc(v[0])}</div><div class="eng">${esc(v[1])}</div></button>
+        ${v[3] ? `<button class="vdef-btn" aria-expanded="${open}">📘 ${t(open ? "defHide" : "def")}</button>
+        ${open ? `<p class="vdef">${bi(v[3], v[4])}</p>` : ""}` : ""}
+      </div>`;
+    }).join("");
+    $$("#vGrid .vmain").forEach(b => b.onclick = () => {
+      const c = b.parentElement;
+      if (c.classList.contains("masked") || c.classList.contains("masked-es")) { c.classList.remove("masked", "masked-es"); }
+      const u1 = new SpeechSynthesisUtterance(b.dataset.es); u1.lang = "es-ES"; u1.rate = .9;
+      const u2 = new SpeechSynthesisUtterance(b.dataset.en); u2.lang = "en-AU"; u2.rate = .9;
+      if ("speechSynthesis" in window) { speechSynthesis.cancel(); speechSynthesis.speak(u1); speechSynthesis.speak(u2); }
+    });
+    $$("#vGrid .vdef-btn").forEach(b => b.onclick = () => {
+      const k = b.parentElement.dataset.key;
+      if (V.allDefs) { V.allDefs = false; D.vocabulario.forEach(v => V.open.add(v[0])); }
+      V.open.has(k) ? V.open.delete(k) : V.open.add(k);
+      renderVocab();
+    });
+    $("#vHideEn").classList.toggle("on", V.hideEn);
+    $("#vHideEs").classList.toggle("on", V.hideEs);
+    $("#vDefsAll").classList.toggle("on", V.allDefs);
+    $("#vStar").classList.toggle("on", V.star);
+    $("#vDefsAll span").textContent = t(V.allDefs ? "defsHide" : "defsAll");
+  }
+  $("#vStar").onclick = () => { V.star = !V.star; renderVocab(); };
+  $("#vDefsAll").onclick = () => { V.allDefs = !V.allDefs; V.open.clear(); renderVocab(); };
+  $("#vSearch").addEventListener("input", renderVocab);
+  $("#vHideEn").onclick = () => { V.hideEn = !V.hideEn; if (V.hideEn) V.hideEs = false; renderVocab(); };
+  $("#vHideEs").onclick = () => { V.hideEs = !V.hideEs; if (V.hideEs) V.hideEn = false; renderVocab(); };
+
+  // ---------- VISU: identificar modelados y riesgos en fotos reales ----------
+  const AGENTES = {
+    agua:   { es: "Aguas superficiales (ríos, torrentes, arroyada)", en: "Running water (rivers, torrents, runoff)" },
+    subt:   { es: "Aguas subterráneas", en: "Groundwater" },
+    hielo:  { es: "Hielo (glaciares)", en: "Ice (glaciers)" },
+    mar:    { es: "El mar", en: "The sea" },
+    viento: { es: "El viento", en: "Wind" },
+    grav:   { es: "La gravedad", en: "Gravity" }
+  };
+  const PROCESOS = { ero: { es: "Erosión", en: "Erosion" }, sed: { es: "Sedimentación (depósito)", en: "Deposition" } };
+  const MODELADOS = {
+    fluvial: { es: "Fluvial", en: "River (fluvial)" }, torrencial: { es: "Torrencial", en: "Torrential" },
+    arroyada: { es: "De arroyada", en: "Runoff" }, karst: { es: "Kárstico", en: "Karst" }, glaciar: { es: "Glaciar", en: "Glacial" },
+    litoral: { es: "Litoral", en: "Coastal" }, eolico: { es: "Eólico", en: "Wind (aeolian)" }, grav: { es: "Gravitacional", en: "Mass movement" }
+  };
+  const RIESGOS = {
+    inund: { es: "Inundación", en: "Flood" }, grav: { es: "Desprendimiento o deslizamiento", en: "Rockfall or landslide" },
+    hund: { es: "Hundimiento del terreno", en: "Ground collapse or subsidence" }, costa: { es: "Erosión costera", en: "Coastal erosion" },
+    volcan: { es: "Riesgo volcánico", en: "Volcanic hazard" }, sismo: { es: "Riesgo sísmico", en: "Earthquake hazard" },
+    desert: { es: "Desertificación y avance de dunas", en: "Desertification and moving dunes" }
+  };
+  const VITEMS = VD.items || [];
+  const byTipo = tp => VITEMS.filter(x => x.tipo === tp);
+  const lbl = o => bi(o.es, o.en);
+  const VU = { mode: "modelado", order: { modelado: [], riesgo: [] }, pos: { modelado: 0, riesgo: 0 }, st: {}, exam: null };
+
+  function vuOrder(tp) { VU.order[tp] = shuffle(byTipo(tp).map(x => x.id)); VU.pos[tp] = 0; }
+  const vuItem = id => VITEMS.find(x => x.id === id);
+
+  // Opciones de "forma": la correcta + distractores (preferentemente del mismo agente)
+  function formaOpts(it, n = 4) {
+    const others = VITEMS.filter(x => x.tipo === "modelado" && x.forma.es !== it.forma.es);
+    const uniq = []; others.forEach(x => { if (!uniq.some(u => u.forma.es === x.forma.es)) uniq.push(x); });
+    const same = shuffle(uniq.filter(x => x.agente === it.agente)).slice(0, 2);
+    const rest = shuffle(uniq.filter(x => !same.includes(x))).slice(0, n - 1 - same.length);
+    return shuffle([it, ...same, ...rest]).map(x => ({ v: x.forma.es, l: x.forma }));
+  }
+  function steps(it) {
+    if (it.tipo === "riesgo") {
+      const others = shuffle(byTipo("riesgo").filter(x => x.riesgo !== it.riesgo));
+      const meds = [];
+      others.forEach(x => { if (meds.length < 2 && !meds.some(m => m.es === x.medida.es)) meds.push(x.medida); });
+      return [
+        { k: "riesgo", q: t("vuQRiesgo"), ok: it.riesgo,
+          o: shuffle(Object.keys(RIESGOS)).map(k => ({ v: k, l: RIESGOS[k] })) },
+        { k: "medida", q: t("vuQMedida"), ok: it.medida.es,
+          o: shuffle([it.medida, ...meds]).map(m => ({ v: m.es, l: m })) }
+      ];
+    }
+    const s = [
+      { k: "agente", q: t("vuQAgente"), ok: it.agente, o: Object.keys(AGENTES).map(k => ({ v: k, l: AGENTES[k] })) },
+      { k: "forma", q: t("vuQForma"), ok: it.forma.es, o: formaOpts(it) }
+    ];
+    if (it.proceso) s.push({ k: "proceso", q: t("vuQProceso"), ok: it.proceso, o: Object.keys(PROCESOS).map(k => ({ v: k, l: PROCESOS[k] })) });
+    return s;
+  }
+  function vuState(it) {
+    if (!VU.st[it.id]) VU.st[it.id] = { steps: steps(it), cur: 0, wrong: {}, done: false, shown: false };
+    return VU.st[it.id];
+  }
+
+  function photoHTML(it, showPlace) {
+    const c = it.credit || {};
+    return `<img src="${esc(it.img)}" alt="${esc(t("vuAlt"))}" id="vuImg">
+      ${showPlace && it.lugar ? `<p class="vplace">📍 ${bi(it.lugar.es, it.lugar.en)}</p>` : ""}
+      <p class="vcredit">📷 ${esc(c.autor || "")} · ${esc(c.lic || "")} · <a href="${esc(c.url || "#")}" target="_blank" rel="noopener">Wikimedia Commons</a></p>`;
+  }
+  function bindZoom(it) {
+    const im = $("#vuImg"); if (!im) return;
+    im.onclick = () => {
+      openModal(`<img src="${esc(it.img)}" style="width:100%;border-radius:14px" alt=""><div class="actions"><span class="spacer" style="flex:1"></span><button class="btn" id="closeM">✖ ${t("close")}</button></div>`);
+      $("#closeM").onclick = closeModal;
+    };
+  }
+
+  function renderVisu() {
+    $("#vuTabs").innerHTML = [["modelado", "🏞️ " + t("vuTabMod")], ["riesgo", "⚠️ " + t("vuTabRies")], ["examen", "⏱️ " + t("vuTabExam")]]
+      .map(([k, l]) => `<button class="chip ${VU.mode === k ? "on" : ""}" data-k="${k}">${l}</button>`).join("");
+    $$("#vuTabs .chip").forEach(c => c.onclick = () => { VU.mode = c.dataset.k; renderVisu(); });
+    if (!VITEMS.length) { $("#vuPhoto").innerHTML = ""; $("#vuAsk").innerHTML = `<p>${t("vuEmpty")}</p>`; return; }
+    if (VU.mode === "examen") return renderExam();
+    const tp = VU.mode;
+    if (!VU.order[tp].length) vuOrder(tp);
+    const it = vuItem(VU.order[tp][VU.pos[tp]]), st = vuState(it);
+    $("#vuPhoto").innerHTML = photoHTML(it, st.done);
+    bindZoom(it);
+
+    let h = `<div class="qhead"><span class="qtag">${t("vuPhoto")} ${VU.pos[tp] + 1} ${t("of")} ${VU.order[tp].length}</span>
+      <span class="ask-top"><button class="btn" id="vuPrev">◀</button><button class="btn" id="vuShuf">🔀</button></span></div>`;
+    st.steps.forEach((s, i) => {
+      if (i > st.cur && !st.done) return;
+      const solved = st.done || i < st.cur;
+      h += `<h3>${i + 1}. ${solved ? "✅ " : ""}${esc(s.q)}</h3>`;
+      if (solved) { const r = s.o.find(o => o.v === s.ok); h += `<p class="vans">${lbl(r.l)}</p>`; return; }
+      const wrong = st.wrong[i] || [];
+      h += `<div class="vopts">${s.o.map(o => `<button class="opt ${wrong.includes(o.v) ? "wrong" : ""}" data-i="${i}" data-v="${esc(o.v)}" ${wrong.includes(o.v) ? "disabled" : ""}><span>${lbl(o.l)}</span></button>`).join("")}</div>`;
+      if (wrong.length) h += `<div class="feedback ko"><span class="big">🔍</span><div>${t("vuTryAgain")}</div></div>`;
+    });
+    if (st.done) {
+      h += `<div class="ficha"><b>📋 ${t("vuFicha")}</b>`;
+      if (it.tipo === "modelado") {
+        h += `<div><span>${t("vuAgente")}</span>${lbl(AGENTES[it.agente])}</div>
+              <div><span>${t("vuForma")}</span>${lbl(it.forma)}</div>
+              ${it.proceso ? `<div><span>${t("vuProceso")}</span>${lbl(PROCESOS[it.proceso])}</div>` : ""}
+              <div><span>${t("vuModelado")}</span>${lbl(MODELADOS[it.modelado])}</div>`;
+      } else {
+        h += `<div><span>${t("vuRiesgo")}</span>${lbl(RIESGOS[it.riesgo])}</div><div><span>${t("vuMedida")}</span>${lbl(it.medida)}</div>`;
+      }
+      h += `</div><div class="think">💡 ${bi(it.nota.es, it.nota.en)}</div>`;
+      h += `<div class="actions"><span class="spacer"></span><button class="btn hot big" id="vuNext">${t("vuNext")} ▶</button></div>`;
+    } else {
+      h += `<div class="actions"><button class="btn" id="vuSol">👁️ ${t("reveal")}</button><span class="spacer"></span><button class="btn" id="vuSkip">${t("vuNext")} ▶</button></div>`;
+    }
+    $("#vuAsk").innerHTML = h;
+
+    $$("#vuAsk .vopts .opt").forEach(b => b.onclick = () => {
+      const i = +b.dataset.i, v = b.dataset.v, s = st.steps[i];
+      if (v === s.ok) { st.cur = i + 1; if (st.cur >= st.steps.length) { st.done = true; cheer(); } }
+      else (st.wrong[i] = st.wrong[i] || []).push(v);
+      renderVisu();
+    });
+    const move = d => { VU.pos[tp] = (VU.pos[tp] + d + VU.order[tp].length) % VU.order[tp].length; renderVisu(); };
+    if ($("#vuNext")) $("#vuNext").onclick = () => move(1);
+    if ($("#vuSkip")) $("#vuSkip").onclick = () => move(1);
+    $("#vuPrev").onclick = () => move(-1);
+    $("#vuShuf").onclick = () => { vuOrder(tp); renderVisu(); };
+    if ($("#vuSol")) $("#vuSol").onclick = () => { st.done = true; st.cur = st.steps.length; renderVisu(); };
+  }
+
+  // Examen visu: 10 fotos al azar, una sola oportunidad por foto
+  function newExam() {
+    const pool = shuffle(VITEMS.filter(x => x.tipo === "modelado")).slice(0, 10);
+    VU.exam = { ids: pool.map(x => x.id), opts: pool.map(x => formaOpts(x)), ans: [], pos: 0 };
+  }
+  function renderExam() {
+    if (!VU.exam) newExam();
+    const E = VU.exam;
+    if (E.pos >= E.ids.length) {
+      const ok = E.ans.filter((a, i) => a === vuItem(E.ids[i]).forma.es).length;
+      $("#vuPhoto").innerHTML = `<div class="score"><div class="big">${ok} / ${E.ids.length}</div><p>${t(ok >= 8 ? "vuGreat" : ok >= 5 ? "vuGood" : "vuMore")}</p></div>`;
+      $("#vuAsk").innerHTML = `<h3>${t("vuReview")}</h3><ol class="vreview">${E.ids.map((id, i) => {
+        const it = vuItem(id), good = E.ans[i] === it.forma.es;
+        return `<li class="${good ? "ok" : "ko"}"><img src="${esc(it.img)}" alt=""><span>${good ? "✅" : "❌"} ${lbl(it.forma)}</span></li>`;
+      }).join("")}</ol><div class="actions"><span class="spacer"></span><button class="btn hot big" id="vuAgain">🔁 ${t("vuAgain")}</button></div>`;
+      $("#vuAgain").onclick = () => { newExam(); renderVisu(); };
+      return;
+    }
+    const it = vuItem(E.ids[E.pos]), answered = E.ans[E.pos] !== undefined;
+    $("#vuPhoto").innerHTML = photoHTML(it, answered);
+    bindZoom(it);
+    let h = `<div class="qhead"><span class="qtag">⏱️ ${t("vuTabExam")}</span><span class="qcount">${E.pos + 1} / ${E.ids.length}</span></div>
+      <div class="progress"><i style="width:${(E.pos + (answered ? 1 : 0)) / E.ids.length * 100}%"></i></div>
+      <h3>${t("vuQExam")}</h3>
+      <div class="vopts">${E.opts[E.pos].map(o => {
+        let cls = "";
+        if (answered && o.v === it.forma.es) cls = "right";
+        else if (answered && o.v === E.ans[E.pos]) cls = "wrong";
+        return `<button class="opt ${cls}" data-v="${esc(o.v)}" ${answered ? "disabled" : ""}><span>${lbl(o.l)}</span></button>`;
+      }).join("")}</div>`;
+    if (answered) h += `<div class="think">💡 ${bi(it.nota.es, it.nota.en)}</div><div class="actions"><span class="spacer"></span><button class="btn hot big" id="vuExNext">${t("next")} ▶</button></div>`;
+    $("#vuAsk").innerHTML = h;
+    $$("#vuAsk .opt").forEach(b => b.onclick = () => { E.ans[E.pos] = b.dataset.v; if (b.dataset.v === it.forma.es) cheer(); renderVisu(); });
+    if ($("#vuExNext")) $("#vuExNext").onclick = () => { E.pos++; renderVisu(); };
+  }
+
+  // ---------- DOSIER: guía, ficha rellenable y rúbrica ----------
+  const DOS = D.dosier;
+  const FICHA_CAMPOS = [
+    { k: "titulo", t: "text" }, { k: "lugar", t: "text" }, { k: "foto", t: "text" },
+    { k: "agente", t: "select", o: () => Object.keys(AGENTES).map(x => AGENTES[x]) },
+    { k: "forma", t: "text", list: true }, { k: "proceso", t: "select", o: () => [{ es: "Erosión", en: "Erosion" }, { es: "Transporte", en: "Transport" }, { es: "Sedimentación", en: "Deposition" }] },
+    { k: "modelado", t: "select", o: () => Object.keys(MODELADOS).map(x => MODELADOS[x]) },
+    { k: "riesgo", t: "text" },
+    { k: "tipoMedida", t: "select", o: () => [{ es: "Previsión", en: "Risk assessment" }, { es: "Prevención", en: "Prevention" }, { es: "Predicción", en: "Prediction" }] },
+    { k: "medida", t: "text" }, { k: "explica", t: "area" }
+  ];
+  let ficha = store.get("ficha", {});
+  const L2 = o => (S.lang === "en" ? o.en : o.es);
+
+  function fichaTexto() {
+    return FICHA_CAMPOS.map(c => `${t("f_" + c.k)}: ${ficha[c.k] || ""}`).join("\n");
+  }
+
+  function renderDosier() {
+    if (!DOS) return;
+    const formas = [...new Set(VITEMS.filter(x => x.tipo === "modelado").map(x => L2(x.forma)))].sort();
+    let h = `<div class="card dsec dkey"><h2>🔑 ${t("dIdea")}</h2><p class="big">${bi(DOS.idea.es, DOS.idea.en)}</p><p>${bi(DOS.tarea.es, DOS.tarea.en)}</p></div>`;
+
+    h += `<div class="dgrid"><div class="card dsec"><h3>✅ ${t("dReq")}</h3><ul>${DOS.requisitos.map(r => `<li>${bi(r.es, r.en)}</li>`).join("")}</ul></div>
+      <div class="card dsec"><h3>📅 ${t("dPlazos")}</h3><table class="dtab"><tbody>${DOS.plazos.map(p => `<tr><th>${bi(p.f.es, p.f.en)}</th><td><b>${bi(p.q.es, p.q.en)}</b><br>${bi(p.d.es, p.d.en)}</td></tr>`).join("")}</tbody></table></div></div>`;
+
+    // Ficha rellenable
+    h += `<div class="card dsec" id="fichaBox"><h3>📝 ${t("dFicha")}</h3><p class="muted">${t("dFichaHelp")}</p><div class="fform">`;
+    FICHA_CAMPOS.forEach(c => {
+      const v = esc(ficha[c.k] || "");
+      h += `<label><span>${t("f_" + c.k)}</span>`;
+      if (c.t === "select") h += `<select data-k="${c.k}"><option value="">—</option>${c.o().map(o => `<option ${ficha[c.k] === L2(o) ? "selected" : ""}>${esc(L2(o))}</option>`).join("")}</select>`;
+      else if (c.t === "area") h += `<textarea data-k="${c.k}" rows="3">${v}</textarea>`;
+      else h += `<input data-k="${c.k}" value="${v}" ${c.list ? 'list="formasList"' : ""}>`;
+      h += `</label>`;
+    });
+    h += `<datalist id="formasList">${formas.map(f => `<option value="${esc(f)}">`).join("")}</datalist></div>
+      <div class="actions"><button class="btn sea" id="fCopy">📋 ${t("dCopy")}</button><button class="btn" id="fPrint">🖨️ ${t("dPrint")}</button><button class="btn" id="fNew">🧹 ${t("dNew")}</button><span class="muted" id="fMsg" style="align-self:center"></span></div></div>`;
+
+    // Ejemplo y ayuda
+    h += `<div class="dgrid"><div class="card dsec"><h3>⭐ ${t("dEjemplo")}</h3><table class="dtab"><tbody>${DOS.ejemplo.map(([a, b]) => `<tr><th>${bi(a.es, a.en)}</th><td>${bi(b.es, b.en)}</td></tr>`).join("")}</tbody></table></div>
+      <div class="card dsec"><h3>🧭 ${t("dAyuda")}</h3><table class="dtab"><thead><tr><th>${t("vuAgente")}</th><th>${t("dFormas")}</th><th>${t("vuRiesgo")}</th></tr></thead><tbody>${DOS.ayuda.map(r => `<tr><th>${bi(r.a.es, r.a.en)}</th><td>${bi(r.f.es, r.f.en)}</td><td>${bi(r.r.es, r.r.en)}</td></tr>`).join("")}</tbody></table></div></div>`;
+
+    // Rúbrica
+    const R = DOS.rubrica;
+    h += `<div class="card dsec"><h3>🎯 ${t("dRubrica")}</h3><div class="rwrap"><table class="dtab rub"><thead><tr><th></th>${R.niveles.map(n => `<th>${bi(n.es, n.en)}</th>`).join("")}</tr></thead>
+      <tbody>${R.filas.map(f => `<tr><th>${bi(f.c.es, f.c.en)}</th>${f.n.map(n => `<td>${bi(n.es, n.en)}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+    $("#dosRoot").innerHTML = h;
+
+    $$("#fichaBox [data-k]").forEach(el => el.addEventListener("input", () => { ficha[el.dataset.k] = el.value; store.set("ficha", ficha); }));
+    $("#fCopy").onclick = () => {
+      const done = () => { $("#fMsg").textContent = "✅ " + t("dCopied"); };
+      if (navigator.clipboard) navigator.clipboard.writeText(fichaTexto()).then(done, () => { $("#fMsg").textContent = fichaTexto(); });
+      else $("#fMsg").textContent = fichaTexto();
+    };
+    $("#fPrint").onclick = () => {
+      const w = window.open("", "_blank"); if (!w) return;
+      const rows = FICHA_CAMPOS.map(c => `<tr><th>${esc(t("f_" + c.k))}</th><td>${esc(ficha[c.k] || "")}</td></tr>`).join("");
+      w.document.write(`<!doctype html><meta charset="utf-8"><title>${esc(t("dFicha"))}</title><style>body{font:14px Arial;margin:24px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #999;padding:8px;text-align:left;vertical-align:top}th{width:30%;background:#e7f4ef}</style><h2>${esc(t("dFicha"))}</h2><table>${rows}</table>`);
+      w.document.close(); w.focus(); w.print();
+    };
+    $("#fNew").onclick = () => { ficha = {}; store.set("ficha", ficha); renderDosier(); };
+  }
+
+  // ---------- Lluvia decorativa ----------
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce) {
+    const box = $("#embers");
+    for (let i = 0; i < 26; i++) {
+      const e = document.createElement("i");
+      e.style.left = Math.random() * 100 + "%";
+      e.style.setProperty("--dx", (Math.random() * 120 - 60) + "px");
+      e.style.animationDuration = (9 + Math.random() * 12) + "s";
+      e.style.animationDelay = (-Math.random() * 20) + "s";
+      e.style.height = (12 + Math.random() * 14) + "px";
+      box.appendChild(e);
+    }
+  }
+
+  // ---------- Inicio ----------
+  rebuildQuiz();
+  rebuildCards();
+  // Enlaces directos: #quiz, #cards, #vocab, #visu, #visu-riesgo, #visu-examen, #mudas o #mudas-3 (uno concreto)
+  const [hv, hn] = location.hash.slice(1).split("-");
+  if (hv === "mudas" && DIAGRAMS[+hn]) M.idx = +hn;
+  if (hv === "visu" && ["modelado", "riesgo", "examen"].includes(hn)) VU.mode = hn;
+  go(["quiz", "cards", "mudas", "vocab", "visu", "dosier"].includes(hv) ? hv : "home");
+})();
+</script>
+</body>
+</html>
