@@ -1,0 +1,1302 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapas en geología · 4º ESO</title>
+<meta name="author" content="María Dolores Gámez Ortiz">
+<link rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12100c; --bg2: #1d1a13; --panel: #24201a; --panel2: #2e2920;
+    --line: rgba(240, 210, 160, .22); --ink: #fbf6ec; --muted: #d6cab4;
+    --acc: #e0a050; --acc2: #7cc8a0; --blue: #6fb6e8; --ok: #34d399; --bad: #ff5d73;
+    --paper: #f7f1e3; --radius: 22px; --shadow: 0 18px 50px rgba(0,0,0,.45);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { font-size: clamp(16px, 0.8vw + 9px, 23px); background: var(--bg); }
+  body {
+    margin: 0; min-height: 100vh; color: var(--ink); overflow-x: hidden;
+    font-family: "Nunito", "Segoe UI", sans-serif; line-height: 1.4;
+    background:
+      radial-gradient(1100px 600px at 85% -10%, rgba(224,160,80,.22), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(124,200,160,.12), transparent 60%),
+      linear-gradient(180deg, var(--bg2), var(--bg));
+    background-attachment: fixed;
+  }
+  h1, h2, h3 { font-family: "Baloo 2", "Trebuchet MS", sans-serif; line-height: 1.08; margin: 0 0 .5rem; }
+  h2 { font-size: 1.7rem; } h3 { font-size: 1.3rem; color: var(--acc); }
+  p { margin: 0 0 .7rem; }
+  a { color: var(--blue); }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; touch-action: manipulation; }
+  .hidden { display: none !important; }
+
+  /* Idioma */
+  body.m-es .en { display: none !important; }
+  body.m-en .es { display: none !important; }
+  body.m-both .en { color: #a8dcef; font-style: italic; }
+  body.m-both span.en::before { content: " / "; color: var(--muted); font-style: normal; }
+  body.m-both .en.d { display: block; font-size: .92em; }
+  body.m-both .en.d::before { content: none; }
+  body.m-both p.en { margin-top: -.4rem; font-size: .93em; }
+
+  .shell { width: min(1400px, calc(100% - 32px)); margin: 0 auto; padding: 14px 0 40px; }
+  .topbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+  .brand .logo { font-size: 2.4rem; }
+  .brand strong { display: block; font-family: "Baloo 2", sans-serif; font-size: 1.45rem; line-height: 1; }
+  .brand small { color: var(--muted); font-size: .8rem; }
+  .langs { margin-left: auto; display: flex; gap: 6px; }
+  .langs button { min-height: 2.6rem; padding: .3rem .8rem; border-radius: 14px; border: 2px solid var(--line); background: rgba(255,255,255,.06); font-weight: 800; }
+  .langs button.on { background: var(--acc); color: #1b1206; border-color: transparent; }
+  .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .nav button, .btn {
+    min-height: 2.9rem; padding: .45rem .9rem; border-radius: 16px; border: 2px solid var(--line);
+    background: rgba(255,255,255,.06); font-weight: 800; display: inline-flex; align-items: center; gap: .4rem; justify-content: center;
+  }
+  .nav button.on { background: linear-gradient(135deg, var(--acc), #f3c97a); color: #1b1206; border-color: transparent; }
+  .btn.hot { background: linear-gradient(135deg, var(--acc), #f3c97a); color: #1b1206; border-color: transparent; }
+  .btn.on { border-color: var(--acc); background: rgba(224,160,80,.22); }
+  .btn:active, .nav button:active { transform: scale(.97); }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .panel { background: linear-gradient(160deg, var(--panel2), var(--panel)); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(14px, 2vw, 24px); box-shadow: var(--shadow); margin-bottom: 18px; }
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+  .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  canvas { display: block; width: 100%; height: auto; border-radius: 14px; touch-action: none; }
+  .mapc { background: var(--paper); }
+  .note { color: var(--muted); font-size: .9rem; }
+  .key { background: rgba(224,160,80,.12); border-left: 5px solid var(--acc); border-radius: 12px; padding: 10px 14px; margin: 10px 0; }
+  ul.clean { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+  .hero h1 { font-size: clamp(2rem, 4.4vw, 3.3rem); }
+  .hero h1 em { color: var(--acc); font-style: normal; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+  .card { border: 2px solid var(--line); border-radius: 18px; padding: 14px; background: rgba(255,255,255,.04); text-align: left; }
+  button.card:hover { border-color: var(--acc); }
+  .card .ico { font-size: 2rem; }
+  .card > b { display: block; font-family: "Baloo 2", sans-serif; font-size: 1.25rem; }
+  .steps { display: grid; gap: 8px; counter-reset: s; }
+  .step { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 14px; border: 2px solid var(--line); background: rgba(255,255,255,.03); opacity: .55; }
+  .step.on { opacity: 1; border-color: var(--acc); background: rgba(224,160,80,.12); }
+  .step.done { opacity: .9; }
+  .step .n { flex: none; width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; background: var(--acc); color: #1b1206; font-weight: 800; }
+  .data { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; }
+  .data div { background: rgba(255,255,255,.05); border-radius: 12px; padding: 8px 10px; }
+  .data b { display: block; font-size: 1.15rem; color: var(--acc); }
+  .data small { color: var(--muted); }
+  input[type=range] { width: 100%; accent-color: var(--acc); }
+  input[type=number], input[type=text], select { min-height: 2.6rem; padding: .3rem .6rem; border-radius: 12px; border: 2px solid var(--line); background: rgba(0,0,0,.3); font-weight: 700; }
+  select option { background: var(--panel); }
+  .big { font-size: 1.5rem; font-weight: 800; color: var(--acc); }
+  .fb { min-height: 1.5rem; font-weight: 800; }
+  .ok { color: var(--ok); } .bad { color: var(--bad); }
+  .legend { display: grid; gap: 6px; }
+  .legend div { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 10px; }
+  .legend div.hl { background: rgba(255,255,255,.12); outline: 2px solid var(--acc); }
+  .legend i { flex: none; width: 2.4rem; height: 1.5rem; border-radius: 5px; border: 1px solid rgba(0,0,0,.4); }
+  .legend small { color: var(--muted); display: block; }
+  .sym { display: grid; grid-template-columns: 3rem 1fr; gap: 6px 10px; align-items: center; }
+  .sym svg { width: 3rem; height: 2rem; background: var(--paper); border-radius: 6px; }
+  .info { min-height: 3rem; }
+  .q { border: 2px solid var(--line); border-radius: 18px; padding: 14px; margin-bottom: 12px; background: rgba(255,255,255,.03); }
+  .q .opts { display: grid; gap: 8px; margin-top: 8px; }
+  .q .opts button { text-align: left; padding: .6rem .9rem; border-radius: 14px; border: 2px solid var(--line); background: rgba(255,255,255,.05); font-weight: 700; }
+  .q .opts button.right { border-color: var(--ok); background: rgba(52,211,153,.18); }
+  .q .opts button.wrong { border-color: var(--bad); background: rgba(255,93,115,.16); }
+  .q .ex { margin-top: 8px; color: var(--muted); }
+  table.voc { width: 100%; border-collapse: collapse; }
+  table.voc td, table.voc th { border-bottom: 1px solid var(--line); padding: 8px 6px; vertical-align: top; text-align: left; }
+  table.voc th { color: var(--acc); }
+  .say { border: 0; background: none; font-size: 1.1rem; padding: 0 .2rem; }
+  .term { font-weight: 800; white-space: nowrap; }
+  footer { text-align: center; color: var(--muted); font-size: .8rem; margin-top: 30px; line-height: 1.5; }
+  footer a { color: inherit; }
+  .print-only { display: none; }
+  @media (max-width: 900px) { .two, .three { grid-template-columns: 1fr; } }
+  @media print {
+    body { background: #fff; color: #000; }
+    .shell { display: none; }
+    .print-only { display: block; }
+    .print-only img { width: 100%; max-width: 17cm; display: block; margin: 0 auto 8mm; }
+    .print-only h2 { font-size: 16pt; color: #000; }
+  }
+</style>
+</head>
+<body class="m-es">
+<div class="shell">
+  <header class="topbar">
+    <a class="brand" href="../">
+      <span class="logo">🗺️</span>
+      <span><strong>Mapas en geología</strong><small><span class="es">4º ESO · Topográficos, perfiles y mapas geológicos</span><span class="en">Year 10 · Topographic maps, profiles and geological maps</span></small></span>
+    </a>
+    <div class="langs" role="group" aria-label="Idioma / Language">
+      <button data-lang="es" class="on">ES</button><button data-lang="both">ES+EN</button><button data-lang="en">EN</button>
+    </div>
+  </header>
+
+  <nav class="nav" id="nav">
+    <button data-tab="inicio" class="on">🏠 <span class="es">Inicio</span><span class="en">Start</span></button>
+    <button data-tab="topo">📏 <span class="es">Mapa topográfico</span><span class="en">Topographic map</span></button>
+    <button data-tab="perfil">⛰️ <span class="es">Perfil topográfico</span><span class="en">Topographic profile</span></button>
+    <button data-tab="practica">✏️ <span class="es">Hazlo tú</span><span class="en">Your turn</span></button>
+    <button data-tab="geo">🪨 <span class="es">Mapa geológico</span><span class="en">Geological map</span></button>
+    <button data-tab="reto">🎯 <span class="es">Reto</span><span class="en">Quiz</span></button>
+    <button data-tab="vocab">📖 <span class="es">Vocabulario</span><span class="en">Vocabulary</span></button>
+  </nav>
+
+  <!-- ================= INICIO ================= -->
+  <section id="t-inicio">
+    <div class="panel hero">
+      <h1><span class="es">Un mapa es el <em>relieve</em> visto desde arriba</span><span class="en d">A map is the <em>land</em> seen from above</span></h1>
+      <p class="es">Un <b>mapa</b> es una representación reducida y plana de una parte de la superficie terrestre. En geología usamos sobre todo dos: el <b>mapa topográfico</b>, que muestra la <b>forma y la altitud del terreno</b>, y el <b>mapa geológico</b>, que muestra <b>qué rocas hay</b>, <b>qué edad tienen</b> y <b>cómo están colocadas</b>.</p>
+      <p class="en">A <b>map</b> is a reduced, flat representation of part of the Earth's surface. In geology we mainly use two: the <b>topographic map</b>, which shows the <b>shape and height of the land</b>, and the <b>geological map</b>, which shows <b>which rocks there are</b>, <b>how old they are</b> and <b>how they are arranged</b>.</p>
+      <div class="two" style="margin-top:14px">
+        <div class="card">
+          <canvas id="cvIntroTopo" class="mapc" width="420" height="420"></canvas>
+          <h3 style="margin-top:10px"><span class="es">Mapa topográfico</span><span class="en">Topographic map</span></h3>
+          <p class="es">Representa el relieve con <b>curvas de nivel</b>: líneas que unen puntos de la misma altitud. Responde a: ¿dónde está más alto?, ¿dónde hay más pendiente?</p>
+          <p class="en">It shows relief with <b>contour lines</b>: lines joining points at the same height. It answers: where is it highest? where is it steepest?</p>
+        </div>
+        <div class="card">
+          <canvas id="cvIntroGeo" class="mapc" width="420" height="420"></canvas>
+          <h3 style="margin-top:10px"><span class="es">Mapa geológico</span><span class="en">Geological map</span></h3>
+          <p class="es">Sobre el mismo mapa topográfico se pintan con colores las <b>rocas que afloran</b> (que se ven en la superficie), su <b>edad</b> y sus <b>estructuras</b> (estratos, pliegues y fallas).</p>
+          <p class="en">On top of the same topographic map, colours show the <b>rocks that crop out</b> (visible at the surface), their <b>age</b> and their <b>structures</b> (layers, folds and faults).</p>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2><span class="es">Elementos de todo mapa</span><span class="en">Parts of every map</span></h2>
+      <div class="cards">
+        <div class="card"><span class="ico">🏷️</span><b><span class="es">Título</span><span class="en">Title</span></b><span class="es">Qué zona representa.</span><span class="en d">Which area it shows.</span></div>
+        <div class="card"><span class="ico">📏</span><b><span class="es">Escala</span><span class="en">Scale</span></b><span class="es">Cuántas veces se ha reducido la realidad.</span><span class="en d">How many times reality has been reduced.</span></div>
+        <div class="card"><span class="ico">🧭</span><b><span class="es">Orientación</span><span class="en">North arrow</span></b><span class="es">Dónde está el norte (normalmente, arriba).</span><span class="en d">Where north is (usually at the top).</span></div>
+        <div class="card"><span class="ico">🔣</span><b><span class="es">Leyenda</span><span class="en">Key / legend</span></b><span class="es">Qué significa cada color, línea o símbolo.</span><span class="en d">What each colour, line or symbol means.</span></div>
+        <div class="card"><span class="ico">#️⃣</span><b><span class="es">Coordenadas</span><span class="en">Coordinates</span></b><span class="es">Sitúan cualquier punto (latitud y longitud o UTM).</span><span class="en d">They locate any point (latitude and longitude or UTM).</span></div>
+      </div>
+      <h3 style="margin-top:16px"><span class="es">La información de un mapa topográfico</span><span class="en">What a topographic map tells you</span></h3>
+      <div class="three">
+        <div class="card"><b>🏷️ <span class="es">Toponímica</span><span class="en">Place names</span></b><span class="es">Los nombres: pueblos, picos, ríos, barrancos, cortijos… (los del agua, en azul).</span><span class="en d">Names: villages, peaks, rivers, gullies, farmhouses… (water names in blue).</span></div>
+        <div class="card"><b>📐 <span class="es">Planimétrica</span><span class="en">Planimetric</span></b><span class="es">Lo que se ve desde arriba: escala, orientación, coordenadas, carreteras, ríos, edificios.</span><span class="en d">What you see from above: scale, north arrow, coordinates, roads, rivers, buildings.</span></div>
+        <div class="card"><b>⛰️ <span class="es">Altimétrica</span><span class="en">Height (relief)</span></b><span class="es">La altitud: curvas de nivel, curvas maestras y cotas (▲ vértices geodésicos).</span><span class="en d">Height: contour lines, index contours and spot heights (▲ survey points).</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2><span class="es">¿Qué vas a hacer en esta web?</span><span class="en">What will you do here?</span></h2>
+      <div class="cards">
+        <button class="card" data-go="topo"><span class="ico">📏</span><b><span class="es">Mapa topográfico</span><span class="en">Topographic map</span></b><span class="es">Entiende las curvas de nivel «inundando» una montaña y practica con la escala.</span><span class="en d">Understand contour lines by "flooding" a mountain and practise with scale.</span></button>
+        <button class="card" data-go="perfil"><span class="ico">⛰️</span><b><span class="es">Perfil topográfico</span><span class="en">Topographic profile</span></b><span class="es">Aprende paso a paso cómo se dibuja un perfil. Mueve A y B por el mapa.</span><span class="en d">Learn step by step how to draw a profile. Move A and B around the map.</span></button>
+        <button class="card" data-go="practica"><span class="ico">✏️</span><b><span class="es">Hazlo tú</span><span class="en">Your turn</span></b><span class="es">Dibuja tú el perfil y comprueba si es correcto. También puedes imprimirlo.</span><span class="en d">Draw the profile yourself and check it. You can also print it.</span></button>
+        <button class="card" data-go="geo"><span class="ico">🪨</span><b><span class="es">Mapa geológico</span><span class="en">Geological map</span></b><span class="es">Explora estratos horizontales, inclinados, un pliegue y una falla, y mira su corte geológico.</span><span class="en d">Explore horizontal and tilted layers, a fold and a fault, and see their cross-section.</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TOPOGRÁFICO ================= -->
+  <section id="t-topo" class="hidden">
+    <div class="panel">
+      <h2><span class="es">Las curvas de nivel</span><span class="en">Contour lines</span></h2>
+      <p class="es">Imagina que la montaña es una isla y que el agua sube de 100 en 100 metros. Cada orilla que deja el agua es una <b>curva de nivel</b>: una línea que une todos los puntos que están a la misma altitud. Mueve el nivel del agua.</p>
+      <p class="en">Imagine the mountain is an island and the water rises 100 metres at a time. Each shoreline the water leaves is a <b>contour line</b>: a line joining all the points at the same height. Move the water level.</p>
+      <div class="row" style="margin:6px 0 12px">
+        <label style="flex:1;min-width:220px"><span class="es">Nivel del agua</span><span class="en">Water level</span>: <span class="big" id="lvlTxt">600 m</span>
+          <input type="range" id="lvl" min="300" max="1200" step="100" value="600"></label>
+      </div>
+      <div class="two">
+        <div><canvas id="cvFlood" class="mapc" width="700" height="700"></canvas>
+          <p class="note"><span class="es">Vista desde arriba (mapa). La línea discontinua es el corte que ves al lado.</span><span class="en">View from above (map). The dashed line is the slice shown next to it.</span></p></div>
+        <div><canvas id="cvSide" width="700" height="360" style="background:#1a2630"></canvas>
+          <p class="note"><span class="es">Vista de perfil (de lado) a lo largo de la línea discontinua. Los puntos rojos son las orillas: los mismos puntos que forman la curva azul del mapa.</span><span class="en">Side view along the dashed line. The red dots are the shorelines: the same points that make the blue contour on the map.</span></p>
+          <div class="key"><span class="es"><b>Equidistancia</b>: diferencia de altitud entre dos curvas seguidas. En este mapa es de <b>100 m</b>. Cada 5 curvas hay una <b>curva maestra</b>, más gruesa y con su altitud escrita (500 m, 1000 m).</span><span class="en d"><b>Contour interval</b>: the height difference between two neighbouring contours. On this map it is <b>100 m</b>. Every fifth line is an <b>index contour</b>, thicker and labelled with its height (500 m, 1000 m).</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="es">Cómo se leen las curvas</span><span class="en">How to read contours</span></h2>
+      <div class="cards">
+        <div class="card"><span class="ico">🎯</span><b><span class="es">Cima o cerro</span><span class="en">Summit or hill</span></b><span class="es">Curvas cerradas una dentro de otra, con la altitud aumentando hacia el centro. El punto más alto se marca con una <b>cota</b> (▲ y su altitud).</span><span class="en d">Closed contours one inside another, rising towards the centre. The highest point is marked with a <b>spot height</b> (▲ and its height).</span></div>
+        <div class="card"><span class="ico">🧗</span><b><span class="es">Pendiente fuerte</span><span class="en">Steep slope</span></b><span class="es">Curvas <b>muy juntas</b>. Si están separadas, el terreno es suave o llano.</span><span class="en d">Contours <b>close together</b>. Widely spaced contours mean gentle or flat ground.</span></div>
+        <div class="card"><span class="ico">🏞️</span><b><span class="es">Valle o vaguada</span><span class="en">Valley</span></b><span class="es">Curvas en forma de <b>V</b> cuyo vértice apunta hacia las <b>zonas más altas</b> (aguas arriba). Por el fondo suele ir un río.</span><span class="en d">V‑shaped contours whose point aims <b>uphill</b> (upstream). A river usually runs along the bottom.</span></div>
+        <div class="card"><span class="ico">⛰️</span><b><span class="es">Cresta o divisoria</span><span class="en">Ridge</span></b><span class="es">Curvas en V o U cuyo vértice apunta hacia las <b>zonas más bajas</b>.</span><span class="en d">V‑ or U‑shaped contours pointing <b>downhill</b>.</span></div>
+        <div class="card"><span class="ico">🐎</span><b><span class="es">Collado</span><span class="en">Saddle / pass</span></b><span class="es">Zona más baja entre dos cimas, con forma de silla de montar.</span><span class="en d">The lowest point between two summits, shaped like a saddle.</span></div>
+        <div class="card"><span class="ico">🚫</span><b><span class="es">Nunca se cruzan</span><span class="en">They never cross</span></b><span class="es">Un punto no puede tener dos altitudes. Siempre son líneas cerradas (aunque se salgan del mapa) y se cuentan desde 0 m, el nivel del mar.</span><span class="en d">A point can't have two heights. They are always closed lines (even if they run off the map) and are counted from 0 m, sea level.</span></div>
+        <div class="card"><span class="ico">🕳️</span><b><span class="es">Depresión (dolina, cráter)</span><span class="en">Hollow (doline, crater)</span></b><span class="es">Curvas cerradas cuya altitud <b>disminuye</b> hacia el centro. Se dibujan <b>discontinuas</b> o con marcas hacia dentro, y llevan su cota.</span><span class="en d">Closed contours whose height <b>decreases</b> towards the centre. They are drawn <b>dashed</b> or with ticks pointing inwards, and are labelled.</span></div>
+        <div class="card"><span class="ico">🧱</span><b><span class="es">Escarpe o cortado</span><span class="en">Escarpment / cliff</span></b><span class="es">Muchas curvas casi pegadas en una franja estrecha. ¡No bajes por ahí de excursión!</span><span class="en d">Many contours almost touching in a narrow band. Don't walk down there on a hike!</span></div>
+      </div>
+      <p class="note" style="margin-top:10px"><span class="es">Búscalos en el mapa de arriba: la cima más alta (▲), el río del sur (curvas en V) y el collado entre las dos montañas.</span><span class="en">Find them on the map above: the highest summit (▲), the river in the south (V‑shaped contours) and the saddle between the two mountains.</span></p>
+      <p class="note"><span class="es">💧 ¿Y si construimos una presa? Con el nivel del agua de arriba puedes ver qué terreno quedaría inundado si el embalse llegara a esa cota.</span><span class="en">💧 What if we built a dam? Use the water level above to see which land would be flooded if the reservoir reached that height.</span></p>
+    </div>
+
+    <div class="panel">
+      <h2><span class="es">¿Qué forma del relieve es?</span><span class="en">Which landform is it?</span></h2>
+      <p class="es">Mira las curvas de nivel (equidistancia de 10 m) y elige la forma del relieve que representan.</p>
+      <p class="en">Look at the contour lines (10 m interval) and choose the landform they show.</p>
+      <div class="two">
+        <canvas id="cvForm" class="mapc" width="420" height="420" style="max-width:420px"></canvas>
+        <div>
+          <div class="opts row" id="fOpts"></div>
+          <p class="fb" id="fFb" style="margin-top:10px"></p>
+          <div class="row"><button class="btn hot" id="fNext"><span class="es">Otra forma</span><span class="en">Another one</span></button><span class="note" id="fScore"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="es">La escala</span><span class="en">Scale</span></h2>
+      <div class="two">
+        <div>
+          <p class="es">La <b>escala</b> indica cuántas veces se ha reducido la realidad. La escala <b>1:25 000</b> significa que <b>1 cm del mapa son 25 000 cm de la realidad</b>, es decir, <b>250 m</b>.</p>
+          <p class="en"><b>Scale</b> tells you how many times reality has been reduced. A scale of <b>1:25,000</b> means <b>1 cm on the map is 25,000 cm in reality</b>, that is, <b>250 m</b>.</p>
+          <ul class="clean">
+            <li><span class="es"><b>Escala numérica</b>: 1:25 000, 1:50 000… Cuanto <b>mayor</b> es el número, <b>más pequeño</b> se ve todo y más territorio cabe.</span><span class="en d"><b>Ratio scale</b>: 1:25,000, 1:50,000… The <b>bigger</b> the number, the <b>smaller</b> everything looks and the more land fits.</span></li>
+            <li><span class="es"><b>Escala gráfica</b>: una barra dividida que se mide con la regla. Sigue siendo correcta aunque amplíes o reduzcas el mapa.</span><span class="en d"><b>Bar scale</b>: a divided bar you measure with a ruler. It stays correct even if the map is enlarged or reduced.</span></li>
+          </ul>
+          <svg viewBox="0 0 420 70" style="width:100%;max-width:520px;background:var(--paper);border-radius:10px;margin-top:10px" role="img" aria-label="Escala gráfica con talón">
+            <text x="210" y="14" font-size="11" text-anchor="middle" font-family="Nunito" font-weight="800">1:25 000 · 1 cm = 250 m</text>
+            <g stroke="#111" stroke-width="1">
+              <rect x="20" y="30" width="80" height="6" fill="#fff"/>
+              <rect x="20" y="30" width="20" height="6" fill="#111"/><rect x="60" y="30" width="20" height="6" fill="#111"/>
+              <rect x="40" y="36" width="20" height="6" fill="#111"/><rect x="80" y="36" width="20" height="6" fill="#111"/>
+              <rect x="20" y="36" width="80" height="6" fill="none"/>
+              <rect x="100" y="30" width="80" height="6" fill="#111"/><rect x="180" y="30" width="80" height="6" fill="#fff"/><rect x="260" y="30" width="80" height="6" fill="#111"/>
+              <rect x="100" y="36" width="80" height="6" fill="#fff"/><rect x="180" y="36" width="80" height="6" fill="#111"/><rect x="260" y="36" width="80" height="6" fill="#fff"/>
+            </g>
+            <g font-size="10" text-anchor="middle" font-family="Nunito" font-weight="700">
+              <text x="20" y="27">1000</text><text x="60" y="27">500</text><text x="100" y="27">0</text><text x="180" y="27">1000</text><text x="260" y="27">2000</text><text x="340" y="27">3000 m</text>
+              <text x="60" y="58" fill="#b04a10">talón</text><text x="220" y="58" fill="#555">cada tramo = 1000 m = 4 cm</text>
+            </g>
+          </svg>
+          <p class="note" style="margin-top:6px"><span class="es">El <b>talón</b> es el tramo a la izquierda del 0, dividido en partes más pequeñas. Abre el compás (o una tira de papel) con la distancia del mapa, pon una punta en un número entero a la derecha del 0 y lee los metros que faltan en el talón.</span><span class="en">The <b>extension</b> is the part to the left of 0, divided into smaller sections. Open your compass (or a paper strip) to the map distance, put one end on a whole number right of 0 and read the remaining metres on the extension.</span></p>
+          <div class="key"><span class="es"><b>Truco</b>: para pasar de cm del mapa a metros reales, multiplica por el denominador y quita dos ceros. 4 cm × 25 000 = 100 000 cm = <b>1000 m = 1 km</b>.</span><span class="en d"><b>Tip</b>: to turn map cm into real metres, multiply by the scale number and remove two zeros. 4 cm × 25,000 = 100,000 cm = <b>1,000 m = 1 km</b>.</span></div>
+        </div>
+        <div class="card">
+          <h3><span class="es">Calculadora</span><span class="en">Calculator</span></h3>
+          <div class="row">
+            <label><span class="es">Escala</span><span class="en">Scale</span> <select id="scS"><option value="10000">1:10 000</option><option value="25000" selected>1:25 000</option><option value="50000">1:50 000</option><option value="200000">1:200 000</option><option value="1000000">1:1 000 000</option></select></label>
+            <label><span class="es">Distancia en el mapa (cm)</span><span class="en">Map distance (cm)</span> <input type="number" id="scD" value="4" min="0" step="0.1" style="width:6rem"></label>
+          </div>
+          <p id="scOut" style="margin-top:10px"></p>
+        </div>
+      </div>
+      <h3 style="margin-top:16px"><span class="es">Practica la escala</span><span class="en">Practise scale</span></h3>
+      <div class="card">
+        <p id="spQ" style="font-weight:700"></p>
+        <div class="row"><input type="number" id="spA" step="any" style="width:9rem"> <span id="spU"></span>
+          <button class="btn hot" id="spCheck"><span class="es">Comprobar</span><span class="en">Check</span></button>
+          <button class="btn" id="spNext"><span class="es">Otro</span><span class="en">Another</span></button>
+          <span class="note" id="spScore"></span></div>
+        <p class="fb" id="spFb"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PERFIL ================= -->
+  <section id="t-perfil" class="hidden">
+    <div class="panel">
+      <h2><span class="es">¿Qué es un perfil topográfico?</span><span class="en">What is a topographic profile?</span></h2>
+      <p class="es">Es un <b>dibujo del relieve visto de lado</b>, como si cortáramos el terreno con un cuchillo a lo largo de una línea A–B. Sirve para ver de un vistazo las subidas, las bajadas, las cimas y los valles de un recorrido.</p>
+      <p class="en">It is a <b>side view of the land</b>, as if we cut the ground with a knife along a line A–B. It shows at a glance the climbs, descents, summits and valleys along a route.</p>
+      <p class="note"><span class="es">👆 Arrastra los puntos A y B por el mapa para cambiar el corte. Pulsa «Siguiente paso» para ver cómo se construye.</span><span class="en">👆 Drag points A and B across the map to change the line. Tap “Next step” to see how it is built.</span></p>
+    </div>
+    <div class="two">
+      <div class="panel">
+        <canvas id="cvPMap" class="mapc" width="700" height="700"></canvas>
+        <div class="row" style="margin-top:10px">
+          <button class="btn" id="pPrev">◀ <span class="es">Anterior</span><span class="en">Back</span></button>
+          <button class="btn hot" id="pNext"><span class="es">Siguiente paso</span><span class="en">Next step</span> ▶</button>
+          <button class="btn" id="pAll"><span class="es">Ver todo</span><span class="en">Show all</span></button>
+          <label class="btn"><input type="checkbox" id="pHyp"> <span class="es">Colorear por altitudes</span><span class="en">Colour by height</span></label>
+        </div>
+        <div class="legend hidden" id="hypLeg" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr));margin-top:8px"></div>
+      </div>
+      <div class="panel">
+        <div class="steps" id="pSteps"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <canvas id="cvProf" width="760" height="380" style="background:#1a2630"></canvas>
+      <div class="row" style="margin-top:10px">
+        <span style="font-weight:800"><span class="es">Escala vertical</span><span class="en">Vertical scale</span>:</span>
+        <button class="btn exg" data-ex="1">1:25 000 (×1)</button>
+        <button class="btn exg on" data-ex="2.5">1:10 000 (×2,5)</button>
+        <button class="btn exg" data-ex="5">1:5 000 (×5)</button>
+        <label class="btn"><input type="checkbox" id="pReal"> <span class="es">Comparar con el relieve real</span><span class="en">Compare with the real relief</span></label>
+      </div>
+      <div class="key"><span class="es"><b>Exageración vertical</b>: si dibujamos la altura a la misma escala que la distancia (×1), el relieve se ve casi plano. Por eso la escala vertical suele ser mayor que la horizontal. Exageración vertical = denominador de la escala horizontal ÷ denominador de la escala vertical. Ejemplo: 25 000 ÷ 10 000 = <b>×2,5</b>.</span><span class="en d"><b>Vertical exaggeration</b>: if heights are drawn at the same scale as distances (×1), the relief looks almost flat. That's why the vertical scale is usually larger than the horizontal one. Vertical exaggeration = horizontal scale number ÷ vertical scale number. Example: 25,000 ÷ 10,000 = <b>×2.5</b>.</span></div>
+      <div class="key"><span class="es"><b>En papel milimetrado</b>: con la escala vertical 1:10 000, 1 cm del papel son 10 000 cm = 100 m. Es decir, <b>cada curva de 100 m sube 1 cm (10 mm)</b>. Con 1:5 000 serían 2 cm, y con 1:25 000, 4 mm.</span><span class="en d"><b>On graph paper</b>: with a 1:10,000 vertical scale, 1 cm of paper is 10,000 cm = 100 m. So <b>each 100 m contour goes up 1 cm (10 mm)</b>. At 1:5,000 it would be 2 cm, and at 1:25,000, 4 mm.</span></div>
+      <div class="key"><span class="es"><b>Distancia que se recorre</b>: si subes una cuesta andas algo más que la distancia del mapa. Se calcula con Pitágoras: distancia recorrida = √(distancia en el mapa² + desnivel²).</span><span class="en d"><b>Distance walked</b>: going up a slope you walk a bit more than the map distance. Use Pythagoras: distance walked = √(map distance² + height difference²).</span></div>
+      <div class="data" id="pData"></div>
+    </div>
+  </section>
+
+  <!-- ================= PRÁCTICA ================= -->
+  <section id="t-practica" class="hidden">
+    <div class="panel">
+      <h2><span class="es">Hazlo tú: dibuja el perfil</span><span class="en">Your turn: draw the profile</span></h2>
+      <p class="es">La línea A–B corta las curvas de nivel en los puntos numerados. Lee la altitud de cada punto en el mapa (cuenta las curvas desde una curva con número; la equidistancia es de 100 m) y <b>toca en la gráfica, sobre la línea de cada número, a su altitud</b>. Después pulsa «Comprobar».</p>
+      <p class="en">Line A–B crosses the contours at the numbered points. Read the height of each point on the map (count the lines from a labelled contour; the interval is 100 m) and <b>tap on the graph, on each number's line, at its height</b>. Then tap “Check”.</p>
+    </div>
+    <div class="two">
+      <div class="panel"><canvas id="cvXMap" class="mapc" width="700" height="700"></canvas>
+        <div class="row" style="margin-top:10px">
+          <label class="btn"><input type="checkbox" id="xExam"> <span class="es">Modo examen: solo curvas maestras con número</span><span class="en">Test mode: only index contours labelled</span></label>
+          <label class="btn"><input type="checkbox" id="xGrid"> <span class="es">Cuadrícula de coordenadas (m)</span><span class="en">Coordinate grid (m)</span></label>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <b><span class="es">Distancia real entre A y B</span><span class="en">Real distance between A and B</span></b>
+          <p class="note"><span class="es">Mídela con la escala gráfica (o con la cuadrícula) y escríbela en metros.</span><span class="en">Measure it with the bar scale (or the grid) and write it in metres.</span></p>
+          <div class="row"><input type="number" id="xDist" style="width:8rem"> m <button class="btn hot" id="xDistOk"><span class="es">Comprobar</span><span class="en">Check</span></button></div>
+          <p class="fb" id="xDistFb"></p>
+        </div>
+      </div>
+      <div class="panel">
+        <canvas id="cvXProf" width="760" height="520" style="background:#1a2630"></canvas>
+        <div class="row" style="margin-top:10px">
+          <button class="btn hot" id="xCheck"><span class="es">Comprobar</span><span class="en">Check</span></button>
+          <button class="btn" id="xClear"><span class="es">Borrar</span><span class="en">Clear</span></button>
+          <button class="btn" id="xNew"><span class="es">Nuevo perfil</span><span class="en">New profile</span></button>
+          <button class="btn" id="xPrint">🖨️ <span class="es">Imprimir para el cuaderno</span><span class="en">Print for your notebook</span></button>
+        </div>
+        <p class="fb" id="xFb"></p>
+        <p class="note"><span class="es">Recuerda: entre dos cortes de la misma curva hay una cima (o un valle). Dibújala redondeada y sin llegar a la curva siguiente.</span><span class="en">Remember: between two crossings of the same contour there is a summit (or a valley). Draw it rounded, without reaching the next contour.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GEOLÓGICO ================= -->
+  <section id="t-geo" class="hidden">
+    <div class="panel">
+      <h2><span class="es">¿Qué es un mapa geológico?</span><span class="en">What is a geological map?</span></h2>
+      <div class="two">
+        <div>
+          <p class="es">Es un mapa topográfico sobre el que se representan las <b>rocas que afloran</b> en la superficie (sin contar el suelo ni la vegetación). Cada color es un tipo de roca de una edad concreta.</p>
+          <p class="en">It is a topographic map showing the <b>rocks that crop out</b> at the surface (ignoring soil and plants). Each colour is a type of rock of a particular age.</p>
+          <h3><span class="es">¿Qué representa?</span><span class="en">What does it show?</span></h3>
+          <ul class="clean">
+            <li><span class="es"><b>Tipo de roca</b> (litología): calizas, pizarras, areniscas, granitos…</span><span class="en d"><b>Rock type</b> (lithology): limestone, slate, sandstone, granite…</span></li>
+            <li><span class="es"><b>Edad</b> de las rocas: los colores siguen un código por eras y periodos (azul para el Jurásico, verde para el Cretácico, amarillo para el Neógeno…).</span><span class="en d"><b>Age</b> of the rocks: colours follow a code for eras and periods (blue for Jurassic, green for Cretaceous, yellow for Neogene…).</span></li>
+            <li><span class="es"><b>Contactos</b>: líneas que separan dos rocas distintas.</span><span class="en d"><b>Contacts</b>: lines separating two different rocks.</span></li>
+            <li><span class="es"><b>Estructuras</b>: la inclinación de los estratos (<b>buzamiento</b>), los <b>pliegues</b> (anticlinales y sinclinales) y las <b>fallas</b>.</span><span class="en d"><b>Structures</b>: how steeply layers are tilted (<b>dip</b>), <b>folds</b> (anticlines and synclines) and <b>faults</b>.</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3><span class="es">Cómo se lee</span><span class="en">How to read it</span></h3>
+          <ul class="clean">
+            <li><span class="es">La <b>leyenda</b> es una columna con las rocas ordenadas por edad: <b>las más antiguas abajo y las más modernas arriba</b> (principio de superposición).</span><span class="en d">The <b>key</b> is a column with the rocks ordered by age: <b>oldest at the bottom, youngest at the top</b> (law of superposition).</span></li>
+            <li><span class="es">Si los contactos van <b>paralelos a las curvas de nivel</b>, los estratos son <b>horizontales</b>.</span><span class="en d">If contacts run <b>parallel to the contours</b>, the layers are <b>horizontal</b>.</span></li>
+            <li><span class="es">Si los contactos <b>cortan las curvas de nivel</b>, los estratos están <b>inclinados o plegados</b>.</span><span class="en d">If contacts <b>cut across the contours</b>, the layers are <b>tilted or folded</b>.</span></li>
+            <li><span class="es">Una línea que <b>corta y desplaza</b> los contactos es una <b>falla</b>.</span><span class="en d">A line that <b>cuts and shifts</b> the contacts is a <b>fault</b>.</span></li>
+            <li><span class="es">El <b>corte geológico</b> es un perfil topográfico al que se le añade qué rocas hay debajo.</span><span class="en d">A <b>geological cross-section</b> is a topographic profile showing which rocks lie underneath.</span></li>
+          </ul>
+          <h3 style="margin-top:12px"><span class="es">¿Para qué sirve?</span><span class="en">What is it for?</span></h3>
+          <p class="es">Para buscar agua subterránea (acuíferos en calizas), planificar carreteras, túneles y presas, localizar zonas de riesgo (deslizamientos, hundimientos) y encontrar recursos minerales.</p>
+          <p class="en">To find groundwater (aquifers in limestone), plan roads, tunnels and dams, locate hazard areas (landslides, collapses) and find mineral resources.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="es">Explora un mapa geológico</span><span class="en">Explore a geological map</span></h2>
+      <p class="note"><span class="es">Es el mismo relieve que en el mapa topográfico. Elige cómo están colocadas las rocas, toca el mapa para saber qué roca aflora y arrastra A y B para ver el corte geológico.</span><span class="en">It's the same relief as the topographic map. Choose how the rocks are arranged, tap the map to find out which rock crops out and drag A and B to see the cross-section.</span></p>
+      <div class="row" id="geoSc" style="margin-bottom:12px">
+        <button class="btn on" data-sc="h"><span class="es">Estratos horizontales</span><span class="en">Horizontal layers</span></button>
+        <button class="btn" data-sc="i"><span class="es">Estratos inclinados</span><span class="en">Tilted layers</span></button>
+        <button class="btn" data-sc="a"><span class="es">Pliegue (anticlinal)</span><span class="en">Fold (anticline)</span></button>
+        <button class="btn" data-sc="f"><span class="es">Falla</span><span class="en">Fault</span></button>
+      </div>
+      <div class="two">
+        <div><canvas id="cvGeo" class="mapc" width="700" height="700"></canvas>
+          <div class="key info" id="geoInfo"><span class="es">👆 Toca el mapa para ver qué roca aflora en ese punto.</span><span class="en">👆 Tap the map to see which rock crops out at that point.</span></div></div>
+        <div>
+          <div class="key" id="geoExp"></div>
+          <h3><span class="es">Leyenda</span><span class="en">Key</span></h3>
+          <div class="legend" id="geoLeg"></div>
+          <h3 style="margin-top:12px"><span class="es">Símbolos</span><span class="en">Symbols</span></h3>
+          <div class="sym">
+            <svg viewBox="0 0 48 32"><path d="M8 26 Q20 8 40 6" stroke="#222" stroke-width="1.6" fill="none"/></svg><span><span class="es">Contacto entre dos rocas</span><span class="en">Contact between two rocks</span></span>
+            <svg viewBox="0 0 48 32"><path d="M24 4 V28 M24 16 H34" stroke="#222" stroke-width="2.4" fill="none"/><text x="35" y="14" font-size="9">10</text></svg><span><span class="es">Dirección y buzamiento del estrato (hacia dónde y cuántos grados se inclina)</span><span class="en">Strike and dip of a layer (which way and how many degrees it tilts)</span></span>
+            <svg viewBox="0 0 48 32"><path d="M18 10 H30 M24 4 V16" stroke="#222" stroke-width="2.2"/></svg><span><span class="es">Estratos horizontales</span><span class="en">Horizontal layers</span></span>
+            <svg viewBox="0 0 48 32"><path d="M24 2 V30" stroke="#c0392b" stroke-width="2.4"/><path d="M24 16 L14 12 M24 16 L14 20 M24 16 L34 12 M24 16 L34 20" stroke="#c0392b" stroke-width="2"/></svg><span><span class="es">Eje de anticlinal (las capas se inclinan hacia fuera)</span><span class="en">Anticline axis (layers dip outwards)</span></span>
+            <svg viewBox="0 0 48 32"><path d="M8 28 L40 4" stroke="#d00" stroke-width="3.2"/><path d="M20 19 l4 5 M30 11.5 l4 5" stroke="#d00" stroke-width="2"/></svg><span><span class="es">Falla (las marcas señalan el bloque hundido)</span><span class="en">Fault (ticks mark the downthrown block)</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2><span class="es">Corte geológico A–B</span><span class="en">Geological cross-section A–B</span></h2>
+      <canvas id="cvCut" width="760" height="380" style="background:#1a2630"></canvas>
+      <p class="note" style="margin-top:8px"><span class="es">Arriba, la línea del perfil topográfico; debajo, las rocas tal y como están en profundidad. Escala vertical exagerada para que se aprecie mejor.</span><span class="en">At the top, the topographic profile line; below, the rocks as they are underground. The vertical scale is exaggerated so it's easier to see.</span></p>
+    </div>
+    <div class="panel">
+      <h2><span class="es">Mapas reales</span><span class="en">Real maps</span></h2>
+      <ul class="clean">
+        <li><span class="es"><a href="https://info.igme.es/cartografiadigital/geologica/Magna50.aspx" target="_blank" rel="noopener">Mapa geológico MAGNA 1:50 000 (IGME)</a>: el mapa geológico oficial de España, hoja a hoja. Busca la hoja de tu localidad.</span><span class="en d"><a href="https://info.igme.es/cartografiadigital/geologica/Magna50.aspx" target="_blank" rel="noopener">MAGNA 1:50,000 geological map (IGME)</a>: Spain's official geological map, sheet by sheet. Find the sheet for your town.</span></li>
+        <li><span class="es"><a href="https://www.ign.es/iberpix/visor/" target="_blank" rel="noopener">Iberpix (IGN)</a>: mapas topográficos de toda España; con la herramienta de perfil puedes dibujar el perfil de cualquier recorrido.</span><span class="en d"><a href="https://www.ign.es/iberpix/visor/" target="_blank" rel="noopener">Iberpix (IGN)</a>: topographic maps of all Spain; its profile tool draws the profile of any route.</span></li>
+        <li><span class="es"><b>Un mapa real de Andalucía</b>: en Iberpix busca «Puerto de la Ragua» (Sierra Nevada). Localiza el Morrón (2730 m) y el Chullo (2611 m), sigue las curvas maestras y fíjate en las V de los barrancos.</span><span class="en d"><b>A real map of Andalusia</b>: in Iberpix search for “Puerto de la Ragua” (Sierra Nevada). Find El Morrón (2,730 m) and El Chullo (2,611 m), follow the index contours and spot the V shapes of the gullies.</span></li>
+        <li><span class="es"><b>Google Earth</b>: traza una ruta y pide «Mostrar perfil de elevación».</span><span class="en d"><b>Google Earth</b>: draw a path and choose “Show elevation profile”.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= RETO ================= -->
+  <section id="t-reto" class="hidden">
+    <div class="panel">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0"><span class="es">Reto de mapas</span><span class="en">Map quiz</span></h2>
+        <div class="row"><span class="big" id="qScore">0 / 0</span><button class="btn" id="qReset"><span class="es">Barajar y empezar</span><span class="en">Shuffle and restart</span></button></div>
+      </div>
+    </div>
+    <div id="qList"></div>
+  </section>
+
+  <!-- ================= VOCAB ================= -->
+  <section id="t-vocab" class="hidden">
+    <div class="panel">
+      <div class="row" style="justify-content:space-between;margin-bottom:10px">
+        <h2 style="margin:0"><span class="es">Vocabulario</span><span class="en">Vocabulary</span></h2>
+        <input type="text" id="vSearch" placeholder="Buscar… / Search…" style="min-width:220px">
+      </div>
+      <table class="voc"><thead><tr><th>Español</th><th>English</th><th><span class="es">Definición</span><span class="en">Definition</span></th></tr></thead><tbody id="vBody"></tbody></table>
+    </div>
+  </section>
+
+  <footer>
+    <span class="es">ES = español · EN = inglés · ES+EN = los dos a la vez</span><span class="en">ES = Spanish · EN = English · ES+EN = both at once</span><br>
+    <span class="es">Autoría</span><span class="en">Author</span>: <b>María Dolores Gámez Ortiz</b> · © 2026 · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es" target="_blank" rel="license noopener">CC BY‑NC‑SA 4.0</a><br>
+    <span class="es">Los mapas de esta web son de un relieve inventado, generado por ordenador.</span><span class="en">The maps on this site show an imaginary landscape generated by computer.</span>
+  </footer>
+</div>
+<div class="print-only" id="printArea"></div>
+
+<script>
+(() => {
+  "use strict";
+  // ---------- Idioma ----------
+  let mode = "es";
+  try { const m = localStorage.getItem("mapas_lang"); if (m === "es" || m === "en" || m === "both") mode = m; } catch (e) {}
+  const tx = (es, en) => mode === "en" ? en : mode === "both" ? es + " / " + en : es;
+  const bi = (es, en) => `<span class="es">${es}</span><span class="en">${en}</span>`;
+  const onLang = [];
+  function setMode(m) {
+    mode = m; document.body.className = "m-" + m;
+    document.documentElement.lang = m === "en" ? "en" : "es";
+    document.querySelectorAll(".langs button").forEach(b => b.classList.toggle("on", b.dataset.lang === m));
+    try { localStorage.setItem("mapas_lang", m); } catch (e) {}
+    onLang.forEach(f => f());
+  }
+  document.querySelectorAll(".langs button").forEach(b => b.onclick = () => setMode(b.dataset.lang));
+
+  // ---------- Relieve inventado ----------
+  const SIZE = 4000; // metros que mide el lado del mapa
+  const g = (x, y, cx, cy, sx, sy) => { const dx = (x - cx) / sx, dy = (y - cy) / sy; return Math.exp(-(dx * dx + dy * dy) / 2); };
+  function segDist(x, y, ax, ay, bx, by) {
+    const vx = bx - ax, vy = by - ay; let t = ((x - ax) * vx + (y - ay) * vy) / (vx * vx + vy * vy);
+    t = Math.max(0, Math.min(1, t)); const px = ax + t * vx - x, py = ay + t * vy - y; return Math.sqrt(px * px + py * py);
+  }
+  const RIVER = [.36, .58, .25, 1.02];
+  function H(x, y) {
+    let h = 340 + 96 * (1 - y) + 820 * g(x, y, .36, .42, .17, .14) + 520 * g(x, y, .72, .66, .13, .11) + 250 * g(x, y, .62, .25, .12, .09);
+    const d = segDist(x, y, RIVER[0], RIVER[1], RIVER[2], RIVER[3]);
+    const w = Math.min(1, Math.max(0, (y - .5) / .14));
+    h -= 80 * Math.exp(-d * d / (2 * .024 * .024)) * w;
+    return h;
+  }
+  const LEVELS = []; for (let L = 400; L <= 1200; L += 100) LEVELS.push(L);
+  const EQ = 100;
+
+  // rejilla para curvas de nivel
+  const N = 161, GRID = new Float32Array(N * N);
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) GRID[j * N + i] = H(i / (N - 1), j / (N - 1));
+  function contour(level) {
+    const segs = [], s = 1 / (N - 1);
+    for (let j = 0; j < N - 1; j++) for (let i = 0; i < N - 1; i++) {
+      const a = GRID[j * N + i], b = GRID[j * N + i + 1], c = GRID[(j + 1) * N + i + 1], d = GRID[(j + 1) * N + i];
+      const idx = (a >= level ? 8 : 0) | (b >= level ? 4 : 0) | (c >= level ? 2 : 0) | (d >= level ? 1 : 0);
+      if (idx === 0 || idx === 15) continue;
+      const x0 = i * s, y0 = j * s;
+      const T = [x0 + s * (level - a) / (b - a), y0], R = [x0 + s, y0 + s * (level - b) / (c - b)];
+      const B = [x0 + s * (level - d) / (c - d), y0 + s], Lf = [x0, y0 + s * (level - a) / (d - a)];
+      const cen = (a + b + c + d) / 4 >= level;
+      switch (idx) {
+        case 1: case 14: segs.push([Lf, B]); break;
+        case 2: case 13: segs.push([B, R]); break;
+        case 3: case 12: segs.push([Lf, R]); break;
+        case 4: case 11: segs.push([T, R]); break;
+        case 6: case 9: segs.push([T, B]); break;
+        case 7: case 8: segs.push([Lf, T]); break;
+        case 5: if (cen) { segs.push([Lf, T]); segs.push([B, R]); } else { segs.push([T, R]); segs.push([Lf, B]); } break;
+        case 10: if (cen) { segs.push([T, R]); segs.push([Lf, B]); } else { segs.push([Lf, T]); segs.push([B, R]); } break;
+      }
+    }
+    return segs;
+  }
+  const CONT = {}; for (const L of [300, ...LEVELS]) CONT[L] = contour(L);
+
+  // cimas
+  const PEAKS = [];
+  for (let j = 4; j < N - 4; j++) for (let i = 4; i < N - 4; i++) {
+    const v = GRID[j * N + i]; if (v < 700) continue; let top = true;
+    for (let dj = -6; dj <= 6 && top; dj++) for (let di = -6; di <= 6; di++) {
+      const jj = j + dj, ii = i + di; if (jj < 0 || ii < 0 || jj >= N || ii >= N || (!di && !dj)) continue;
+      if (GRID[jj * N + ii] > v) { top = false; break; }
+    }
+    if (top) PEAKS.push({ x: i / (N - 1), y: j / (N - 1), h: Math.round(v) });
+  }
+
+  // etiquetas de curvas: a lo largo de unos «rayos» que bajan desde las cimas
+  const RAYS = [[.36, .42, .04, .9], [.72, .66, .99, .99], [.62, .25, .9, .02], [.36, .42, .1, .05]];
+  const LABELS = [];
+  (function () {
+    for (const L of LEVELS) {
+      const maxH = Math.max(...PEAKS.map(p => p.h));
+      if (L > maxH - 40) continue;
+      for (const r of RAYS) {
+        let best = null, bd = 1e9;
+        for (const sg of CONT[L]) {
+          const mx = (sg[0][0] + sg[1][0]) / 2, my = (sg[0][1] + sg[1][1]) / 2;
+          const d = segDist(mx, my, r[0], r[1], r[2], r[3]); if (d < bd) { bd = d; best = { x: mx, y: my }; }
+        }
+        if (!best || bd > .012 || best.x < .04 || best.x > .96 || best.y < .04 || best.y > .96) continue;
+        if (LABELS.some(o => Math.hypot(o.x - best.x, o.y - best.y) < .07)) continue;
+        LABELS.push({ x: best.x, y: best.y, L });
+      }
+    }
+  })();
+
+  // altura por píxel (700 × 700), se calcula una vez
+  const PX = 700; let HP = null;
+  function hp() { if (HP) return HP; HP = new Float32Array(PX * PX); for (let j = 0; j < PX; j++) for (let i = 0; i < PX; i++) HP[j * PX + i] = H((i + .5) / PX, (j + .5) / PX); return HP; }
+
+  // ---------- Dibujo del mapa topográfico ----------
+  function drawContours(ctx, S, opts = {}) {
+    const alpha = opts.alpha ?? 1;
+    ctx.save(); ctx.globalAlpha = alpha; ctx.lineJoin = "round"; ctx.lineCap = "round";
+    for (const L of LEVELS) {
+      const master = L % 500 === 0;
+      ctx.strokeStyle = opts.color || "#9a5a2a"; ctx.lineWidth = (master ? 2.4 : 1.1) * S / 700;
+      ctx.beginPath();
+      for (const sg of CONT[L]) { ctx.moveTo(sg[0][0] * S, sg[0][1] * S); ctx.lineTo(sg[1][0] * S, sg[1][1] * S); }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function drawRiver(ctx, S) {
+    ctx.save(); ctx.strokeStyle = "#2f7fd0"; ctx.lineWidth = 3 * S / 700; ctx.lineCap = "round"; ctx.beginPath();
+    const t0 = (.62 - RIVER[1]) / (RIVER[3] - RIVER[1]);
+    ctx.moveTo((RIVER[0] + (RIVER[2] - RIVER[0]) * t0) * S, .62 * S); ctx.lineTo(RIVER[2] * S, RIVER[3] * S); ctx.stroke(); ctx.restore();
+  }
+  function drawLabels(ctx, S, onlyMaster) {
+    ctx.save(); const fs = Math.round(13 * S / 700); ctx.font = `800 ${fs}px Nunito, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    for (const l of LABELS) {
+      if (onlyMaster && l.L % 500) continue;
+      const t = String(l.L), w = ctx.measureText(t).width + 6;
+      ctx.fillStyle = "rgba(247,241,227,.95)"; ctx.fillRect(l.x * S - w / 2, l.y * S - fs / 2 - 1, w, fs + 2);
+      ctx.fillStyle = "#7a3f12"; ctx.fillText(t, l.x * S, l.y * S + 1);
+    }
+    for (const p of PEAKS) {
+      ctx.fillStyle = "#222"; const x = p.x * S, y = p.y * S, r = 6 * S / 700;
+      ctx.beginPath(); ctx.moveTo(x, y - r); ctx.lineTo(x + r, y + r * .8); ctx.lineTo(x - r, y + r * .8); ctx.closePath(); ctx.fill();
+      ctx.font = `800 ${fs}px Nunito, sans-serif`; ctx.fillText(p.h, x, y + r + fs * .8);
+    }
+    ctx.restore();
+  }
+  function drawFrame(ctx, S) {
+    ctx.save(); const k = S / 700;
+    // norte
+    ctx.fillStyle = "#222"; ctx.font = `800 ${16 * k}px Nunito, sans-serif`; ctx.textAlign = "center";
+    ctx.beginPath(); ctx.moveTo(660 * k, 22 * k); ctx.lineTo(670 * k, 50 * k); ctx.lineTo(660 * k, 44 * k); ctx.lineTo(650 * k, 50 * k); ctx.closePath(); ctx.fill();
+    ctx.fillText("N", 660 * k, 66 * k);
+    // escala gráfica: 1 km = 175 px
+    const x0 = 24 * k, y0 = 672 * k, seg = 175 * k / 2;
+    ctx.fillStyle = "rgba(247,241,227,.9)"; ctx.fillRect(x0 - 8 * k, y0 - 26 * k, seg * 2 + 60 * k, 36 * k);
+    for (let i = 0; i < 2; i++) { ctx.fillStyle = i % 2 ? "#fff" : "#222"; ctx.fillRect(x0 + i * seg, y0, seg, 7 * k); }
+    ctx.strokeStyle = "#222"; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, seg * 2, 7 * k);
+    ctx.fillStyle = "#222"; ctx.font = `700 ${11 * k}px Nunito, sans-serif`;
+    ctx.fillText("0", x0, y0 - 5 * k); ctx.fillText("500", x0 + seg, y0 - 5 * k); ctx.fillText("1 km", x0 + seg * 2 + 8 * k, y0 - 5 * k);
+    ctx.textAlign = "left"; ctx.fillText(tx("Equidistancia 100 m · 1:25 000 (en papel, 16 cm)", "Contour interval 100 m · 1:25,000 (16 cm on paper)"), 12 * k, 18 * k);
+    ctx.restore();
+  }
+  const TOPO = {};
+  function topoImage(exam) {
+    const key = exam ? "x" : "n"; if (TOPO[key] && TOPO[key].mode === mode) return TOPO[key].c;
+    const c = document.createElement("canvas"); c.width = c.height = PX; const x = c.getContext("2d");
+    x.fillStyle = "#f7f1e3"; x.fillRect(0, 0, PX, PX);
+    drawContours(x, PX); drawRiver(x, PX); drawLabels(x, PX, exam); drawFrame(x, PX);
+    TOPO[key] = { c, mode }; return c;
+  }
+
+  // ---------- Geología ----------
+  const LAYERS = [
+    { c: "#9d8f86", es: "Pizarras", en: "Slate", aes: "Paleozoico", aen: "Palaeozoic", ma: "541–252 Ma" },
+    { c: "#d98fb6", es: "Areniscas y arcillas rojas", en: "Red sandstone and clay", aes: "Triásico", aen: "Triassic", ma: "252–201 Ma" },
+    { c: "#6fa8dc", es: "Calizas", en: "Limestone", aes: "Jurásico", aen: "Jurassic", ma: "201–145 Ma" },
+    { c: "#93c873", es: "Margas", en: "Marl", aes: "Cretácico", aen: "Cretaceous", ma: "145–66 Ma" },
+    { c: "#f1d660", es: "Conglomerados y arenas", en: "Conglomerate and sand", aes: "Neógeno", aen: "Neogene", ma: "23–2,6 Ma" }
+  ];
+  const TH = [430, 650, 880, 1120];
+  const layerOf = v => v < TH[0] ? 0 : v < TH[1] ? 1 : v < TH[2] ? 2 : v < TH[3] ? 3 : 4;
+  const faultX = y => .6 + .12 * (y - .5);
+  const AX = [[.46, 0], [.56, 1]];
+  function axisDist(x, y) { // metros al eje del anticlinal
+    const [a, b] = AX; const vx = b[0] - a[0], vy = b[1] - a[1], L = Math.hypot(vx, vy);
+    return Math.abs((x - a[0]) * vy - (y - a[1]) * vx) / L * SIZE;
+  }
+  function V(sc, x, y, z) {
+    const X = x * SIZE;
+    if (sc === "h") return z;
+    if (sc === "i") return z + .176 * (X - 2000);
+    if (sc === "a") { const d = axisDist(x, y); return z - 260 + 1.7e-4 * d * d; }
+    if (sc === "f") return z + .06 * (X - 2000) + (x > faultX(y) ? 300 : 0);
+    return z;
+  }
+  const hex = c => [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16)];
+  const LRGB = LAYERS.map(l => hex(l.c));
+  const GEO = {};
+  function geoImage(sc) {
+    if (GEO[sc] && GEO[sc].mode === mode) return GEO[sc].c;
+    const h = hp(); const c = document.createElement("canvas"); c.width = c.height = PX; const x = c.getContext("2d");
+    const im = x.createImageData(PX, PX), d = im.data, lay = new Uint8Array(PX * PX);
+    for (let j = 0; j < PX; j++) for (let i = 0; i < PX; i++) lay[j * PX + i] = layerOf(V(sc, (i + .5) / PX, (j + .5) / PX, h[j * PX + i]));
+    for (let j = 0; j < PX; j++) for (let i = 0; i < PX; i++) {
+      const k = j * PX + i, L = lay[k], rgb = LRGB[L];
+      const edge = (i < PX - 1 && lay[k + 1] !== L) || (j < PX - 1 && lay[k + PX] !== L) || (i > 0 && lay[k - 1] !== L) || (j > 0 && lay[k - PX] !== L);
+      const f = edge ? .35 : 1;
+      d[k * 4] = rgb[0] * f; d[k * 4 + 1] = rgb[1] * f; d[k * 4 + 2] = rgb[2] * f; d[k * 4 + 3] = 255;
+    }
+    x.putImageData(im, 0, 0);
+    drawContours(x, PX, { alpha: .45, color: "#5a3a1a" }); drawRiver(x, PX); drawLabels(x, PX); drawFrame(x, PX);
+    // símbolos
+    x.save(); x.lineCap = "round";
+    if (sc === "h") {
+      for (const [px, py] of [[.15, .3], [.8, .85], [.85, .35]]) { x.strokeStyle = "#111"; x.lineWidth = 3; x.beginPath(); x.moveTo(px * PX - 12, py * PX); x.lineTo(px * PX + 12, py * PX); x.moveTo(px * PX, py * PX - 12); x.lineTo(px * PX, py * PX + 12); x.stroke(); }
+    } else if (sc === "i") {
+      x.font = "800 15px Nunito, sans-serif"; x.fillStyle = "#111";
+      for (const [px, py] of [[.15, .25], [.8, .3], [.2, .85], [.88, .82]]) { x.strokeStyle = "#111"; x.lineWidth = 3.4; x.beginPath(); x.moveTo(px * PX, py * PX - 22); x.lineTo(px * PX, py * PX + 22); x.moveTo(px * PX, py * PX); x.lineTo(px * PX + 14, py * PX); x.stroke(); x.fillText("10°", px * PX + 16, py * PX - 4); }
+    } else if (sc === "a") {
+      const [a, b] = AX; x.strokeStyle = "#c0392b"; x.lineWidth = 4; x.beginPath(); x.moveTo(a[0] * PX, a[1] * PX); x.lineTo(b[0] * PX, b[1] * PX); x.stroke();
+      for (const t of [.2, .5, .8]) {
+        const cx = (a[0] + (b[0] - a[0]) * t) * PX, cy = (a[1] + (b[1] - a[1]) * t) * PX;
+        x.lineWidth = 3; x.beginPath(); x.moveTo(cx - 24, cy); x.lineTo(cx + 24, cy);
+        x.moveTo(cx - 24, cy); x.lineTo(cx - 16, cy - 6); x.moveTo(cx - 24, cy); x.lineTo(cx - 16, cy + 6);
+        x.moveTo(cx + 24, cy); x.lineTo(cx + 16, cy - 6); x.moveTo(cx + 24, cy); x.lineTo(cx + 16, cy + 6); x.stroke();
+      }
+    } else if (sc === "f") {
+      x.strokeStyle = "#d00"; x.lineWidth = 5; x.beginPath(); x.moveTo(faultX(0) * PX, 0); x.lineTo(faultX(1) * PX, PX); x.stroke();
+      x.lineWidth = 3; for (let t = .08; t < 1; t += .12) { const fx = faultX(t) * PX, fy = t * PX; x.beginPath(); x.moveTo(fx, fy); x.lineTo(fx + 12, fy + 2); x.stroke(); }
+      x.fillStyle = "#111"; x.font = "800 15px Nunito, sans-serif";
+      const lab = tx("bloque hundido", "downthrown block"); const w = x.measureText(lab).width + 8;
+      x.fillStyle = "rgba(247,241,227,.9)"; x.fillRect(faultX(.12) * PX + 18, .12 * PX - 14, w, 22); x.fillStyle = "#111"; x.fillText(lab, faultX(.12) * PX + 22, .12 * PX + 2);
+    }
+    x.restore();
+    GEO[sc] = { c, mode }; return c;
+  }
+
+  // ---------- Utilidades de A–B ----------
+  function sampleAB(A, B, n = 600) {
+    const pts = [];
+    for (let k = 0; k <= n; k++) { const t = k / n; pts.push({ t, h: H(A.x + (B.x - A.x) * t, A.y + (B.y - A.y) * t) }); }
+    return pts;
+  }
+  function crossings(A, B) {
+    const pts = sampleAB(A, B), out = [];
+    for (let k = 1; k < pts.length; k++) {
+      const h0 = pts[k - 1].h, h1 = pts[k].h;
+      for (const L of LEVELS) if ((h0 < L && h1 >= L) || (h0 >= L && h1 < L)) {
+        const f = (L - h0) / (h1 - h0); out.push({ t: pts[k - 1].t + f * (pts[k].t - pts[k - 1].t), L });
+      }
+    }
+    out.sort((a, b) => a.t - b.t);
+    return { pts, cr: out };
+  }
+  const lenM = (A, B) => Math.hypot(B.x - A.x, B.y - A.y) * SIZE;
+  function drawAB(ctx, A, B, opts = {}) {
+    const S = ctx.canvas.width;
+    ctx.save(); ctx.strokeStyle = "#c0392b"; ctx.lineWidth = 3; ctx.setLineDash(opts.dash ? [10, 6] : []);
+    ctx.beginPath(); ctx.moveTo(A.x * S, A.y * S); ctx.lineTo(B.x * S, B.y * S); ctx.stroke(); ctx.setLineDash([]);
+    for (const [p, n] of [[A, "A"], [B, "B"]]) {
+      ctx.fillStyle = "#c0392b"; ctx.beginPath(); ctx.arc(p.x * S, p.y * S, 15, 0, 7); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.font = "800 17px Nunito, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(n, p.x * S, p.y * S + 1);
+    }
+    ctx.restore();
+  }
+  function makeDrag(cv, getPts, onMove, onTap) {
+    let drag = null;
+    const pos = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height }; };
+    cv.addEventListener("pointerdown", e => {
+      const p = pos(e), pts = getPts(); let best = null, bd = .05;
+      for (const k in pts) { const d = Math.hypot(pts[k].x - p.x, pts[k].y - p.y); if (d < bd) { bd = d; best = k; } }
+      if (best) { drag = best; cv.setPointerCapture(e.pointerId); e.preventDefault(); }
+      else if (onTap) onTap(p);
+    });
+    cv.addEventListener("pointermove", e => {
+      if (!drag) return; const p = pos(e); const pts = getPts();
+      pts[drag].x = Math.max(.03, Math.min(.97, p.x)); pts[drag].y = Math.max(.03, Math.min(.97, p.y)); onMove();
+    });
+    const end = () => { drag = null; }; cv.addEventListener("pointerup", end); cv.addEventListener("pointercancel", end);
+  }
+  // curva suave por puntos (Catmull-Rom)
+  function smooth(ctx, P) {
+    ctx.moveTo(P[0][0], P[0][1]);
+    for (let i = 0; i < P.length - 1; i++) {
+      const p0 = P[Math.max(0, i - 1)], p1 = P[i], p2 = P[i + 1], p3 = P[Math.min(P.length - 1, i + 2)];
+      ctx.bezierCurveTo(p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6, p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6, p2[0], p2[1]);
+    }
+  }
+  // puntos del perfil «a mano»: A, cortes, cimas/fondos estimados, B
+  function profilePoints(A, B, cr) {
+    const hA = H(A.x, A.y), hB = H(B.x, B.y), out = [{ t: 0, z: hA }];
+    const all = [{ t: 0, L: hA }, ...cr, { t: 1, L: hB }];
+    for (let i = 0; i < all.length - 1; i++) {
+      if (i > 0) out.push({ t: all[i].t, z: all[i].L });
+      const a = all[i], b = all[i + 1];
+      if (i > 0 && i < all.length - 2 && a.L === b.L) { // cima o fondo entre dos cortes iguales
+        const tm = (a.t + b.t) / 2, hm = H(A.x + (B.x - A.x) * tm, A.y + (B.y - A.y) * tm);
+        out.push({ t: tm, z: hm > a.L ? Math.min(hm, a.L + .6 * EQ) : Math.max(hm, a.L - .6 * EQ) });
+      }
+    }
+    out.push({ t: 1, z: hB });
+    return out;
+  }
+
+  // ---------- Lienzo de perfil ----------
+  function profileLayout(cv, A, B, ex, fixedRange) {
+    const W = cv.width, ml = 70, mr = 24, top = 92, mb = 50, pw = W - ml - mr;
+    const len = lenM(A, B), hx = pw / len;
+    const { pts, cr } = crossings(A, B);
+    let lo = Math.min(...pts.map(p => p.h)), hi = Math.max(...pts.map(p => p.h));
+    let zmin = fixedRange ? fixedRange[0] : Math.floor((lo - 30) / 100) * 100, zmax = fixedRange ? fixedRange[1] : Math.ceil((hi + 30) / 100) * 100;
+    let vy = hx * ex; let realEx = ex;
+    if ((zmax - zmin) * vy > 560) { vy = 560 / (zmax - zmin); realEx = vy / hx; }
+    if ((zmax - zmin) * vy < 70) { vy = 70 / (zmax - zmin); realEx = vy / hx; }
+    const ph = (zmax - zmin) * vy; cv.height = Math.round(top + ph + mb);
+    const X = t => ml + t * pw, Y = z => top + ph - (z - zmin) * vy;
+    return { W, ml, mr, top, mb, pw, ph, len, hx, vy, zmin, zmax, X, Y, pts, cr, realEx };
+  }
+  function drawAxes(ctx, Lo, every = 100) {
+    const { ml, top, pw, ph, zmin, zmax, X, Y, len } = Lo;
+    ctx.save(); ctx.font = "700 14px Nunito, sans-serif"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    for (let z = zmin; z <= zmax; z += every) {
+      ctx.strokeStyle = z % 500 === 0 ? "rgba(255,255,255,.35)" : "rgba(255,255,255,.13)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(ml, Y(z)); ctx.lineTo(ml + pw, Y(z)); ctx.stroke();
+      ctx.fillStyle = "#cfe2ea"; ctx.fillText(z + " m", ml - 8, Y(z));
+    }
+    ctx.strokeStyle = "#cfe2ea"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ml, top - 6); ctx.lineTo(ml, top + ph); ctx.lineTo(ml + pw, top + ph); ctx.stroke();
+    ctx.textAlign = "center"; ctx.textBaseline = "top"; ctx.fillStyle = "#cfe2ea";
+    const stepM = len > 2500 ? 1000 : 500;
+    for (let m = 0; m <= len + 1; m += stepM) { const xx = X(m / len); ctx.fillRect(xx - 1, top + ph, 2, 6); ctx.fillText((m / 1000).toLocaleString("es") + " km", xx, top + ph + 9); }
+    ctx.font = "800 16px Nunito, sans-serif"; ctx.fillStyle = "#ffb4a8"; ctx.fillText("A", X(0), top + ph + 28); ctx.fillText("B", X(1), top + ph + 28);
+    ctx.restore();
+  }
+
+  // ================= PESTAÑA: TOPOGRÁFICO =================
+  const cvFlood = document.getElementById("cvFlood"), cvSide = document.getElementById("cvSide"), lvl = document.getElementById("lvl");
+  const SIDE_Y = .42;
+  function drawFlood() {
+    const L = +lvl.value; document.getElementById("lvlTxt").textContent = L + " m";
+    const ctx = cvFlood.getContext("2d"), h = hp();
+    const im = ctx.createImageData(PX, PX), d = im.data;
+    for (let k = 0; k < PX * PX; k++) {
+      const under = h[k] < L;
+      d[k * 4] = under ? 120 : 247; d[k * 4 + 1] = under ? 180 : 241; d[k * 4 + 2] = under ? 230 : 227; d[k * 4 + 3] = 255;
+    }
+    ctx.putImageData(im, 0, 0);
+    ctx.save(); ctx.lineCap = "round";
+    for (const LL of LEVELS) if (LL <= L) {
+      ctx.strokeStyle = LL === L ? "#0b57b0" : "#9a5a2a"; ctx.lineWidth = LL === L ? 4.5 : (LL % 500 ? 1.2 : 2.4);
+      ctx.beginPath(); for (const sg of CONT[LL]) { ctx.moveTo(sg[0][0] * PX, sg[0][1] * PX); ctx.lineTo(sg[1][0] * PX, sg[1][1] * PX); } ctx.stroke();
+    }
+    ctx.setLineDash([10, 7]); ctx.strokeStyle = "#222"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(0, SIDE_Y * PX); ctx.lineTo(PX, SIDE_Y * PX); ctx.stroke(); ctx.setLineDash([]);
+    // puntos de corte con la línea
+    ctx.fillStyle = "#e0303a";
+    let prev = H(0, SIDE_Y); for (let i = 1; i <= 700; i++) { const x = i / 700, v = H(x, SIDE_Y); if ((prev < L) !== (v < L)) { ctx.beginPath(); ctx.arc(x * PX, SIDE_Y * PX, 7, 0, 7); ctx.fill(); } prev = v; }
+    ctx.restore();
+    drawLabels(ctx, PX); drawFrame(ctx, PX);
+    // vista lateral
+    const s = cvSide.getContext("2d"), SW = cvSide.width, SH = cvSide.height, z0 = 250, z1 = 1300, Y = z => SH - 30 - (z - z0) / (z1 - z0) * (SH - 50);
+    s.clearRect(0, 0, SW, SH);
+    s.fillStyle = "rgba(90,160,230,.75)"; s.fillRect(0, Y(L), SW, SH - 30 - Y(L));
+    s.beginPath(); s.moveTo(0, SH - 30);
+    for (let i = 0; i <= SW; i++) s.lineTo(i, Y(H(i / SW, SIDE_Y)));
+    s.lineTo(SW, SH - 30); s.closePath();
+    const gr = s.createLinearGradient(0, Y(1250), 0, SH); gr.addColorStop(0, "#c49a6c"); gr.addColorStop(1, "#6b4a2b"); s.fillStyle = gr; s.fill();
+    s.strokeStyle = "#0b57b0"; s.lineWidth = 3; s.beginPath(); s.moveTo(0, Y(L)); s.lineTo(SW, Y(L)); s.stroke();
+    s.font = "700 13px Nunito, sans-serif"; s.fillStyle = "#cfe2ea"; s.textBaseline = "middle";
+    for (let z = 300; z <= 1200; z += 100) { s.fillStyle = z <= L ? "#cfe2ea" : "rgba(207,226,234,.4)"; s.fillText(z + " m", 4, Y(z)); }
+    s.fillStyle = "#e0303a"; prev = H(0, SIDE_Y);
+    for (let i = 1; i <= SW; i++) { const v = H(i / SW, SIDE_Y); if ((prev < L) !== (v < L)) { s.beginPath(); s.arc(i, Y(L), 7, 0, 7); s.fill(); } prev = v; }
+    s.fillStyle = "#cfe2ea"; s.font = "800 14px Nunito, sans-serif"; s.textAlign = "left"; s.fillText(tx("Oeste", "West"), 8, SH - 12); s.textAlign = "right"; s.fillText(tx("Este", "East"), SW - 8, SH - 12); s.textAlign = "left";
+  }
+  lvl.addEventListener("input", drawFlood);
+
+  // escala
+  const fmt = (n, d = 2) => (+n.toFixed(d)).toLocaleString("es");
+  function calcScale() {
+    const S = +document.getElementById("scS").value, d = +document.getElementById("scD").value || 0;
+    const cm = d * S, m = cm / 100, km = m / 1000;
+    document.getElementById("scOut").innerHTML =
+      `${fmt(d)} cm × ${S.toLocaleString("es")} = <b>${cm.toLocaleString("es")} cm</b> = <b>${fmt(m)} m</b> = <span class="big">${fmt(km, 3)} km</span><br>` +
+      `<span class="note">${bi(`En esta escala, 1 cm del mapa son ${fmt(S / 100)} m en la realidad.`, `At this scale, 1 cm on the map is ${fmt(S / 100)} m in reality.`)}</span>`;
+  }
+  document.getElementById("scS").onchange = calcScale; document.getElementById("scD").oninput = calcScale;
+  let sp = null, spOk = 0, spN = 0;
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  function newSP() {
+    const type = Math.floor(Math.random() * 5), S = pick([10000, 25000, 50000, 100000, 200000]);
+    if (type === 3) { const [cm, m] = pick([[5, 200], [4, 1000], [2, 500], [5, 2500], [3, 1500], [4, 200]]); sp = { es: `La escala gráfica de un mapa es un segmento de ${cm} cm que equivale a ${m.toLocaleString("es")} m en la realidad. ¿Cuál es su escala numérica? Escribe solo el denominador (1:…).`, en: `A map's bar scale is a ${cm} cm segment equal to ${m.toLocaleString("en")} m in reality. What is its ratio scale? Type only the second number (1:…).`, a: m * 100 / cm, u: "1:…" }; document.getElementById("spA").value = ""; document.getElementById("spFb").textContent = ""; renderSP(); return; }
+    if (type === 4) { const [Sm, eq] = pick([[5000, 20], [10000, 100], [10000, 20], [25000, 100], [5000, 10], [20000, 100]]); sp = { es: `Un mapa a escala 1:${Sm.toLocaleString("es")} tiene una equidistancia de ${eq} m. Si dibujas el perfil con la misma escala en el eje vertical, ¿cuántos milímetros del papel milimetrado ocupa cada curva (${eq} m)?`, en: `A 1:${Sm.toLocaleString("en")} map has a ${eq} m contour interval. If you draw the profile at the same vertical scale, how many millimetres of graph paper does each contour (${eq} m) take?`, a: eq * 1000 / Sm, u: "mm" }; document.getElementById("spA").value = ""; document.getElementById("spFb").textContent = ""; renderSP(); return; }
+    if (type === 0) { const d = pick([2, 3, 4, 5, 6, 8, 2.5, 3.5, 7.2]); sp = { es: `En un mapa a escala 1:${S.toLocaleString("es")}, dos pueblos están separados ${fmt(d)} cm. ¿Qué distancia real hay entre ellos, en kilómetros?`, en: `On a 1:${S.toLocaleString("en")} map, two villages are ${d} cm apart. What is the real distance in kilometres?`, a: d * S / 100000, u: "km" }; }
+    else if (type === 1) { const km = pick([1, 2, 3, 5, 10, 12, 0.5]); sp = { es: `Dos cimas están a ${fmt(km)} km en la realidad. ¿Cuántos centímetros las separan en un mapa 1:${S.toLocaleString("es")}?`, en: `Two summits are ${km} km apart in reality. How many centimetres apart are they on a 1:${S.toLocaleString("en")} map?`, a: km * 100000 / S, u: "cm" }; }
+    else { const d = pick([2, 4, 5, 8, 10]); const km = d * S / 100000; sp = { es: `En un mapa, ${d} cm corresponden a ${fmt(km, 3)} km reales. ¿Cuál es la escala? Escribe solo el denominador (1:…).`, en: `On a map, ${d} cm are ${km} km in reality. What is the scale? Type only the second number (1:…).`, a: S, u: "1:…" }; }
+    document.getElementById("spA").value = ""; document.getElementById("spFb").textContent = ""; renderSP();
+  }
+  function renderSP() { if (!sp) return; document.getElementById("spQ").innerHTML = bi(sp.es, sp.en); document.getElementById("spU").textContent = sp.u; }
+  document.getElementById("spCheck").onclick = () => {
+    const v = parseFloat(String(document.getElementById("spA").value).replace(",", ".")); if (isNaN(v)) return;
+    const ok = Math.abs(v - sp.a) <= Math.abs(sp.a) * .02 + 1e-9; spN++; if (ok) spOk++;
+    const fb = document.getElementById("spFb"); fb.className = "fb " + (ok ? "ok" : "bad");
+    fb.innerHTML = ok ? bi("¡Correcto! 🎉", "Correct! 🎉") : bi(`No. La respuesta es ${fmt(sp.a, 3)} ${sp.u}.`, `No. The answer is ${fmt(sp.a, 3)} ${sp.u}.`);
+    document.getElementById("spScore").textContent = `${spOk} / ${spN}`;
+  };
+  document.getElementById("spNext").onclick = newSP;
+
+  // ================= PESTAÑA: PERFIL =================
+  const PA = { A: { x: .1, y: .52 }, B: { x: .92, y: .74 } };
+  let step = 1, exag = 2.5;
+  const STEPS = [
+    ["Traza la línea A–B en el mapa: es el recorrido que vas a «cortar».", "Draw line A–B on the map: it's the route you are going to “cut”."],
+    ["Coloca una tira de papel sobre A–B. Marca A, B y cada punto donde la línea corta una curva de nivel, y escribe su altitud.", "Lay a strip of paper along A–B. Mark A, B and every point where the line crosses a contour, and write its height."],
+    ["Dibuja los ejes: en horizontal, la longitud de A–B (a la escala del mapa); en vertical, las altitudes con la escala vertical que elijas.", "Draw the axes: horizontally, the length of A–B (at map scale); vertically, the heights at the vertical scale you choose."],
+    ["Pon la tira sobre el eje horizontal y lleva cada marca hacia arriba hasta su altitud.", "Put the strip along the horizontal axis and take each mark up to its height."],
+    ["Une los puntos con una línea suave. Entre dos puntos de la misma altitud hay una cima o un valle: redondéalo sin pasar de la curva siguiente. ¡Ya tienes el perfil!", "Join the points with a smooth line. Between two points at the same height there is a summit or a valley: round it off without reaching the next contour. Your profile is done!"]
+  ];
+  function renderSteps() {
+    document.getElementById("pSteps").innerHTML = STEPS.map((s, i) =>
+      `<div class="step ${i + 1 === step ? "on" : i + 1 < step ? "done" : ""}"><span class="n">${i + 1}</span><span>${bi(s[0], s[1])}</span></div>`).join("");
+  }
+  const HYPB = [[300, 500, "#cfe8b0"], [500, 700, "#8fc47a"], [700, 900, "#e3c58e"], [900, 1100, "#b98a55"], [1100, 1300, "#c9c4bd"]];
+  let HYP = null;
+  function hypImage() {
+    if (HYP && HYP.mode === mode) return HYP.c;
+    const h = hp(), c = document.createElement("canvas"); c.width = c.height = PX; const x = c.getContext("2d");
+    const im = x.createImageData(PX, PX), d = im.data, cols = HYPB.map(b => hex(b[2]));
+    for (let k = 0; k < PX * PX; k++) { const b = Math.max(0, Math.min(4, Math.floor((h[k] - 300) / 200))), r = cols[b]; d[k * 4] = r[0]; d[k * 4 + 1] = r[1]; d[k * 4 + 2] = r[2]; d[k * 4 + 3] = 255; }
+    x.putImageData(im, 0, 0); drawContours(x, PX, { color: "#5a3010" }); drawRiver(x, PX); drawLabels(x, PX); drawFrame(x, PX);
+    HYP = { c, mode }; return c;
+  }
+  function drawPerfil() {
+    const cv = document.getElementById("cvPMap"), ctx = cv.getContext("2d"), hyp = document.getElementById("pHyp").checked;
+    ctx.drawImage(hyp ? hypImage() : topoImage(), 0, 0);
+    const hl = document.getElementById("hypLeg"); hl.classList.toggle("hidden", !hyp);
+    if (hyp) hl.innerHTML = HYPB.slice().reverse().map(b => `<div><i style="background:${b[2]}"></i><span>${b[0]}–${b[1]} m</span></div>`).join("");
+    const { A, B } = PA;
+    drawAB(ctx, A, B);
+    const pc = document.getElementById("cvProf"), Lo = profileLayout(pc, A, B, exag), p = pc.getContext("2d");
+    const { cr, X, Y, top, ph } = Lo;
+    if (step >= 2) {
+      ctx.save();
+      cr.forEach(c => { const x = (A.x + (B.x - A.x) * c.t) * PX, y = (A.y + (B.y - A.y) * c.t) * PX; ctx.fillStyle = "#111"; ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill(); ctx.fillStyle = "#ffd34d"; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); });
+      ctx.restore();
+    }
+    p.clearRect(0, 0, pc.width, pc.height);
+    const hA = H(A.x, A.y), hB = H(B.x, B.y);
+    // tira de papel
+    if (step >= 2) {
+      p.save(); p.fillStyle = "#f7f1e3"; p.fillRect(X(0) - 10, 14, X(1) - X(0) + 20, 46);
+      p.font = "800 12px Nunito, sans-serif"; p.textAlign = "center"; p.fillStyle = "#e8d9bb";
+      p.fillText(tx("tira de papel", "paper strip"), (X(0) + X(1)) / 2, 8); p.fillStyle = "#3a2a14";
+      const marks = [{ t: 0, L: Math.round(hA), n: "A" }, ...cr, { t: 1, L: Math.round(hB), n: "B" }];
+      let lastX = -99, row = 0;
+      marks.forEach(m => {
+        const xx = X(m.t); p.strokeStyle = "#3a2a14"; p.lineWidth = 2; p.beginPath(); p.moveTo(xx, 14); p.lineTo(xx, 32); p.stroke();
+        row = xx - lastX < 34 ? 1 - row : 0; lastX = xx;
+        p.font = "800 12px Nunito, sans-serif"; if (m.n) { p.fillStyle = "#c0392b"; p.font = "800 15px Nunito, sans-serif"; p.fillText(m.n, xx, 46); p.fillStyle = "#3a2a14"; } else p.fillText(m.L, xx, 44 + row * 12);
+      });
+      p.restore();
+    }
+    if (step >= 3) drawAxes(p, Lo);
+    const P = profilePoints(A, B, cr);
+    if (step >= 4) {
+      p.save(); p.setLineDash([4, 5]); p.strokeStyle = "rgba(255,211,77,.55)"; p.lineWidth = 1.4;
+      cr.forEach(c => { p.beginPath(); p.moveTo(X(c.t), 60); p.lineTo(X(c.t), Y(c.L)); p.stroke(); }); p.setLineDash([]);
+      p.fillStyle = "#ffd34d"; [{ t: 0, L: hA }, ...cr, { t: 1, L: hB }].forEach(c => { p.beginPath(); p.arc(X(c.t), Y(c.L), 5, 0, 7); p.fill(); });
+      p.restore();
+    }
+    if (step >= 5) {
+      p.save(); p.beginPath(); smooth(p, P.map(q => [X(q.t), Y(q.z)])); p.lineTo(X(1), top + ph); p.lineTo(X(0), top + ph); p.closePath();
+      p.fillStyle = "rgba(196,154,108,.45)"; p.fill();
+      p.beginPath(); smooth(p, P.map(q => [X(q.t), Y(q.z)])); p.strokeStyle = "#ffb050"; p.lineWidth = 3.5; p.stroke();
+      p.restore();
+    }
+    if (document.getElementById("pReal").checked) {
+      p.save(); p.setLineDash([6, 5]); p.strokeStyle = "#7fe0ff"; p.lineWidth = 2; p.beginPath();
+      Lo.pts.forEach((q, i) => i ? p.lineTo(X(q.t), Y(q.h)) : p.moveTo(X(q.t), Y(q.h))); p.stroke(); p.restore();
+    }
+    p.save(); p.fillStyle = "#cfe2ea"; p.font = "800 14px Nunito, sans-serif"; p.textAlign = "right";
+    if (step >= 3) p.fillText(tx("Exageración vertical", "Vertical exaggeration") + " ×" + (+Lo.realEx.toFixed(1)).toLocaleString("es"), pc.width - 24, top - 12);
+    p.restore();
+    // datos
+    const maxH = Math.max(...Lo.pts.map(q => q.h)), dz = hB - hA;
+    document.getElementById("pData").innerHTML = [
+      [fmt(Lo.len, 0) + " m", "Longitud real A–B", "Real length A–B"],
+      [Math.round(hA) + " m", "Altitud de A (aprox.)", "Height of A (approx.)"],
+      [Math.round(hB) + " m", "Altitud de B (aprox.)", "Height of B (approx.)"],
+      [Math.round(maxH) + " m", "Punto más alto del recorrido", "Highest point on the route"],
+      [(dz >= 0 ? "+" : "") + Math.round(dz) + " m", "Desnivel de A a B", "Height difference A to B"],
+      [fmt(Math.hypot(Lo.len, dz), 0) + " m", "Distancia recorrida A–B en línea recta (Pitágoras)", "Distance walked A–B in a straight line (Pythagoras)"],
+      [fmt(Lo.len / 25000 * 100, 1) + " cm", "Longitud de A–B en el papel (1:25 000)", "Length of A–B on paper (1:25,000)"],
+      [fmt(Math.abs(dz) / Lo.len * 100, 1) + " %", "Pendiente media A–B (desnivel ÷ distancia × 100)", "Average gradient A–B (height difference ÷ distance × 100)"],
+      [String(cr.length), "Curvas de nivel cortadas", "Contours crossed"]
+    ].map(r => `<div><b>${r[0]}</b><small>${bi(r[1], r[2])}</small></div>`).join("");
+    renderSteps();
+  }
+  makeDrag(document.getElementById("cvPMap"), () => PA, drawPerfil);
+  document.getElementById("pNext").onclick = () => { step = Math.min(5, step + 1); drawPerfil(); };
+  document.getElementById("pPrev").onclick = () => { step = Math.max(1, step - 1); drawPerfil(); };
+  document.getElementById("pAll").onclick = () => { step = 5; drawPerfil(); };
+  document.getElementById("pReal").onchange = drawPerfil;
+  document.getElementById("pHyp").onchange = drawPerfil;
+
+  // ---------- Juego: ¿qué forma del relieve es? ----------
+  function contourFn(f, level, n = 81) {
+    const G = new Float32Array(n * n); for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) G[j * n + i] = f(i / (n - 1), j / (n - 1));
+    const segs = [], s = 1 / (n - 1);
+    for (let j = 0; j < n - 1; j++) for (let i = 0; i < n - 1; i++) {
+      const a = G[j * n + i], b = G[j * n + i + 1], c = G[(j + 1) * n + i + 1], d = G[(j + 1) * n + i];
+      const idx = (a >= level ? 8 : 0) | (b >= level ? 4 : 0) | (c >= level ? 2 : 0) | (d >= level ? 1 : 0);
+      if (idx === 0 || idx === 15) continue;
+      const x0 = i * s, y0 = j * s, T = [x0 + s * (level - a) / (b - a), y0], R = [x0 + s, y0 + s * (level - b) / (c - b)], B = [x0 + s * (level - d) / (c - d), y0 + s], Lf = [x0, y0 + s * (level - a) / (d - a)];
+      const cen = (a + b + c + d) / 4 >= level;
+      switch (idx) {
+        case 1: case 14: segs.push([Lf, B]); break; case 2: case 13: segs.push([B, R]); break;
+        case 3: case 12: segs.push([Lf, R]); break; case 4: case 11: segs.push([T, R]); break;
+        case 6: case 9: segs.push([T, B]); break; case 7: case 8: segs.push([Lf, T]); break;
+        case 5: if (cen) { segs.push([Lf, T]); segs.push([B, R]); } else { segs.push([T, R]); segs.push([Lf, B]); } break;
+        case 10: if (cen) { segs.push([T, R]); segs.push([Lf, B]); } else { segs.push([Lf, T]); segs.push([B, R]); } break;
+      }
+    }
+    return segs;
+  }
+  const r2 = (x, y, cx = .5, cy = .5) => (x - cx) ** 2 + (y - cy) ** 2;
+  const FORMS = [
+    { k: "pico", es: "Pico o cima", en: "Peak / summit", f: (x, y) => 300 + 90 * Math.max(0, 1 - Math.sqrt(r2(x, y, .5, .52)) / .5) * (1 + .15 * Math.sin(3 * Math.atan2(y - .5, x - .5))), lv: [310, 320, 330, 340, 350, 360, 370], top: [.5, .52], ray: [.5, .52, .97, .52] },
+    { k: "depre", es: "Depresión (dolina)", en: "Hollow (doline)", f: (x, y) => 380 - 70 * Math.exp(-r2(x, y) / (2 * .15 * .15)), lv: [320, 330, 340, 350, 360, 370], dash: true, ray: [.5, .5, .97, .5] },
+    { k: "valle", es: "Valle con río", en: "Valley with a river", f: (x, y) => 300 + 70 * (1 - y) + 110 * Math.abs(x - .5) ** 1.2, lv: [310, 320, 330, 340, 350, 360], river: true, ray: [.85, .02, .85, .98] },
+    { k: "collado", es: "Línea de cumbres con collado", en: "Ridge with a saddle (pass)", f: (x, y) => 300 + 75 * Math.exp(-(r2(x, y, .27, .5)) / (2 * .13 * .13)) + 70 * Math.exp(-(r2(x, y, .73, .5)) / (2 * .13 * .13)), lv: [310, 320, 330, 340, 350, 360, 370], ray: [.27, .5, .27, .98] },
+    { k: "escarpe", es: "Escarpe o cortado", en: "Escarpment / cliff", f: (x, y) => 300 + 60 / (1 + Math.exp(-(x - .5 - .08 * Math.sin(y * 6)) * 45)) + 8 * x, lv: [310, 320, 330, 340, 350, 360], ray: [.02, .15, .98, .15] },
+    { k: "meseta", es: "Meseta (relieve tabular)", en: "Plateau / mesa", f: (x, y) => 300 + 60 / (1 + Math.exp(-(.3 - Math.sqrt(r2(x, y) * (1 + .3 * Math.sin(4 * Math.atan2(y - .5, x - .5))))) * 40)), lv: [310, 320, 330, 340, 350], ray: [.5, .5, .97, .5] },
+    { k: "llanura", es: "Llanura", en: "Plain", f: (x, y) => 300 + 25 * x + 4 * Math.sin(y * 4), lv: [310, 320], ray: [.02, .3, .98, .3] }
+  ];
+  let fCur = null, fOk = 0, fN = 0, fDone = false;
+  function drawForm() {
+    const cv = document.getElementById("cvForm"), ctx = cv.getContext("2d"), S = cv.width, F = fCur;
+    ctx.fillStyle = "#f7f1e3"; ctx.fillRect(0, 0, S, S); ctx.lineCap = "round";
+    const labels = [];
+    for (const L of F.lv) {
+      const sg = contourFn(F.f, L); ctx.strokeStyle = "#9a5a2a"; ctx.lineWidth = 2; ctx.setLineDash(F.dash ? [8, 6] : []);
+      ctx.beginPath(); for (const s of sg) { ctx.moveTo(s[0][0] * S, s[0][1] * S); ctx.lineTo(s[1][0] * S, s[1][1] * S); } ctx.stroke(); ctx.setLineDash([]);
+      let best = null, bd = 1e9; for (const s of sg) { const mx = (s[0][0] + s[1][0]) / 2, my = (s[0][1] + s[1][1]) / 2, d = segDist(mx, my, ...F.ray); if (d < bd) { bd = d; best = [mx, my]; } }
+      if (best && bd < .03 && best[0] > .04 && best[0] < .96 && best[1] > .04 && best[1] < .96 && !labels.some(o => Math.hypot(o[0] - best[0], o[1] - best[1]) < .07)) labels.push([...best, L]);
+    }
+    if (F.river) { ctx.strokeStyle = "#2f7fd0"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(.5 * S, .1 * S); ctx.lineTo(.5 * S, S); ctx.stroke(); }
+    ctx.font = "800 14px Nunito, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    for (const [x, y, L] of labels) { const w = ctx.measureText(L).width + 6; ctx.fillStyle = "#f7f1e3"; ctx.fillRect(x * S - w / 2, y * S - 9, w, 18); ctx.fillStyle = "#7a3f12"; ctx.fillText(L, x * S, y * S + 1); }
+    if (F.top) { const x = F.top[0] * S, y = F.top[1] * S; ctx.fillStyle = "#222"; ctx.beginPath(); ctx.moveTo(x, y - 7); ctx.lineTo(x + 7, y + 6); ctx.lineTo(x - 7, y + 6); ctx.closePath(); ctx.fill(); }
+  }
+  function renderFormOpts() {
+    document.getElementById("fOpts").innerHTML = FORMS.map(F => `<button class="btn" data-f="${F.k}">${bi(F.es, F.en)}</button>`).join("");
+  }
+  function newForm() { let F; do { F = pick(FORMS); } while (fCur && F === fCur); fCur = F; fDone = false; document.getElementById("fFb").textContent = ""; renderFormOpts(); drawForm(); }
+  document.getElementById("fOpts").addEventListener("click", e => {
+    const b = e.target.closest("button[data-f]"); if (!b || fDone) return; fDone = true; fN++;
+    const ok = b.dataset.f === fCur.k; if (ok) fOk++;
+    b.style.borderColor = ok ? "var(--ok)" : "var(--bad)";
+    const fb = document.getElementById("fFb"); fb.className = "fb " + (ok ? "ok" : "bad");
+    fb.innerHTML = ok ? bi("¡Correcto! 🎉", "Correct! 🎉") : bi(`No. Es: ${fCur.es}.`, `No. It's: ${fCur.en}.`);
+    document.getElementById("fScore").textContent = `${fOk} / ${fN}`;
+  });
+  document.getElementById("fNext").onclick = newForm;
+  document.querySelectorAll(".exg").forEach(b => b.onclick = () => { exag = +b.dataset.ex; document.querySelectorAll(".exg").forEach(o => o.classList.toggle("on", o === b)); drawPerfil(); });
+
+  // ================= PESTAÑA: PRÁCTICA =================
+  let X_ = null; // {A,B,cr,ans:[]}
+  function newPractice() {
+    for (let tries = 0; tries < 400; tries++) {
+      const A = { x: .06 + Math.random() * .88, y: .06 + Math.random() * .88 }, B = { x: .06 + Math.random() * .88, y: .06 + Math.random() * .88 };
+      if (Math.hypot(B.x - A.x, B.y - A.y) < .55) continue;
+      const { cr } = crossings(A, B);
+      if (cr.length < 5 || cr.length > 11) continue;
+      let ok = true; for (let i = 1; i < cr.length; i++) if (cr[i].t - cr[i - 1].t < .035) ok = false;
+      if (!ok) continue;
+      X_ = { A, B, cr, ans: cr.map(() => null), checked: false }; document.getElementById("xDist").value = ""; document.getElementById("xDistFb").textContent = "";
+      document.getElementById("xFb").textContent = ""; drawPractice(); return;
+    }
+  }
+  function practiceLayout() {
+    const cv = document.getElementById("cvXProf");
+    return profileLayout(cv, X_.A, X_.B, 5, [Math.floor((Math.min(...X_.cr.map(c => c.L)) - 100) / 100) * 100, Math.ceil((Math.max(...X_.cr.map(c => c.L)) + 100) / 100) * 100]);
+  }
+  function drawPracticeMap(ctx) {
+    ctx.drawImage(topoImage(document.getElementById("xExam").checked), 0, 0);
+    if (document.getElementById("xGrid").checked) {
+      ctx.save(); ctx.strokeStyle = "rgba(30,60,140,.45)"; ctx.lineWidth = 1; ctx.fillStyle = "#1e3c8c"; ctx.font = "700 12px Nunito, sans-serif";
+      for (let m = 0; m <= SIZE; m += 500) { const q = m / SIZE * PX; ctx.beginPath(); ctx.moveTo(q, 0); ctx.lineTo(q, PX); ctx.moveTo(0, q); ctx.lineTo(PX, q); ctx.stroke();
+        if (m && m < SIZE) { ctx.textAlign = "center"; ctx.fillText(m, q, 36); ctx.textAlign = "left"; ctx.fillText(SIZE - m, 4, q - 4); } }
+      ctx.restore();
+    }
+    drawAB(ctx, X_.A, X_.B);
+    ctx.save(); ctx.font = "800 14px Nunito, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const nx = -(X_.B.y - X_.A.y), ny = X_.B.x - X_.A.x, nl = Math.hypot(nx, ny);
+    X_.cr.forEach((c, i) => {
+      const x = (X_.A.x + (X_.B.x - X_.A.x) * c.t) * PX, y = (X_.A.y + (X_.B.y - X_.A.y) * c.t) * PX;
+      ctx.fillStyle = "#111"; ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill();
+      const off = (i % 2 ? 1 : -1) * 20, lx = x + nx / nl * off, ly = y + ny / nl * off;
+      ctx.fillStyle = "#1f3b57"; ctx.beginPath(); ctx.arc(lx, ly, 11, 0, 7); ctx.fill(); ctx.fillStyle = "#fff"; ctx.fillText(i + 1, lx, ly + 1);
+    });
+    ctx.restore();
+  }
+  function drawPractice() {
+    drawPracticeMap(document.getElementById("cvXMap").getContext("2d"));
+    const cv = document.getElementById("cvXProf"), p = cv.getContext("2d"), Lo = practiceLayout(), { X, Y, top, ph } = Lo;
+    p.clearRect(0, 0, cv.width, cv.height); drawAxes(p, Lo);
+    p.save(); p.font = "800 14px Nunito, sans-serif"; p.textAlign = "center";
+    X_.cr.forEach((c, i) => {
+      p.strokeStyle = "rgba(127,224,255,.35)"; p.setLineDash([3, 4]); p.beginPath(); p.moveTo(X(c.t), top - 20); p.lineTo(X(c.t), top + ph); p.stroke(); p.setLineDash([]);
+      p.fillStyle = "#1f3b57"; p.beginPath(); p.arc(X(c.t), top - 30, 11, 0, 7); p.fill(); p.fillStyle = "#fff"; p.fillText(i + 1, X(c.t), top - 25);
+    });
+    if (X_.checked) {
+      const P = profilePoints(X_.A, X_.B, X_.cr);
+      p.beginPath(); smooth(p, P.map(q => [X(q.t), Y(q.z)])); p.strokeStyle = "rgba(124,200,160,.9)"; p.lineWidth = 3; p.stroke();
+    }
+    X_.cr.forEach((c, i) => {
+      const a = X_.ans[i];
+      if (X_.checked) { p.strokeStyle = "#7cc8a0"; p.lineWidth = 2; p.beginPath(); p.arc(X(c.t), Y(c.L), 9, 0, 7); p.stroke(); }
+      if (a == null) return;
+      p.fillStyle = X_.checked ? (a === c.L ? "#34d399" : "#ff5d73") : "#ffb050";
+      p.beginPath(); p.arc(X(c.t), Y(a), 7, 0, 7); p.fill();
+    });
+    if (!X_.checked) {
+      const P = X_.cr.map((c, i) => X_.ans[i] == null ? null : [X(c.t), Y(X_.ans[i])]).filter(Boolean);
+      if (P.length > 1) { p.strokeStyle = "rgba(255,176,80,.7)"; p.lineWidth = 2; p.beginPath(); smooth(p, P); p.stroke(); }
+    }
+    p.restore();
+  }
+  (function () {
+    const cv = document.getElementById("cvXProf");
+    cv.addEventListener("pointerdown", e => {
+      if (!X_ || X_.checked) return;
+      const r = cv.getBoundingClientRect(), x = (e.clientX - r.left) * cv.width / r.width, y = (e.clientY - r.top) * cv.height / r.height;
+      const Lo = practiceLayout(); let best = -1, bd = 26;
+      X_.cr.forEach((c, i) => { const d = Math.abs(Lo.X(c.t) - x); if (d < bd) { bd = d; best = i; } });
+      if (best < 0) return;
+      const z = Lo.zmin + (Lo.top + Lo.ph - y) / Lo.vy, zs = Math.round(z / 100) * 100;
+      if (zs < Lo.zmin || zs > Lo.zmax) return;
+      X_.ans[best] = zs; drawPractice();
+    });
+  })();
+  document.getElementById("xCheck").onclick = () => {
+    if (!X_) return;
+    if (X_.ans.some(a => a == null)) { const fb = document.getElementById("xFb"); fb.className = "fb bad"; fb.innerHTML = bi("Te falta algún punto por colocar.", "Some points are still missing."); return; }
+    X_.checked = true; const ok = X_.cr.filter((c, i) => X_.ans[i] === c.L).length;
+    const fb = document.getElementById("xFb"); fb.className = "fb " + (ok === X_.cr.length ? "ok" : "bad");
+    fb.innerHTML = bi(`${ok} de ${X_.cr.length} puntos correctos.`, `${ok} of ${X_.cr.length} points correct.`) + " " +
+      (ok === X_.cr.length ? bi("¡Perfil perfecto! 🏆", "Perfect profile! 🏆") : bi("Los círculos verdes marcan la altitud correcta.", "The green circles show the right height."));
+    drawPractice();
+  };
+  document.getElementById("xClear").onclick = () => { if (!X_) return; X_.ans = X_.cr.map(() => null); X_.checked = false; document.getElementById("xFb").textContent = ""; drawPractice(); };
+  document.getElementById("xNew").onclick = newPractice;
+  document.getElementById("xExam").onchange = drawPractice; document.getElementById("xGrid").onchange = drawPractice;
+  document.getElementById("xDistOk").onclick = () => {
+    const v = parseFloat(String(document.getElementById("xDist").value).replace(",", ".")), L = lenM(X_.A, X_.B), fb = document.getElementById("xDistFb");
+    if (isNaN(v)) return; const ok = Math.abs(v - L) <= L * .06; fb.className = "fb " + (ok ? "ok" : "bad");
+    fb.innerHTML = (ok ? bi("¡Bien medido! 🎉", "Well measured! 🎉") : bi("No es correcto.", "Not right.")) + " " + bi(`La distancia real es ≈ ${fmt(L, 0)} m (en el papel, a 1:25 000, serían ${fmt(L / 250, 1)} cm).`, `The real distance is ≈ ${fmt(L, 0)} m (on paper at 1:25,000 it would be ${fmt(L / 250, 1)} cm).`);
+  };
+  document.getElementById("xPrint").onclick = () => {
+    if (!X_) return;
+    const m = document.createElement("canvas"); m.width = m.height = PX; drawPracticeMap(m.getContext("2d"));
+    const g2 = document.createElement("canvas"); g2.width = 760; const Lo = profileLayout(g2, X_.A, X_.B, 5, practiceLayout().zmin !== undefined ? [practiceLayout().zmin, practiceLayout().zmax] : null);
+    const q = g2.getContext("2d"); q.fillStyle = "#fff"; q.fillRect(0, 0, g2.width, g2.height);
+    // cuadrícula para papel
+    q.strokeStyle = "#999"; q.lineWidth = 1; q.font = "700 14px Nunito, sans-serif"; q.fillStyle = "#000"; q.textAlign = "right"; q.textBaseline = "middle";
+    for (let z = Lo.zmin; z <= Lo.zmax; z += 100) { q.beginPath(); q.moveTo(Lo.ml, Lo.Y(z)); q.lineTo(Lo.ml + Lo.pw, Lo.Y(z)); q.stroke(); q.fillText(z + " m", Lo.ml - 8, Lo.Y(z)); }
+    q.strokeStyle = "#000"; q.lineWidth = 2; q.beginPath(); q.moveTo(Lo.ml, Lo.top - 10); q.lineTo(Lo.ml, Lo.top + Lo.ph); q.lineTo(Lo.ml + Lo.pw, Lo.top + Lo.ph); q.stroke();
+    q.textAlign = "center"; q.font = "800 16px Nunito, sans-serif"; q.fillText("A", Lo.X(0), Lo.top + Lo.ph + 22); q.fillText("B", Lo.X(1), Lo.top + Lo.ph + 22);
+    const pa = document.getElementById("printArea");
+    pa.innerHTML = `<h2>${tx("Perfil topográfico A–B", "Topographic profile A–B")}</h2><p>${tx("Nombre: ______________________  Mapa 1:25 000 · Equidistancia 100 m · Cada línea horizontal de la cuadrícula = 100 m", "Name: ______________________  Map 1:25,000 · Contour interval 100 m · Each horizontal grid line = 100 m")}</p><img src="${m.toDataURL()}" alt=""><img src="${g2.toDataURL()}" alt="">`;
+    setTimeout(() => window.print(), 100);
+  };
+
+  // ================= PESTAÑA: GEOLÓGICO =================
+  let sc = "h"; const GA = { A: { x: .08, y: .42 }, B: { x: .94, y: .58 } };
+  const EXPL = {
+    h: ["<b>Estratos horizontales.</b> Fíjate: los contactos entre rocas van <b>paralelos a las curvas de nivel</b>. Las rocas más antiguas (pizarras) están en los valles, abajo, y las más modernas, en la cima.", "<b>Horizontal layers.</b> Look: the contacts between rocks run <b>parallel to the contours</b>. The oldest rocks (slate) are down in the valleys and the youngest are on the summit."],
+    i: ["<b>Estratos inclinados.</b> Los contactos <b>cortan las curvas de nivel</b>. Las capas se inclinan 10° hacia el este (símbolo de buzamiento): por eso hacia el este afloran rocas cada vez más modernas.", "<b>Tilted layers.</b> The contacts <b>cut across the contours</b>. The layers dip 10° to the east (dip symbol): that's why younger and younger rocks crop out towards the east."],
+    a: ["<b>Anticlinal.</b> Las capas están dobladas hacia arriba. En el mapa, las rocas <b>se repiten a los dos lados del eje</b> y en el centro afloran las <b>más antiguas</b>. (En un sinclinal sería al revés: las más modernas en el centro).", "<b>Anticline.</b> The layers are folded upwards. On the map, the rocks <b>repeat on both sides of the axis</b> and the <b>oldest</b> crop out in the centre. (In a syncline it's the other way round: the youngest in the centre)."],
+    f: ["<b>Falla.</b> Una línea recta <b>corta y desplaza</b> los contactos. El bloque del este ha bajado (bloque hundido): por eso, a la misma altitud, en él afloran rocas más modernas que en el bloque del oeste.", "<b>Fault.</b> A straight line <b>cuts and shifts</b> the contacts. The eastern block has moved down (downthrown block): so, at the same height, younger rocks crop out there than in the western block."]
+  };
+  let geoHL = -1;
+  function renderLegend() {
+    document.getElementById("geoLeg").innerHTML = LAYERS.map((l, i) => i).reverse().map(i => {
+      const l = LAYERS[i];
+      return `<div class="${i === geoHL ? "hl" : ""}"><i style="background:${l.c}"></i><span><b>${bi(l.es, l.en)}</b><small>${bi(l.aes, l.aen)} · ${l.ma}</small></span></div>`;
+    }).join("") + `<p class="note">${bi("↑ más modernas · ↓ más antiguas", "↑ youngest · ↓ oldest")}</p>`;
+    document.getElementById("geoExp").innerHTML = bi(EXPL[sc][0], EXPL[sc][1]);
+  }
+  function drawGeo() {
+    const cv = document.getElementById("cvGeo"), ctx = cv.getContext("2d");
+    ctx.drawImage(geoImage(sc), 0, 0); drawAB(ctx, GA.A, GA.B);
+    // corte
+    const pc = document.getElementById("cvCut"), W = pc.width, ml = 70, mr = 24, top = 30, mb = 50, pw = W - ml - mr;
+    const zmin = 0, zmax = 1400, ph = 300; pc.height = top + ph + mb;
+    const p = pc.getContext("2d"); p.clearRect(0, 0, W, pc.height);
+    const im = p.createImageData(pw, ph), d = im.data, { A, B } = GA;
+    const surf = [];
+    for (let i = 0; i < pw; i++) {
+      const t = i / (pw - 1), x = A.x + (B.x - A.x) * t, y = A.y + (B.y - A.y) * t, zs = H(x, y); surf.push(zs);
+      let prevL = -1;
+      for (let j = 0; j < ph; j++) {
+        const z = zmax - (j / ph) * (zmax - zmin); if (z > zs) continue;
+        const L = layerOf(V(sc, x, y, z)), rgb = LRGB[L], k = (j * pw + i) * 4, f = (prevL >= 0 && prevL !== L) ? .35 : 1; prevL = L;
+        d[k] = rgb[0] * f; d[k + 1] = rgb[1] * f; d[k + 2] = rgb[2] * f; d[k + 3] = 255;
+      }
+    }
+    p.putImageData(im, ml, top);
+    const Y = z => top + (zmax - z) / (zmax - zmin) * ph, Xc = t => ml + t * (pw - 1);
+    p.strokeStyle = "#ffe0b0"; p.lineWidth = 3; p.beginPath(); surf.forEach((z, i) => i ? p.lineTo(ml + i, Y(z)) : p.moveTo(ml, Y(z))); p.stroke();
+    if (sc === "f") { // dónde corta la falla
+      for (let i = 1; i < pw; i++) {
+        const t0 = (i - 1) / (pw - 1), t1 = i / (pw - 1);
+        const s0 = (A.x + (B.x - A.x) * t0) > faultX(A.y + (B.y - A.y) * t0), s1 = (A.x + (B.x - A.x) * t1) > faultX(A.y + (B.y - A.y) * t1);
+        if (s0 !== s1) { p.strokeStyle = "#ff2020"; p.lineWidth = 4; p.beginPath(); p.moveTo(ml + i, Y(surf[i]) - 14); p.lineTo(ml + i, top + ph); p.stroke(); }
+      }
+    }
+    p.font = "700 14px Nunito, sans-serif"; p.fillStyle = "#cfe2ea"; p.textAlign = "right"; p.textBaseline = "middle";
+    for (let z = 0; z <= zmax; z += 200) { p.fillText(z + " m", ml - 8, Y(z)); p.fillRect(ml - 4, Y(z), 4, 1); }
+    p.textAlign = "center"; p.textBaseline = "top"; p.font = "800 16px Nunito, sans-serif"; p.fillStyle = "#ffb4a8";
+    p.fillText("A", Xc(0), top + ph + 8); p.fillText("B", Xc(1), top + ph + 8);
+    const len = lenM(A, B), ex = (ph / (zmax - zmin)) / ((pw) / len);
+    p.font = "700 13px Nunito, sans-serif"; p.fillStyle = "#cfe2ea"; p.fillText(`${fmt(len / 1000, 1)} km · ${tx("exageración vertical", "vertical exaggeration")} ×${fmt(ex, 1)}`, ml + pw / 2, top + ph + 28);
+  }
+  makeDrag(document.getElementById("cvGeo"), () => GA, drawGeo, pt => {
+    const z = H(pt.x, pt.y), L = layerOf(V(sc, pt.x, pt.y, z)), l = LAYERS[L]; geoHL = L; renderLegend();
+    document.getElementById("geoInfo").innerHTML = bi(`Aquí aflora: <b>${l.es}</b> (${l.aes}, ${l.ma}). Altitud ≈ ${Math.round(z)} m.`, `Rock cropping out here: <b>${l.en}</b> (${l.aen}, ${l.ma}). Height ≈ ${Math.round(z)} m.`);
+  });
+  document.querySelectorAll("#geoSc button").forEach(b => b.onclick = () => {
+    sc = b.dataset.sc; geoHL = -1; document.querySelectorAll("#geoSc button").forEach(o => o.classList.toggle("on", o === b)); renderLegend(); drawGeo();
+  });
+
+  // ================= RETO =================
+  const QUIZ = [
+    { q: ["¿Qué es una curva de nivel?", "What is a contour line?"], o: [["Una línea que une puntos de la misma altitud", "A line joining points at the same height"], ["Una línea que une puntos con la misma roca", "A line joining points with the same rock"], ["El recorrido de un río", "The course of a river"], ["Una línea que marca la pendiente", "A line that marks the slope"]], ex: ["Por eso dos curvas nunca se cruzan: un punto no puede tener dos altitudes.", "That's why contours never cross: a point can't have two heights."] },
+    { q: ["¿Qué es la equidistancia?", "What is the contour interval?"], o: [["La diferencia de altitud entre dos curvas de nivel seguidas", "The height difference between two neighbouring contours"], ["La distancia en el mapa entre dos curvas", "The distance on the map between two contours"], ["La altitud de la cima", "The height of the summit"], ["La escala del mapa", "The map scale"]], ex: ["En los mapas 1:25 000 suele ser de 10 m; en nuestro mapa inventado, de 100 m.", "On 1:25,000 maps it is usually 10 m; on our imaginary map, 100 m."] },
+    { q: ["Si las curvas de nivel están muy juntas, el terreno…", "If contours are very close together, the ground…"], o: [["tiene mucha pendiente", "is very steep"], ["es llano", "is flat"], ["es un valle", "is a valley"], ["está bajo el nivel del mar", "is below sea level"]], ex: ["Mucho desnivel en poca distancia = pendiente fuerte.", "A big height change over a short distance = steep slope."] },
+    { q: ["En un mapa a escala 1:25 000, 1 cm equivale a…", "On a 1:25,000 map, 1 cm equals…"], o: [["250 m", "250 m"], ["25 m", "25 m"], ["2,5 km", "2.5 km"], ["25 km", "25 km"]], ex: ["25 000 cm = 250 m.", "25,000 cm = 250 m."] },
+    { q: ["En un mapa 1:50 000 mides 6 cm entre dos pueblos. ¿Distancia real?", "On a 1:50,000 map two towns are 6 cm apart. Real distance?"], o: [["3 km", "3 km"], ["300 m", "300 m"], ["30 km", "30 km"], ["6 km", "6 km"]], ex: ["6 × 50 000 = 300 000 cm = 3000 m = 3 km.", "6 × 50,000 = 300,000 cm = 3,000 m = 3 km."] },
+    { q: ["¿Qué mapa permite ver más territorio en el mismo papel?", "Which map shows more land on the same sheet of paper?"], o: [["1:200 000", "1:200,000"], ["1:25 000", "1:25,000"], ["1:10 000", "1:10,000"], ["Todos igual", "All the same"]], ex: ["Cuanto mayor es el denominador, más se reduce la realidad: más territorio y menos detalle.", "The bigger the second number, the more reality is reduced: more land, less detail."] },
+    { q: ["Unas curvas en forma de V cuyo vértice apunta hacia las zonas altas indican…", "V‑shaped contours pointing uphill show…"], o: [["un valle por el que suele ir un río", "a valley, usually with a river"], ["una cresta", "a ridge"], ["una cima", "a summit"], ["un acantilado", "a cliff"]], ex: ["El río excava hacia arriba de la ladera: las curvas «se meten» aguas arriba.", "The river cuts back into the slope: the contours bend upstream."] },
+    { q: ["¿Qué es un perfil topográfico?", "What is a topographic profile?"], o: [["Un dibujo del relieve visto de lado a lo largo de una línea", "A side view of the land along a line"], ["Un mapa visto desde arriba", "A map seen from above"], ["Un mapa de las rocas", "A map of the rocks"], ["Una fotografía aérea", "An aerial photograph"]], ex: ["Es como cortar el terreno con un cuchillo por la línea A–B y mirarlo de lado.", "It's like cutting the land with a knife along A–B and looking at it from the side."] },
+    { q: ["¿Por qué se exagera la escala vertical en un perfil?", "Why is the vertical scale exaggerated in a profile?"], o: [["Para que se aprecie mejor el relieve, que si no se vería casi plano", "So the relief is easier to see; otherwise it would look almost flat"], ["Para que el dibujo quepa en el papel", "So the drawing fits on the paper"], ["Porque las montañas son más altas de lo que indica el mapa", "Because mountains are higher than the map shows"], ["Es un error del dibujo", "It's a drawing mistake"]], ex: ["Con escala horizontal 1:25 000 y vertical 1:10 000 la exageración es ×2,5.", "With a 1:25,000 horizontal and 1:10,000 vertical scale the exaggeration is ×2.5."] },
+    { q: ["¿Qué representa un mapa geológico?", "What does a geological map show?"], o: [["Las rocas que afloran, su edad y sus estructuras", "The rocks at the surface, their age and their structures"], ["Solo el relieve con curvas de nivel", "Only the relief with contours"], ["Las carreteras y los pueblos", "Roads and towns"], ["El clima de una zona", "The climate of an area"]], ex: ["Se dibuja sobre una base topográfica.", "It is drawn on a topographic base."] },
+    { q: ["En la leyenda de un mapa geológico, las rocas más antiguas se colocan…", "In a geological map key, the oldest rocks go…"], o: [["abajo", "at the bottom"], ["arriba", "at the top"], ["en el centro", "in the middle"], ["en orden alfabético", "in alphabetical order"]], ex: ["Principio de superposición: los estratos de abajo se depositaron antes.", "Law of superposition: the lower layers were deposited first."] },
+    { q: ["Si los contactos entre rocas son paralelos a las curvas de nivel, los estratos son…", "If rock contacts are parallel to the contours, the layers are…"], o: [["horizontales", "horizontal"], ["verticales", "vertical"], ["plegados", "folded"], ["fallados", "faulted"]], ex: ["Un estrato horizontal está siempre a la misma altitud, igual que una curva de nivel.", "A horizontal layer is always at the same height, just like a contour."] },
+    { q: ["En un anticlinal erosionado, en el centro del pliegue afloran las rocas…", "In an eroded anticline, the rocks in the centre of the fold are…"], o: [["más antiguas", "the oldest"], ["más modernas", "the youngest"], ["volcánicas", "volcanic"], ["sin edad", "of no age"]], ex: ["En el sinclinal es al revés: en el centro, las más modernas.", "In a syncline it's the other way round: the youngest in the centre."] },
+    { q: ["En un mapa geológico, una línea que corta y desplaza los contactos es…", "On a geological map, a line that cuts and shifts the contacts is…"], o: [["una falla", "a fault"], ["un río", "a river"], ["una curva de nivel", "a contour"], ["un estrato", "a layer"]], ex: ["Las fallas son roturas de la roca con desplazamiento de los bloques.", "Faults are breaks in the rock where the blocks have moved."] },
+    { q: ["¿Qué es un corte geológico?", "What is a geological cross-section?"], o: [["Un perfil topográfico que muestra también las rocas en profundidad", "A topographic profile that also shows the rocks underground"], ["Una muestra de roca", "A rock sample"], ["Un mapa de riesgos", "A hazard map"], ["Una curva de nivel cortada", "A broken contour line"]], ex: ["Se construye a partir del mapa geológico.", "It is built from the geological map."] },
+    { q: ["Entre A (400 m) y B (600 m) hay 1 km. ¿Pendiente media?", "A (400 m) and B (600 m) are 1 km apart. Average gradient?"], o: [["20 %", "20%"], ["2 %", "2%"], ["200 %", "200%"], ["60 %", "60%"]], ex: ["Desnivel 200 m ÷ distancia 1000 m × 100 = 20 %.", "Height difference 200 m ÷ distance 1,000 m × 100 = 20%."] }
+  ];
+  let qOrder = [], qAns = {};
+  function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function resetQuiz() { qOrder = shuffle(QUIZ.map((q, i) => ({ i, o: shuffle(q.o.map((o, k) => k)) }))); qAns = {}; renderQuiz(); }
+  function renderQuiz() {
+    const ok = Object.values(qAns).filter(v => v.ok).length;
+    document.getElementById("qScore").textContent = `${ok} / ${Object.keys(qAns).length}`;
+    document.getElementById("qList").innerHTML = qOrder.map((it, n) => {
+      const q = QUIZ[it.i], a = qAns[it.i];
+      return `<div class="q"><b>${n + 1}. ${bi(q.q[0], q.q[1])}</b><div class="opts">${it.o.map(k => {
+        let c = ""; if (a) { if (k === 0) c = "right"; else if (k === a.k) c = "wrong"; }
+        return `<button data-q="${it.i}" data-k="${k}" class="${c}" ${a ? "disabled" : ""}>${bi(q.o[k][0], q.o[k][1])}</button>`;
+      }).join("")}</div>${a ? `<div class="ex">${a.ok ? "✅" : "❌"} ${bi(q.ex[0], q.ex[1])}</div>` : ""}</div>`;
+    }).join("");
+  }
+  document.getElementById("qList").addEventListener("click", e => {
+    const b = e.target.closest("button[data-q]"); if (!b) return; const i = +b.dataset.q, k = +b.dataset.k;
+    if (qAns[i]) return; qAns[i] = { k, ok: k === 0 }; renderQuiz();
+  });
+  document.getElementById("qReset").onclick = resetQuiz;
+
+  // ================= VOCABULARIO =================
+  const VOC = [
+    ["mapa topográfico", "topographic map", "Mapa que representa la forma y la altitud del relieve con curvas de nivel.", "Map showing the shape and height of the land with contour lines."],
+    ["curva de nivel", "contour line", "Línea que une los puntos que están a la misma altitud.", "Line joining points at the same height."],
+    ["curva maestra", "index contour", "Curva de nivel más gruesa, con su altitud escrita, que aparece cada cierto número de curvas.", "Thicker contour labelled with its height, every few lines."],
+    ["equidistancia", "contour interval", "Diferencia de altitud entre dos curvas de nivel seguidas.", "Height difference between two neighbouring contours."],
+    ["cota", "spot height", "Punto del mapa con su altitud exacta escrita.", "Point on the map with its exact height written."],
+    ["escala", "scale", "Relación entre una distancia en el mapa y la distancia real.", "Ratio between a distance on the map and the real distance."],
+    ["escala gráfica", "bar scale", "Barra dividida que indica a cuántos metros reales equivale cada tramo.", "Divided bar showing how many real metres each section stands for."],
+    ["pendiente", "slope / gradient", "Inclinación del terreno: desnivel ÷ distancia horizontal × 100.", "Steepness of the ground: height difference ÷ horizontal distance × 100."],
+    ["desnivel", "height difference", "Diferencia de altitud entre dos puntos.", "Difference in height between two points."],
+    ["valle (vaguada)", "valley", "Zona alargada más baja que su entorno; las curvas forman una V que apunta aguas arriba.", "Long low area; contours form a V pointing upstream."],
+    ["cresta (divisoria)", "ridge", "Línea de puntos altos que separa dos vertientes.", "Line of high points separating two slopes."],
+    ["collado", "saddle / pass", "Punto más bajo entre dos cimas.", "Lowest point between two summits."],
+    ["perfil topográfico", "topographic profile", "Dibujo del relieve visto de lado a lo largo de una línea.", "Side view of the land along a line."],
+    ["exageración vertical", "vertical exaggeration", "Número de veces que la escala vertical es mayor que la horizontal.", "How many times larger the vertical scale is than the horizontal one."],
+    ["mapa geológico", "geological map", "Mapa que muestra las rocas que afloran, su edad y sus estructuras.", "Map showing surface rocks, their age and structures."],
+    ["aflorar / afloramiento", "to crop out / outcrop", "Lugar donde la roca se ve en la superficie.", "Place where rock is visible at the surface."],
+    ["contacto", "contact", "Línea que separa dos rocas distintas en el mapa.", "Line separating two different rocks on the map."],
+    ["estrato", "layer / stratum", "Capa de roca sedimentaria.", "Layer of sedimentary rock."],
+    ["buzamiento", "dip", "Ángulo que forma un estrato con la horizontal.", "Angle between a layer and the horizontal."],
+    ["dirección (rumbo)", "strike", "Dirección de la línea horizontal contenida en un estrato.", "Direction of a horizontal line on a layer."],
+    ["leyenda / columna estratigráfica", "key / stratigraphic column", "Lista de rocas de un mapa ordenadas por edad, las más antiguas abajo.", "List of a map's rocks in age order, oldest at the bottom."],
+    ["principio de superposición", "law of superposition", "Los estratos de abajo son más antiguos que los de arriba (si no están dados la vuelta).", "Lower layers are older than upper ones (unless overturned)."],
+    ["anticlinal", "anticline", "Pliegue con forma de arco hacia arriba; en su centro están las rocas más antiguas.", "Upward arch-shaped fold; the oldest rocks are in its core."],
+    ["sinclinal", "syncline", "Pliegue con forma de U; en su centro están las rocas más modernas.", "U‑shaped fold; the youngest rocks are in its core."],
+    ["falla", "fault", "Fractura de la roca con desplazamiento de los bloques.", "Break in the rock where the blocks have moved."],
+    ["corte geológico", "geological cross-section", "Perfil topográfico que muestra también cómo están las rocas en profundidad.", "Topographic profile that also shows the rocks underground."]
+  ];
+  function speak(t, l) { try { const u = new SpeechSynthesisUtterance(t); u.lang = l; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
+  function renderVoc() {
+    const f = document.getElementById("vSearch").value.trim().toLowerCase();
+    document.getElementById("vBody").innerHTML = VOC.filter(v => !f || v.join(" ").toLowerCase().includes(f)).map(v =>
+      `<tr><td><span class="term">${v[0]}</span> <button class="say" data-s="${v[0]}" data-l="es-ES" aria-label="Escuchar">🔊</button></td><td><span class="term">${v[1]}</span> <button class="say" data-s="${v[1]}" data-l="en-AU" aria-label="Listen">🔊</button></td><td>${bi(v[2], v[3])}</td></tr>`).join("");
+  }
+  document.getElementById("vSearch").oninput = renderVoc;
+  document.getElementById("vBody").addEventListener("click", e => { const b = e.target.closest(".say"); if (b) speak(b.dataset.s, b.dataset.l); });
+
+  // ================= INICIO =================
+  function drawIntro() {
+    const a = document.getElementById("cvIntroTopo"), b = document.getElementById("cvIntroGeo");
+    a.getContext("2d").drawImage(topoImage(), 0, 0, a.width, a.height);
+    b.getContext("2d").drawImage(geoImage("h"), 0, 0, b.width, b.height);
+  }
+
+  // ================= Navegación =================
+  const TABS = ["inicio", "topo", "perfil", "practica", "geo", "reto", "vocab"];
+  const drawn = {};
+  function show(tab) {
+    if (!TABS.includes(tab)) tab = "inicio";
+    TABS.forEach(t => document.getElementById("t-" + t).classList.toggle("hidden", t !== tab));
+    document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+    refresh(tab); drawn[tab] = true;
+  }
+  function refresh(tab) {
+    if (tab === "inicio") drawIntro();
+    if (tab === "topo") { drawFlood(); calcScale(); if (!sp) newSP(); if (!fCur) newForm(); }
+    if (tab === "perfil") drawPerfil();
+    if (tab === "practica") { if (!X_) newPractice(); else drawPractice(); }
+    if (tab === "geo") { renderLegend(); drawGeo(); }
+    if (tab === "reto" && !qOrder.length) resetQuiz();
+    if (tab === "vocab") renderVoc();
+  }
+  document.querySelectorAll("#nav button").forEach(b => b.onclick = () => { location.hash = b.dataset.tab; });
+  document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { location.hash = b.dataset.go; scrollTo(0, 0); });
+  window.addEventListener("hashchange", () => show(location.hash.slice(1)));
+  onLang.push(() => { const t = location.hash.slice(1) || "inicio"; refresh(TABS.includes(t) ? t : "inicio"); });
+  setMode(mode);
+  show(location.hash.slice(1) || "inicio");
+})();
+</script>
+</body>
+</html>
